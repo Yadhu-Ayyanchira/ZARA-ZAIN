@@ -4,7 +4,6 @@ const session = require("express-session");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const config = require("../config/config");
 user_route.use(
   session({
     secret: process.env.SECRET,

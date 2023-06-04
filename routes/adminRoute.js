@@ -6,7 +6,6 @@ const multer = require("multer");
 const session = require("express-session");
 
 const upload = require("../config/multer.js");
-const config = require("../config/config");
 const auth = require("../middleware.js/adminAuth");
 const categoryController = require("../controllers/categoryController");
 const adminController = require("../controllers/adminController");
