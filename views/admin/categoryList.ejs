@@ -71,7 +71,7 @@
                                                                 <% if (category[i].is_delete==true){ %>
                                                                     <a class="btn btn-success" href="/admin/listcategory?id=<%= category[i]._id%>">list</a>
                                                                     <% }else{%>
-                                                                        <a class="btn btn-danger" href="/admin/unlistcategory?id=<%= category[i]._id %>">unlist</a>
+                                                                        <a class="btn btn-danger" href="/admin/unlistcategory?id=<%= category[i]._id %>" onclick="return confirm('Are you sure you want to unlist <%= category[i].categorytName%>?')">unlist</a>
                                                             </td>
                                                             <!-- <td><a href="/admin/editCatogary?id=<%=category[i]._id%>" class="" href="" data-bs-target="#editcategory">
                                                                             Edit

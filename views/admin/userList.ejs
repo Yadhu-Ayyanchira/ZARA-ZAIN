@@ -49,7 +49,7 @@
                                                                         class="btn btn-success">Unblock</a>
                                                                     <% }else{ %>
                                                                         <a href="/admin/block-user?id=<%= users[i].id %>"
-                                                                            class="btn btn-danger">Block</a>
+                                                                            class="btn btn-danger" onclick="return confirm('Are you sure you want to block <%= users[i].name%>?')">Block</a>
                                                                         <% } %>
                                                             </td>
                                                         </tr>
