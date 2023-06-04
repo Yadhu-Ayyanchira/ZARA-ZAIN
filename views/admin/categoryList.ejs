@@ -1,0 +1,102 @@
+<%- include('../layouts/adminLayout/header.ejs') %>
+    <%- include('../layouts/adminLayout/sidebar.ejs') %>
+        <%- include('../layouts/adminLayout/navbar.ejs') %>
+
+
+            <div class="main-panel bg-warning">
+                <div class="content-wrapper">
+                    <div class="row bg-dark">
+
+
+
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card-body">
+                                <div class="card-body">
+                                    <h4 class="card-title">Category List</h4>                
+                                   <a data-bs-toggle="modal" data-bs-target="#addcategory"><button type="button" class="btn btn-success m-2">Add Category</button></a>
+                                
+
+
+
+                                    <!-- ================================ ADD CATEGORY ============================= -->
+                                    
+                                    <div class="modal fade" id="addcategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <!-- <h4 class="modal-title fs-5" id="exampleModalLabel">ADD PRODUCT</h4> -->
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                    
+                                                    <form class="forms-sample" method="post" action="/admin/insertCategory">
+                                                        <div class="form-group">
+                                                            <label for="exampleInputName1">CATEGORY NAME</label>
+                                                            <input type="text" class="form-control" id="exampleInputName1" placeholder="Name"
+                                                                name="categoryName">
+                                                        </div>
+                                    
+                                                        <a href="/admin/categoryList"> <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                                            <button class="btn btn-dark" id="Cancel">Cancel</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="table-responsive">
+                                        <table class="table table-hover text-white ">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-warning">Product Id</th>
+                                                    <th class="text-warning">Category Name </th>
+                                                    <th class="text-warning"> Action </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            
+                                                <% if (category.length> 0) { %>
+                                                    <% for (var i=0; i < category.length; i++) { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= i + 1 %>
+                                                            </td>
+                                                            <td >
+                                                                <%= category[i].categoryName %>
+                                                            </td>
+                                                            <td>
+                                                                <% if (category[i].is_delete==true){ %>
+                                                                    <a class="btn btn-success" href="/admin/listcategory?id=<%= category[i]._id%>">list</a>
+                                                                    <% }else{%>
+                                                                        <a class="btn btn-danger" href="/admin/unlistcategory?id=<%= category[i]._id %>">unlist</a>
+                                                            </td>
+                                                            <!-- <td><a href="/admin/editCatogary?id=<%=category[i]._id%>" class="" href="" data-bs-target="#editcategory">
+                                                                            Edit
+                                                                          </a></td> -->
+                                                            <td>
+                                                                <a type="button" class="btn btn-success w-60" style="margin-top: 30px;margin-left: 10px;"
+                                                                    href="/admin/editCategory?id=<%=category[i]._id%>">
+                                                                    EDIT CATEGORY
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                                            <% } %>
+                                                                <% } %>
+                                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <%- include('../layouts/adminLayout/footer.ejs') %>
