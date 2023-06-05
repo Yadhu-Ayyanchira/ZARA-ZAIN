@@ -29,7 +29,8 @@ const loadCart = async (req, res) => {
   try {
     let id = req.session.user_id;
     const session = req.session.user_id;
-    let userName = await User.findOne({ _id: req.session.user_id });
+    const categoryData = await Category.find();
+    let userData = await User.findOne({ _id: req.session.user_id });
     let cartData = await Cart.findOne({ userId: req.session.user_id }).populate("products.productId");
     if (req.session.user_id) {
       if (cartData) {
@@ -51,29 +52,32 @@ const loadCart = async (req, res) => {
           ]);
           const Total = total.length > 0 ? total[0].total : 0;
           const totalAmount = Total + 80;
-          const userId = userName._id;
+         // const userId = userName._id;
           const userData = await User.findById({ _id: req.session.user_id });
           res.render("cart", {
             products: products,
             Total: Total,
-            userId,
+           // userId,
             session,
             userData,
             totalAmount,
-            user: userName,
+            userData: userData,
+            categoryData
           });
         } else {
           res.render("cart", {
-            user: userName,
+            user: userData,
             session,
             message: "No Products Added to cart",
+            categoryData
           });
         }
       } else {
         res.render("cart", {
-          user: userName,
+          userData: userData,
           session,
           message: "No Products Added to cart",
+          categoryData
         });
       }
     } else {
