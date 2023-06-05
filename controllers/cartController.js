@@ -1,5 +1,5 @@
 const User = require("../Models/userModel");
-const Product =require('../Models/productmodel')
+const Product = require("../Models/productmodel");
 const Category = require("../Models/categoryModel");
 const Cart = require("../Models/cartModel");
 
@@ -31,7 +31,9 @@ const loadCart = async (req, res) => {
     const session = req.session.user_id;
     const categoryData = await Category.find();
     let userData = await User.findOne({ _id: req.session.user_id });
-    let cartData = await Cart.findOne({ userId: req.session.user_id }).populate("products.productId");
+    let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
+      "products.productId"
+    );
     if (req.session.user_id) {
       if (cartData) {
         if (cartData.products.length > 0) {
@@ -52,32 +54,37 @@ const loadCart = async (req, res) => {
           ]);
           const Total = total.length > 0 ? total[0].total : 0;
           const totalAmount = Total + 80;
-         // const userId = userName._id;
+          // const userId = userName._id;
           const userData = await User.findById({ _id: req.session.user_id });
           res.render("cart", {
             products: products,
             Total: Total,
-           // userId,
+            // userId,
             session,
             userData,
             totalAmount,
             userData: userData,
-            categoryData
+            categoryData,
           });
         } else {
+          console.log("no prdtsssss");
           res.render("cart", {
             user: userData,
             session,
             message: "No Products Added to cart",
-            categoryData
+            categoryData,
+            products,
           });
         }
       } else {
+        console.log("no prdts");
+        const products = 0;
         res.render("cart", {
           userData: userData,
           session,
           message: "No Products Added to cart",
-          categoryData
+          categoryData,
+          products,
         });
       }
     } else {

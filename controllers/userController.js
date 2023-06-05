@@ -72,6 +72,7 @@ const loadHome = async (req, res) => {
         categoryData,
       });
     } else {
+      console.log('destroyyyyy');
       const session = null;
       res.render("index", { session, productData, categoryData });
     }

@@ -34,8 +34,9 @@ user_route.get("/showProduct/:id", userController.loadShowproduct);
 user_route.get("/shop", userController.loadShop);
 user_route.post("/verifyOtp", userController.verifyLoad);
 
-user_route.get("/userProfile", userController.loadProfile);
+user_route.get("/userProfile",auth.isLogin, userController.loadProfile);
 
-user_route.get("/cart", cartController.loadCart);
+user_route.get("/cart",auth.isLogin,cartController.loadCart);
+//user_route.('/addToCart',auth.isLogin,cartController.addToCart)
 
 module.exports = user_route;
