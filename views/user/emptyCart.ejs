@@ -31,49 +31,10 @@
           </tr>
         </thead>
         <tbody class="align-middle">
-          <% if(products.length> 0){ products.forEach(products =>{ %>
-
-          <tr>
-            <td class="align-middle">
-              <img
-                src="/adminAsset/adminImages/<%=products.productId.image[0]%>"
-                alt=""
-                style="width: 50px"
-              />
-              <%= products.productId.productName %>
-            </td>
-            <td class="align-middle">Rs.<%= products.productId.price %>.00</td>
-            <td class="align-middle">
-              <div class="input-group quantity mx-auto" style="width: 100px">
-                <div class="input-group-btn">
-                  <button class="btn btn-sm btn-primary btn-minus">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  class="form-control form-control-sm bg-secondary border-0 text-center"
-                  value="1"
-                />
-                <div class="input-group-btn">
-                  <button class="btn btn-sm btn-primary btn-plus">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </div>
-              </div>
-            </td>
-            <td class="align-middle">$150</td>
-            <td class="align-middle"><a href="/removeProduct?id=<%=products.productId._id%>" onclick="return confirm('are you sure you want to delete?')">
-              <button class="btn btn-sm btn-danger">
-                <i class="fa fa-times"></i>
-              </button></a>
-            </td>
-          </tr>
-          <% }); %> <% } else { %>
+          
           <tr>
             <td colspan="5" class="text-center">No Products Added to Cart</td>
           </tr>
-          <% } %>
         </tbody>
       </table>
     </div>
@@ -118,33 +79,5 @@
   </div>
 </div>
 <!-- Cart End -->
-
-<script>
-  function changeQuantity(userId, proId, count) {
-    $.ajax({
-      url: "/changeQuantity",
-      data: {
-        user: userId,
-        product: proId,
-        count: count,
-      },
-      method: "post",
-      success: (response) => {
-        if (response.success) {
-          $("#reloadDiv").load("/cart #reloadDiv");
-        } else if (response.check) {
-          swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Out of stock",
-          });
-        }
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-  }
-</script>
 
 <%- include('../layouts/user/footer.ejs') %>

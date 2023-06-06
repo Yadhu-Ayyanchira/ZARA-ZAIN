@@ -25,17 +25,89 @@ const loadEmptyCart = async (req, res) => {
 };
 
 // ---------- Cart loading section start
-const loadCart = async (req, res) => {
+// const loadCart = async (req, res) => {
+//   try {
+//     let id = req.session.user_id;
+//     const session = req.session.user_id;
+//     const categoryData = await Category.find();
+//     let userData = await User.findOne({ _id: req.session.user_id });
+//     let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
+//       "products.productId"
+//     );
+//     if (req.session.user_id) {
+//       if (cartData) {
+//         if (cartData.products.length > 0) {
+//           const products = cartData.products;
+//           const total = await Cart.aggregate([
+//             { $match: { userId: req.session.user_id } },
+//             { $unwind: "$products" },
+//             {
+//               $group: {
+//                 _id: null,
+//                 total: {
+//                   $sum: {
+//                     $multiply: ["$products.productPrice", "$products.count"],
+//                   },
+//                 },
+//               },
+//             },
+//           ]);
+//           const Total = total.length > 0 ? total[0].total : 0;
+//           const totalAmount = Total + 80;
+//           // const userId = userName._id;
+//           const userData = await User.findById({ _id: req.session.user_id });
+//           res.render("cart", {
+//             products: products,
+//             Total: Total,
+//             // userId,
+//             session,
+//             userData,
+//             totalAmount,
+//             userData: userData,
+//             categoryData,
+//           });
+//         } else {
+//           console.log("no prdtsssss");
+//           res.render("cart", {
+//             user: userData,
+//             session,
+//             message: "No Products Added to cart",
+//             categoryData,
+//             products,
+//           });
+//         }
+//       } else {
+//         console.log("no prdts");
+//         const products = 0;
+//         res.render("cart", {
+//           userData: userData,
+//           session,
+//           message: "No Products Added to cart",
+//           categoryData,
+//           products,
+//         });
+//       }
+//     } else {
+//       res.redirect("/login");
+//     }
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
+// ---------- Cart loading section start
+const loadCart = async(req,res)=>{
   try {
     let id = req.session.user_id;
-    const session = req.session.user_id;
+    const session = req.session.user_id
     const categoryData = await Category.find();
-    let userData = await User.findOne({ _id: req.session.user_id });
+    const userData = await User.findById({ _id: req.session.user_id });
     let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
       "products.productId"
     );
     if (req.session.user_id) {
+      let userData = await User.findOne({ _id: req.session.user_id });
       if (cartData) {
+        
         if (cartData.products.length > 0) {
           const products = cartData.products;
           const total = await Cart.aggregate([
@@ -44,47 +116,26 @@ const loadCart = async (req, res) => {
             {
               $group: {
                 _id: null,
-                total: {
-                  $sum: {
-                    $multiply: ["$products.productPrice", "$products.count"],
-                  },
-                },
+                total: { $sum: { $multiply: ["$products.productPrice", "$products.count"] } },
               },
             },
           ]);
-          const Total = total.length > 0 ? total[0].total : 0;
-          const totalAmount = Total + 80;
-          // const userId = userName._id;
-          const userData = await User.findById({ _id: req.session.user_id });
-          res.render("cart", {
-            products: products,
-            Total: Total,
-            // userId,
-            session,
+          const Total = total.length > 0 ? total[0].total : 0; 
+           const totalAmount = Total+80;   
+          const userId = userData._id;
+          res.render("cart", { products:products,Total:Total,userId,session,totalAmount,userData,categoryData});
+        }else {
+          res.render("emptyCart", {
             userData,
-            totalAmount,
-            userData: userData,
-            categoryData,
-          });
-        } else {
-          console.log("no prdtsssss");
-          res.render("cart", {
-            user: userData,
             session,
             message: "No Products Added to cart",
             categoryData,
-            products,
-          });
-        }
-      } else {
-        console.log("no prdts");
-        const products = 0;
-        res.render("cart", {
-          userData: userData,
+          });}
+      }else {
+        res.render("emptyCart", {
+          userData,
           session,
-          message: "No Products Added to cart",
-          categoryData,
-          products,
+          categoryData,message: "No Products Added to cart",
         });
       }
     } else {
@@ -93,7 +144,8 @@ const loadCart = async (req, res) => {
   } catch (error) {
     console.log(error.message);
   }
-};
+}
+       
 
 // ---------- Add to cart section start
 const addToCart = async (req, res) => {
@@ -198,9 +250,25 @@ const changeProductCount = async (req, res) => {
   }
 };
 
+const removeProduct = async (req, res) => {
+  try {
+    const user = req.session.user_id;
+    const id = req.query.id;
+    console.log(id,user);
+    await Cart.updateOne(
+      { userId: user },
+      { $pull: { products: { productId: id } } }
+    );
+    res.redirect("/cart");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   loadCart,
   addToCart,
   changeProductCount,
   loadEmptyCart,
+  removeProduct
 };

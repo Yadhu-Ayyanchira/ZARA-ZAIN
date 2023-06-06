@@ -37,6 +37,6 @@ user_route.post("/verifyOtp", userController.verifyLoad);
 user_route.get("/userProfile",auth.isLogin, userController.loadProfile);
 
 user_route.get("/cart",auth.isLogin,cartController.loadCart);
-//user_route.('/addToCart',auth.isLogin,cartController.addToCart)
-
+user_route.post('/addToCart',auth.isLogin,cartController.addToCart)
+user_route.get("/removeProduct", cartController.removeProduct);
 module.exports = user_route;

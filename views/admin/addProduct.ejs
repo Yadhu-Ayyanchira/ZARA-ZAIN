@@ -22,7 +22,17 @@
                             </div>
                           </div>
                           
+                          <div class="col-md-6">
+                            <div class="form-group row">
+                              <label class="col-sm-3 col-form-label">Price</label>
+                              <div class="col-sm-9">
+                                <input class="form-control" name="price" />
+                              </div>
+                            </div>
+                          </div>
                         </div>
+
+
                         <div class="row">
                           <div class="col-md-6">
                             <div class="form-group row">
@@ -35,13 +45,19 @@
                               </div>
                             </div>
                           </div>
+                          
                           <div class="col-md-6">
                             <div class="form-group row">
-                              <label class="col-sm-3 col-form-label">Price</label>
+                              <label class="col-sm-3 col-form-label">Description</label>
                               <div class="col-sm-9">
-                                <input class="form-control" name="price" />
+                                <!-- <input type="text" class="form-control" name="description"/> -->
+                                <textarea class="form-control" id="exampleTextarea1" rows="4" name="description"></textarea>
+                                
                               </div>
+                              
+                              
                             </div>
+                            
                           </div>
                         </div>
                         <div class="row">
@@ -52,12 +68,12 @@
                                 <select class="form-control" name="category">
                                    
                                     <%
-                 for(let i=0;i<category.length;i++){
-                  %>
-                  <option><%=category[i].categoryName%></option>
-                  <%
-                }
-                 %>
+                                        for(let i=0;i<category.length;i++){
+                                          %>
+                                          <option><%=category[i].categoryName%></option>
+                                          <%
+                                        }
+                                        %>
                                 </select>
                               </div>
                             </div>
@@ -81,10 +97,6 @@
                               </div>
                             </div>
                           </div>
-                          
-                        </div>
-                       
-                        <div class="row">
                           <div class="col-md-6">
                             <div class="form-group row">
                               <label class="col-sm-3 col-form-label">stock Quantity</label>
@@ -93,19 +105,12 @@
                               </div>
                             </div>
                           </div>
-                          <div class="col-md-6">
-                            <div class="form-group row">
-                              <label class="col-sm-3 col-form-label">Description</label>
-                              <div class="col-sm-9">
-                                <!-- <input type="text" class="form-control" name="description"/> -->
-                                <textarea class="form-control" id="exampleTextarea1" rows="4" name="description"></textarea>
-                                
-                              </div>
-                              
-                              
-                            </div>
-                            
-                          </div>
+                          
+                        </div>
+                       
+                        <div class="row">
+                          
+                          
                         </div><br>
                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                               <button class="btn btn-dark">Cancel</button>
