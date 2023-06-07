@@ -3,7 +3,6 @@ const Product = require("../Models/productmodel");
 const Category = require("../Models/categoryModel");
 const Cart = require("../Models/cartModel");
 
-// ---------- Emptycart loading section start
 const loadEmptyCart = async (req, res) => {
   try {
     const session = req.session.user_id;
@@ -12,7 +11,7 @@ const loadEmptyCart = async (req, res) => {
       return res.render("emptyCart", { session: session });
     }
 
-    const userData = await User.findById({ _id: req.session.user_id });
+    const userData = await User.findById(req.session.user_id);
     if (userData) {
       return res.render("emptyCart", { user: userData, session });
     } else {
@@ -24,90 +23,19 @@ const loadEmptyCart = async (req, res) => {
   }
 };
 
-// ---------- Cart loading section start
-// const loadCart = async (req, res) => {
-//   try {
-//     let id = req.session.user_id;
-//     const session = req.session.user_id;
-//     const categoryData = await Category.find();
-//     let userData = await User.findOne({ _id: req.session.user_id });
-//     let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
-//       "products.productId"
-//     );
-//     if (req.session.user_id) {
-//       if (cartData) {
-//         if (cartData.products.length > 0) {
-//           const products = cartData.products;
-//           const total = await Cart.aggregate([
-//             { $match: { userId: req.session.user_id } },
-//             { $unwind: "$products" },
-//             {
-//               $group: {
-//                 _id: null,
-//                 total: {
-//                   $sum: {
-//                     $multiply: ["$products.productPrice", "$products.count"],
-//                   },
-//                 },
-//               },
-//             },
-//           ]);
-//           const Total = total.length > 0 ? total[0].total : 0;
-//           const totalAmount = Total + 80;
-//           // const userId = userName._id;
-//           const userData = await User.findById({ _id: req.session.user_id });
-//           res.render("cart", {
-//             products: products,
-//             Total: Total,
-//             // userId,
-//             session,
-//             userData,
-//             totalAmount,
-//             userData: userData,
-//             categoryData,
-//           });
-//         } else {
-//           console.log("no prdtsssss");
-//           res.render("cart", {
-//             user: userData,
-//             session,
-//             message: "No Products Added to cart",
-//             categoryData,
-//             products,
-//           });
-//         }
-//       } else {
-//         console.log("no prdts");
-//         const products = 0;
-//         res.render("cart", {
-//           userData: userData,
-//           session,
-//           message: "No Products Added to cart",
-//           categoryData,
-//           products,
-//         });
-//       }
-//     } else {
-//       res.redirect("/login");
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
-// ---------- Cart loading section start
-const loadCart = async(req,res)=>{
+const loadCart = async (req, res) => {
   try {
     let id = req.session.user_id;
-    const session = req.session.user_id
+    const session = req.session.user_id;
     const categoryData = await Category.find();
-    const userData = await User.findById({ _id: req.session.user_id });
+    const userData = await User.findById(req.session.user_id);
     let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
       "products.productId"
     );
+
     if (req.session.user_id) {
       let userData = await User.findOne({ _id: req.session.user_id });
       if (cartData) {
-        
         if (cartData.products.length > 0) {
           const products = cartData.products;
           const total = await Cart.aggregate([
@@ -116,26 +44,40 @@ const loadCart = async(req,res)=>{
             {
               $group: {
                 _id: null,
-                total: { $sum: { $multiply: ["$products.productPrice", "$products.count"] } },
+                total: {
+                  $sum: {
+                    $multiply: ["$products.productPrice", "$products.count"],
+                  },
+                },
               },
             },
           ]);
-          const Total = total.length > 0 ? total[0].total : 0; 
-           const totalAmount = Total+80;   
+          const Total = total.length > 0 ? total[0].total : 0;
+          const totalAmount = Total + 80;
           const userId = userData._id;
-          res.render("cart", { products:products,Total:Total,userId,session,totalAmount,userData,categoryData});
-        }else {
+          res.render("cart", {
+            products: products,
+            Total: Total,
+            userId,
+            session,
+            totalAmount,
+            userData,
+            categoryData,
+          });
+        } else {
           res.render("emptyCart", {
             userData,
             session,
             message: "No Products Added to cart",
             categoryData,
-          });}
-      }else {
+          });
+        }
+      } else {
         res.render("emptyCart", {
           userData,
           session,
-          categoryData,message: "No Products Added to cart",
+          categoryData,
+          message: "No Products Added to cart",
         });
       }
     } else {
@@ -144,10 +86,8 @@ const loadCart = async(req,res)=>{
   } catch (error) {
     console.log(error.message);
   }
-}
-       
+};
 
-// ---------- Add to cart section start
 const addToCart = async (req, res) => {
   try {
     const userId = req.session.user_id;
@@ -203,7 +143,6 @@ const addToCart = async (req, res) => {
   }
 };
 
-// ---------- Change product quantity in cart section
 const changeProductCount = async (req, res) => {
   try {
     const userData = req.session.user_id;
@@ -212,12 +151,12 @@ const changeProductCount = async (req, res) => {
     count = parseInt(count);
     const cartData = await Cart.findOne({ userId: userData });
     const product = cartData.products.find(
-      (product) => product.productId === proId
+      (product) => product.productId.toString() === proId
     );
     const quantity = product.count;
     const productData = await Product.findOne({ _id: proId });
 
-    const cartdata = await Cart.updateOne(
+    await Cart.updateOne(
       { userId: userData, "products.productId": proId },
       { $inc: { "products.$.count": count } }
     );
@@ -233,7 +172,7 @@ const changeProductCount = async (req, res) => {
 
     const updatedCartData = await Cart.findOne({ userId: userData });
     const updatedProduct = updatedCartData.products.find(
-      (product) => product.productId === proId
+      (product) => product.productId.toString() === proId
     );
     const updatedQuantity = updatedProduct.count;
     const price = updatedQuantity * productData.price;
@@ -254,7 +193,7 @@ const removeProduct = async (req, res) => {
   try {
     const user = req.session.user_id;
     const id = req.query.id;
-    console.log(id,user);
+    console.log(id, user);
     await Cart.updateOne(
       { userId: user },
       { $pull: { products: { productId: id } } }
@@ -270,5 +209,5 @@ module.exports = {
   addToCart,
   changeProductCount,
   loadEmptyCart,
-  removeProduct
+  removeProduct,
 };
