@@ -111,68 +111,12 @@ const insertAddresss = async (req,res)=>{
 }
 
 
-//-------- Edit address section  -----------//
-const editAddress = async (req,res)=>{
-  try {
-   const id = req.query.id;
-   const session = req.session.user_id;
-   const user = await User.find({})
-   const addressData = await Address.findOne({userId:session},{addresses:{$elemMatch:{_id:id}}});
-   const address = addressData.addresses;
-   console.log('here333');
-   res.render('editAddress',{address:address[0],session:session,user:user}) ;
-  } catch (error) {
-    console.log(error.message);
-  }
-}
 
 
-//-------- Update address section  -----------//
-const updateAddress = async (req,res) =>{
-  try{
-    const session = req.session.user_id;
-    const id = req.query.id;
-    const address = await Address.updateOne({ userId: session }, { $pull: { addresses: { _id: id } } });
-    const pushAddress = await Address.updateOne({userId:session},
-      {$push:
-        {addresses:{
-          userName:req.body.userName,
-          mobile:req.body.mobile,
-          altrenativeMob:req.body.altrenativeMobile,
-          houseName:req.body.house,
-          city:req.body.city,
-          state:req.body.state,
-          pincode:req.body.pincode,
-          landmark:req.body.landmark,
-        }
-      }})
-      res.redirect('/checkout')
-  }catch(error){
-    console.log(error.message);
-  }
-}
 
 
-const deleteAddress  = async (req,res) =>{
-  try{
-    const id = req.body.address;
-    const session = req.session.user_id;
-    const adressData = await Address.findOne({userId:session});
-    if(adressData.addresses.length === 1){
-      await Address.deleteOne({userId:session})
-    }else{
-      await Address.updateOne({ userId: session }, { $pull: { addresses: { _id: id } } });
-    }
-    res.status(200).json({message:'Address deleted successfully'})
-  }catch(error){
-    console.log(error.message);
-  }
-}
 module.exports ={
     loadAddress,
     loadInsertAddress,
     insertAddresss,
-    editAddress,
-    updateAddress,
-    deleteAddress,
 }
