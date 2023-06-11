@@ -4,9 +4,9 @@ const categoryModel = require("../Models/categoryModel");
 const bcrypt = require("bcrypt");
 const fast2sms = require("fast-two-sms");
 const session = require("express-session");
-const nodemailer =require('nodemailer')
-const randomString = require('randomstring');
-const dotenv = require('dotenv');
+const nodemailer = require("nodemailer");
+const randomString = require("randomstring");
+const dotenv = require("dotenv");
 dotenv.config();
 let message;
 
@@ -52,7 +52,7 @@ const sendverifyMail = async (name, email, otp) => {
         console.log(otp);
       }
     });
-    return otp
+    return otp;
   } catch (error) {
     console.log(error.message);
   }
@@ -72,7 +72,7 @@ const loadHome = async (req, res) => {
         categoryData,
       });
     } else {
-      console.log('destroyyyyy');
+      console.log("destroyyyyy");
       const session = null;
       res.render("index", { session, productData, categoryData });
     }
@@ -88,7 +88,10 @@ const loginLoad = async (req, res) => {
       const session = req.session.user_id;
       const userData = await User.findById({ _id: req.session.user_id });
       res.render("index", {
-        message,userData,session,categoryData,
+        message,
+        userData,
+        session,
+        categoryData,
       });
       message = null;
     } else {
@@ -123,75 +126,10 @@ const loadRegister = async (req, res) => {
   }
 };
 
-// const insertUser = async (req, res) => {
-//   try {
-//     const categoryData = await categoryModel.find();
-//     const productData = await productmodel.find();
-//     let session = null;
-//     const spassword = await securePassword(req.body.password);
-//     console.log(req.body);
-
-//     const existingUser = await User.findOne({ email: req.body.email });
-//     if (existingUser) {
-//       return res.render("registration", {
-//         message: "Email already registered",
-//         session,
-//         categoryData,
-//         productData,
-//       });
-//     }
-
-//     if (!req.body.name || req.body.name.trim().length === 0) {
-//       return res.render("registration", {
-//         message: "Please enter a valid name",
-//         session,
-//         categoryData,
-//         productData,
-//       });
-//     }
-//     if (req.body.password != req.body.verifyPassword) {
-//       return res.render("registration", {
-//         message: "Wrong Password",
-//         session,
-//         categoryData,
-//         productData,
-//       });
-//     }
-
-//     const user = new User({
-//       name: req.body.name,
-//       email: req.body.email,
-//       mobile: req.body.mob,
-//       password: spassword,
-//       is_admin: 0,
-//     });
-//     const userData = await user.save();
-//     req.session.user_id = userData._id;
-//     if (userData) {
-//       const session = req.session.user_id;
-//       const userData = await User.findById({ _id: req.session.user_id });
-//       res.render("index", {
-//         userData: userData,
-//         session: session,
-//         categoryData,
-//         productData,
-//       });
-//     } else {
-//       res.render("registration", {
-//         message: "Your registration has been failed",
-//         categoryData,
-//         productData,
-//       });
-//     }
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
-
 let email;
 const insertUser = async (req, res) => {
   try {
-    const session=null
+    const session = null;
     const categoryData = await categoryModel.find();
     const spassword = await securePassword(req.body.password);
     const user = new User({
@@ -208,7 +146,9 @@ const insertUser = async (req, res) => {
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.render("registration", {
-        message: "Email already registered",session,categoryData
+        message: "Email already registered",
+        session,
+        categoryData,
       });
     }
     if (req.body.name.trim().length === 0) {
@@ -265,7 +205,7 @@ const verifyLogin = async (req, res) => {
     const userData = await User.findOne({ email: email });
     const productData = await productmodel.find();
 
-    if (userData && userData.is_block==false) {
+    if (userData && userData.is_block == false) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
       console.log(passwordMatch);
       if (passwordMatch) {
@@ -303,9 +243,6 @@ const userLogout = async (req, res) => {
   }
 };
 
-
-
-
 const loadShop = async (req, res) => {
   try {
     if (req.session.user_id) {
@@ -323,7 +260,7 @@ const loadShop = async (req, res) => {
       const session = null;
       const categoryData = await categoryModel.find();
       const productData = await productmodel.find();
-      res.render("shop", { session,productData:productData, categoryData });
+      res.render("shop", { session, productData: productData, categoryData });
     }
   } catch (error) {
     console.log(error.message);
@@ -337,63 +274,72 @@ const loadShowproduct = async (req, res) => {
       const userData = await User.findById({ _id: req.session.user_id });
       const categoryData = await categoryModel.find();
       const data = await productmodel.findOne({ _id: id });
-      res.render("showProduct", { productData: data,session,categoryData,userData });
+      res.render("showProduct", {
+        productData: data,
+        session,
+        categoryData,
+        userData,
+      });
     } else {
       const id = req.params.id;
       const session = req.session.user_id;
       const categoryData = await categoryModel.find();
       const data = await productmodel.findOne({ _id: id });
-      res.render("showProduct", { productData: data,session,categoryData });
+      res.render("showProduct", { productData: data, session, categoryData });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-
 //  Verifying the users otp and redirecting to login page
 //  =====================================================
-const verifyLoad = async (req,res)=>{
-  const otp2= req.body.otp;
-  try { 
+const verifyLoad = async (req, res) => {
+  const otp2 = req.body.otp;
+  try {
     const session = req.session.user_id;
     const categoryData = await categoryModel.find();
-      if (otp2 == otp) {
-        console.log("heyyy");
-        const UserData = await User.findOneAndUpdate(
-          { email: email },
-          { $set: { is_verified: 1 } }
-        );
-        if (UserData) {
-          res.redirect("/");
-        } else {
-          console.log("something went wrong");
-        }
+    if (otp2 == otp) {
+      console.log("heyyy");
+      const UserData = await User.findOneAndUpdate(
+        { email: email },
+        { $set: { is_verified: 1 } }
+      );
+      if (UserData) {
+        res.redirect("/");
       } else {
-        res.render("verifyOtp", {
-          message: "Please Check the OTP again!",
-          session,
-          categoryData,
-        });
+        console.log("something went wrong");
       }
+    } else {
+      res.render("verifyOtp", {
+        message: "Please Check the OTP again!",
+        session,
+        categoryData,
+      });
+    }
   } catch (error) {
-      console.log(error.message);
+    console.log(error.message);
   }
-}
+};
 
 const loadCart = async (req, res) => {
   try {
     if (req.session.user_id) {
-      console.log('have session');
+      console.log("have session");
       const session = req.session.user_id;
       const id = req.params.id;
       const userData = await User.findById({ _id: req.session.user_id });
       const categoryData = await categoryModel.find();
       const data = await productmodel.findOne({ _id: id });
-      res.render("cart", { productData: data, session, categoryData,userData });
+      res.render("cart", {
+        productData: data,
+        session,
+        categoryData,
+        userData,
+      });
     } else {
-      console.log('else');
-      const session=null
+      console.log("else");
+      const session = null;
       const id = req.params.id;
       const categoryData = await categoryModel.find();
       const data = await productmodel.findOne({ _id: id });
@@ -404,8 +350,7 @@ const loadCart = async (req, res) => {
   }
 };
 
-
-const loadProfile = async (req,res)=>{
+const loadProfile = async (req, res) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
@@ -415,19 +360,17 @@ const loadProfile = async (req,res)=>{
         userData: userData,
         session: session,
         categoryData,
-      })
+      });
     } else {
-      const userData = await User.findById({ _id: '646dd35cb3f71f9940575fad' });
+      const userData = await User.findById({ _id: "646dd35cb3f71f9940575fad" });
       const session = null;
       const categoryData = await categoryModel.find();
-      res.render("userProfile", { session, categoryData,userData });
+      res.render("userProfile", { session, categoryData, userData });
     }
   } catch (error) {
     console.log(error.message);
   }
-}
-
-
+};
 
 module.exports = {
   loadRegister,
@@ -441,5 +384,5 @@ module.exports = {
   verifyLoad,
   sendverifyMail,
   loadCart,
-  loadProfile
+  loadProfile,
 };

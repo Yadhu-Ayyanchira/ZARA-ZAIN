@@ -18,7 +18,6 @@ user_route.use(
   })
 );
 
-
 user_route.set("view engine", "ejs");
 user_route.set("views", "./views/user");
 
@@ -58,8 +57,12 @@ user_route.get("/userProfile", auth.isLogin, userController.loadProfile);
 user_route.get("/cart", auth.isLogin, cartController.loadCart);
 user_route.post("/addToCart", auth.isLogin, cartController.addToCart);
 user_route.get("/removeProduct", cartController.removeProduct);
-user_route.post("/changeQuantity",auth.isLogin,cartController.changeProductCount);
-user_route.get('/checkout',auth.isLogin,cartController.loadCheckout)
-user_route.get('/addAddress',auth.isLogin,cartController.loadAddAddress)
-user_route.post('/addAddress',addressController.insertAddresss)
+user_route.post(
+  "/changeQuantity",
+  auth.isLogin,
+  cartController.changeProductCount
+);
+user_route.get("/checkout", auth.isLogin, cartController.loadCheckout);
+user_route.get("/addAddress", auth.isLogin, cartController.loadAddAddress);
+user_route.post("/addAddress", addressController.insertAddresss);
 module.exports = user_route;

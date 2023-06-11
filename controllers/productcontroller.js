@@ -90,7 +90,7 @@ const editProduct = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    try {
+  try {
     //   for (let i = 0; i < req.files.length; i++) {
     //     const imageupload = req.files[i].path;
     //     const uploadResponse = await cloudinary.uploader.upload(imageupload);
@@ -107,40 +107,38 @@ const updateProduct = async (req, res) => {
     //     image[i] = req.files[i].filename;
     //   }
     // }
-  
+
     const image = [];
     if (req.files && req.files.length > 0) {
       for (i = 0; i < req.files.length; i++) {
         image[i] = req.files[i].filename;
       }
     }
-      const productUpdate = await productmodel.findByIdAndUpdate(
-        { _id: req.query.id },
-        {
-          $set: {
-            productName: req.body.name,
-            description: req.body.description,
-            price: req.body.price,
-            quantity: req.body.quantity,
-            category: req.body.category,
-            brand: req.body.brand,
-            status: 0,
-          },
-        }
-      );
+    const productUpdate = await productmodel.findByIdAndUpdate(
+      { _id: req.query.id },
+      {
+        $set: {
+          productName: req.body.name,
+          description: req.body.description,
+          price: req.body.price,
+          quantity: req.body.quantity,
+          category: req.body.category,
+          brand: req.body.brand,
+          status: 0,
+        },
+      }
+    );
 
-      const productData = await productUpdate.save();
-      if (productData) {
-        res.redirect("/admin/productList");
-        } else {
-            res.redirect("/admin/productList");
-            }
-    } catch (error) {
-      console.log(error);
+    const productData = await productUpdate.save();
+    if (productData) {
+      res.redirect("/admin/productList");
+    } else {
+      res.redirect("/admin/productList");
     }
-  };
-      
-
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   productList,
@@ -148,5 +146,5 @@ module.exports = {
   insertProduct,
   deleteProduct,
   editProduct,
-  updateProduct
+  updateProduct,
 };

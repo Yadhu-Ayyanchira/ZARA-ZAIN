@@ -2,7 +2,7 @@ const User = require("../Models/userModel");
 const Product = require("../Models/productmodel");
 const Category = require("../Models/categoryModel");
 const Cart = require("../Models/cartModel");
-const Address = require("../Models/addressModel")
+const Address = require("../Models/addressModel");
 
 const loadEmptyCart = async (req, res) => {
   try {
@@ -217,58 +217,73 @@ const removeProduct = async (req, res) => {
 //   }
 // }
 
-
-const loadCheckout = async(req,res)=>{
+const loadCheckout = async (req, res) => {
   try {
-    const session = req.session.user_id
+    const session = req.session.user_id;
     const categoryData = await Category.find();
-    const userData = await User.findOne ({_id:req.session.user_id});
-    const addressData = await Address.findOne({userId:req.session.user_id});
+    const userData = await User.findOne({ _id: req.session.user_id });
+    const addressData = await Address.findOne({ userId: req.session.user_id });
     const total = await Cart.aggregate([
       { $match: { userId: req.session.user_id } },
       { $unwind: "$products" },
       {
         $group: {
           _id: null,
-          total: { $sum: { $multiply: ["$products.productPrice", "$products.count"] } },
+          total: {
+            $sum: { $multiply: ["$products.productPrice", "$products.count"] },
+          },
         },
       },
     ]);
-    if(req.session.user_id){
-      if(addressData){
-          if(addressData.addresses.length>0){
-            const address = addressData.addresses
-            const Total = total.length > 0 ? total[0].total : 0; 
-            const totalAmount = Total+80;
-            res.render('checkout',{session,Total,address,totalAmount,categoryData,userData})
-          }
-          else{
-            res.render('emptyCheckout',{session,userData,categoryData,message:"Add your delivery address"});
-          }
-        }else{
-          res.render('emptyCheckout',{session,userData,categoryData,message:"Add your delivery address"});
+    if (req.session.user_id) {
+      if (addressData) {
+        if (addressData.addresses.length > 0) {
+          const address = addressData.addresses;
+          const Total = total.length > 0 ? total[0].total : 0;
+          const totalAmount = Total + 80;
+          res.render("checkout", {
+            session,
+            Total,
+            address,
+            totalAmount,
+            categoryData,
+            userData,
+          });
+        } else {
+          res.render("emptyCheckout", {
+            session,
+            userData,
+            categoryData,
+            message: "Add your delivery address",
+          });
         }
-      }else{
-        res.redirect('/')
+      } else {
+        res.render("emptyCheckout", {
+          session,
+          userData,
+          categoryData,
+          message: "Add your delivery address",
+        });
       }
+    } else {
+      res.redirect("/");
+    }
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
-
-const loadAddAddress = async (req,res) => {
+const loadAddAddress = async (req, res) => {
   try {
     const session = req.session.user_id;
     const userId = req.session.user_id;
     const userData = await User.findOne({ _id: userId });
     const categoryData = await Category.find();
-    res.render('addAddress',{categoryData,userData,session})
+    res.render("addAddress", { categoryData, userData, session });
   } catch (error) {
     console.log(error.message);
   }
-} 
-
+};
 
 module.exports = {
   loadCart,
@@ -277,5 +292,5 @@ module.exports = {
   loadEmptyCart,
   removeProduct,
   loadCheckout,
-  loadAddAddress
+  loadAddAddress,
 };

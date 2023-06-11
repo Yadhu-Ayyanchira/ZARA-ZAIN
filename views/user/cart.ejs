@@ -46,7 +46,10 @@
             <td class="align-middle">
               <div class="input-group quantity mx-auto" style="width: 100px">
                 <div class="input-group-btn">
-                  <button onclick="changeQuantity('<%=userId%>','<%=products.productId._id%>',-1)" class="btn btn-sm btn-primary btn-minus">
+                  <button
+                    onclick="changeQuantity('<%=userId%>','<%=products.productId._id%>',-1)"
+                    class="btn btn-sm btn-primary btn-minus"
+                  >
                     <i class="fa fa-minus"></i>
                   </button>
                 </div>
@@ -56,23 +59,27 @@
                   value="<%= products.count %>"
                 />
                 <div class="input-group-btn">
-                  <button onclick="changeQuantity('<%=userId%>','<%=products.productId._id%>',1)" class="btn btn-sm btn-primary btn-plus">
+                  <button
+                    onclick="changeQuantity('<%=userId%>','<%=products.productId._id%>',1)"
+                    class="btn btn-sm btn-primary btn-plus"
+                  >
                     <i class="fa fa-plus"></i>
                   </button>
                 </div>
               </div>
             </td>
             <td class="align-middle">$<%= products.totalPrice %></td>
-            <td class="align-middle"><a href="/removeProduct?id=<%=products.productId._id%>" onclick="return confirm('are you sure you want to delete?')">
-              <button class="btn btn-sm btn-danger">
-                <i class="fa fa-times"></i>
-              </button></a>
-              <% }); %> 
-                
+            <td class="align-middle">
+              <a
+                href="/removeProduct?id=<%=products.productId._id%>"
+                onclick="return confirm('are you sure you want to delete?')"
+              >
+                <button class="btn btn-sm btn-danger">
+                  <i class="fa fa-times"></i></button
+              ></a>
+              <% }); %>
             </td>
-            
           </tr>
-          
         </tbody>
       </table>
     </div>
@@ -108,11 +115,14 @@
             <h5>Total</h5>
             <h5>$<%= totalAmount+10 %></h5>
           </div>
-         <a href="/checkout"><button class="btn btn-block btn-primary font-weight-bold my-3 py-3">
-            Proceed To Checkout
-          </button></a>
+          <a href="/checkout"
+            ><button
+              class="btn btn-block btn-primary font-weight-bold my-3 py-3"
+            >
+              Proceed To Checkout
+            </button></a
+          >
           <% } %>
-          
         </div>
       </div>
     </div>
