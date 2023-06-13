@@ -2,10 +2,10 @@ const User = require("../Models/userModel");
 const productmodel = require("../Models/productmodel");
 const categoryModel = require("../Models/categoryModel");
 const bcrypt = require("bcrypt");
-const fast2sms = require("fast-two-sms");
 const session = require("express-session");
 const nodemailer = require("nodemailer");
 const randomString = require("randomstring");
+const Address = require("../Models/addressModel");
 const dotenv = require("dotenv");
 dotenv.config();
 let message;
@@ -32,13 +32,13 @@ const sendverifyMail = async (name, email, otp) => {
       },
     });
     const mailOption = {
-      form: "yadhu2k15@gmail.com",
+      from: "yadhu2k15@gmail.com",
       to: email,
       subject: "For Verification mail",
       html:
         "<p>Hi " +
         name +
-        ', please click here to <a href="http://localhost:2040/otp">varify</a> and enter the for your verification' +
+        ', please click here to <a href="http://localhost:3000/otp">varify</a> and enter the for your verification' +
         email +
         " this is your otp" +
         otp +
@@ -169,7 +169,6 @@ const insertUser = async (req, res, next) => {
       if (userData) {
         randomnumber = Math.floor(Math.random() * 9000) + 1000;
         otp = randomnumber;
-        console.log(otp);
         console.log(otp, "===", req.body.email);
         sendverifyMail(name, req.body.email, randomnumber);
         res.render("verifyOtp", { session, categoryData });
@@ -185,15 +184,7 @@ const insertUser = async (req, res, next) => {
     next(error);
   }
 };
-// verification page of user
-// ==========================
-// const loadVerfication = async(req,res)=>{
-//   try {
-//      res.render('verifyOtp')
-//   } catch (error) {
-//      console.log(error.message);
-//   }
-//   }
+
 
 const verifyLogin = async (req, res, next) => {
   try {
@@ -219,14 +210,14 @@ const verifyLogin = async (req, res, next) => {
           session,
           message: "Email or password is incorrect",
         });
-        console.log("incorrect");
+        
       }
     } else {
       res.render("login", {
         userData: userData,
         categoryData,
         session,
-        message: "s incorrect",
+        message: " incorrect",
       });
     }
   } catch (error) {
@@ -300,7 +291,7 @@ const verifyLoad = async (req, res, next) => {
     const session = req.session.user_id;
     const categoryData = await categoryModel.find();
     if (otp2 == otp) {
-      console.log("heyyy");
+      
       const UserData = await User.findOneAndUpdate(
         { email: email },
         { $set: { is_verified: 1 } }
@@ -325,7 +316,7 @@ const verifyLoad = async (req, res, next) => {
 const loadCart = async (req, res, next) => {
   try {
     if (req.session.user_id) {
-      console.log("have session");
+      
       const session = req.session.user_id;
       const id = req.params.id;
       const userData = await User.findById({ _id: req.session.user_id });
@@ -338,7 +329,7 @@ const loadCart = async (req, res, next) => {
         userData,
       });
     } else {
-      console.log("else");
+     
       const session = null;
       const id = req.params.id;
       const categoryData = await categoryModel.find();
@@ -356,10 +347,13 @@ const loadProfile = async (req, res, next) => {
       const session = req.session.user_id;
       const categoryData = await categoryModel.find();
       const userData = await User.findById({ _id: req.session.user_id });
+      const addressData = await Address.findOne({ userId: req.session.user_id });
+      const address = addressData.addresses;
       res.render("userProfile", {
         userData: userData,
         session: session,
         categoryData,
+        address
       });
     } else {
       const userData = await User.findById({ _id: "646dd35cb3f71f9940575fad" });

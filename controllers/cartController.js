@@ -203,17 +203,7 @@ const removeProduct = async (req, res, next) => {
   }
 };
 
-// const loadCheckout = async (req,res) => {
-//   try {
-//     const session = req.session.user_id;
-//     const userId = req.session.user_id;
-//     const userData = await User.findOne({ _id: userId });
-//     const categoryData = await Category.find();
-//     res.render('checkout',{categoryData,userData,session})
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
+
 
 const loadCheckout = async (req, res, next) => {
   try {
@@ -221,6 +211,9 @@ const loadCheckout = async (req, res, next) => {
     const categoryData = await Category.find();
     const userData = await User.findOne({ _id: req.session.user_id });
     const addressData = await Address.findOne({ userId: req.session.user_id });
+    let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
+      "products.productId"
+    );
     const total = await Cart.aggregate([
       { $match: { userId: req.session.user_id } },
       { $unwind: "$products" },
@@ -238,7 +231,8 @@ const loadCheckout = async (req, res, next) => {
         if (addressData.addresses.length > 0) {
           const address = addressData.addresses;
           const Total = total.length > 0 ? total[0].total : 0;
-          const totalAmount = Total + 80;
+          const totalAmount = Total ;
+          const products = cartData.products;
           res.render("checkout", {
             session,
             Total,
@@ -246,6 +240,7 @@ const loadCheckout = async (req, res, next) => {
             totalAmount,
             categoryData,
             userData,
+            products
           });
         } else {
           res.render("emptyCheckout", {

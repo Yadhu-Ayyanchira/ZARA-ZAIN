@@ -15,7 +15,7 @@
                   name="userName"
                   class="form-control"
                   type="text"
-                  placeholder="John"
+                  value="<%= address.userName %>"
                 />
               </div>
   
@@ -25,7 +25,7 @@
                   name="mobile"
                   class="form-control"
                   type="text"
-                  placeholder="+123 456 789"
+                  value="<%= address.mobile %>"
                 />
               </div>
               <div class="col-md-6 form-group">
@@ -34,7 +34,7 @@
                   name="mobile2"
                   class="form-control"
                   type="text"
-                  placeholder="+123 456 789"
+                  value="<%= address.altrenativeMob %>"
                 />
               </div>
               <div class="col-md-12 form-group">
@@ -43,7 +43,7 @@
                   name="house"
                   class="form-control"
                   type="text"
-                  placeholder=""
+                  value="<%= address.houseName %>"
                 />
               </div>
               <div class="col-md-12 form-group">
@@ -52,30 +52,17 @@
                   name="landmark"
                   class="form-control"
                   type="text"
-                  placeholder="Near Washington dc"
+                  value="<%= address.landmark %>"
                 />
               </div>
-              <!-- <div class="col-md-6 form-group">
-                          <label>Country</label>
-                          <select class="custom-select">
-                              <option selected>United States</option>
-                              <option>Afghanistan</option>
-                              <option>Albania</option>
-                              <option>Algeria</option>
-                              <option>India</option>
-                              <option>Pakistan</option>
-                              <option>USA</option>
-                              <option>UAE</option>
-                              <option>China</option>
-                          </select>
-                      </div> -->
+
               <div class="col-md-6 form-group">
                 <label>City</label>
                 <input
                   name="city"
                   class="form-control"
                   type="text"
-                  placeholder="New York"
+                  value="<%= address.city %>"
                 />
               </div>
               <div class="col-md-6 form-group">
@@ -84,7 +71,7 @@
                   name="state"
                   class="form-control"
                   type="text"
-                  placeholder="New York"
+                  value="<%= address.state %>"
                 />
               </div>
               <div class="col-md-6 form-group">
@@ -93,7 +80,7 @@
                   name="pincode"
                   class="form-control"
                   type="text"
-                  placeholder="123"
+                  value="<%= address.pincode %>"
                 />
               </div>
             </div>
@@ -112,4 +99,4 @@
     </div>
   </div>
 
-<%- include('../layouts/user/header.ejs') %>
+<%- include('../layouts/user/footer.ejs') %>

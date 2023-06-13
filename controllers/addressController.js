@@ -159,7 +159,7 @@ const deleteAddress = async (req,res) => {
 
 
 const editAddress = async (req, res) => {
-  console.log('yes iam out');
+  console.log('yes edit address');
 
   if (
     req.body.userName.trim() === "" ||
@@ -179,13 +179,16 @@ const editAddress = async (req, res) => {
       { userId: session },
       { addresses: { $elemMatch: { _id: id } } }
     );
+    const categoryData = await Category.find();
     const address = addressDetails.addresses;
     res.render("editAddress", {
       session,
       userData: userData,
       address: address[0],
+      categoryData
     });
   } else {
+    console.log('i am else');
     try {
       const id = req.params.id;
       await Address.updateOne(
@@ -193,8 +196,9 @@ const editAddress = async (req, res) => {
         {
           $set: {
             "addresses.$": {
-              userName: req.body.name,
+              userName: req.body.userName,
               mobile: req.body.mobile,
+              altrenativeMob: req.body.mobile2, 
               houseName: req.body.house,
               landmark: req.body.landmark,
               city: req.body.city,
@@ -214,8 +218,8 @@ const editAddress = async (req, res) => {
 
 const loadEditAddress = async (req, res) => {
   try {
-    console.log('yes iam inn');
     const id = req.params.id;
+    console.log(id);
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
     const categoryData = await Category.find();

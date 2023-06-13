@@ -6,11 +6,10 @@
       <div class="col">
         <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
           <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="/index">Home</a></li>
             <li class="breadcrumb-item"><a href="#">User</a></li>
             <li class="breadcrumb-item active" aria-current="page">User Profile</li>
           </ol>
-          
         </nav>
       </div>
     </div>
@@ -19,34 +18,31 @@
       <div class="col-lg-4">
         <div class="card mb-4">
           <div class="card-body text-center">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
             <h5 class="my-3"><%=userData.name%></h5>
-            <!-- <p class="text-muted mb-1">Full Stack Developer</p>
-            <p class="text-muted mb-4">Bay Area, San Francisco, CA</p> -->
             <div class="d-flex justify-content-center mb-2">
-              <button type="button" class="btn btn-primary">ORDERS</button>
-            <a class="text-body mr-3" href="/logout"><i></i> 
-              <button type="button" class="btn btn-outline-primary ms-1">Log out</button></a>
+              <button type="button" style="border-radius: 7px;" class="btn btn-primary">ORDERS</button>
+              <a class="text-body mr-3" href="/logout"><i></i></a>
+              <button type="button" style="border-radius: 7px;" class="btn btn-outline-danger ms-1">Log out</button>
             </div>
           </div>
         </div>
         <div class="card mb-4 mb-lg-0">
           <div class="card-body p-0">
-            <ul class="list-group list-group-flush rounded-3">
-              
-              </li>
+            <ul class="list-unstyled list-group-flush rounded-3">
+              <li><button class="btn btn-primary m-2" onclick="showEdit()" style="border-radius: 7px;">Edit details</button></li>
+              <li><button class="btn btn-primary m-2" onclick="showEdit()" style="border-radius: 7px;">Edit details</button></li>
+              <li><button class="btn btn-primary m-2" onclick="showEdit()" style="border-radius: 7px;">Edit details</button></li>
             </ul>
           </div>
         </div>
       </div>
       <div class="col-lg-8">
-       
         <div class="card mb-4">
           <div class="card-body">
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Name : </p>
+                <p class="mb-0">Name :</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0"><%=userData.name%></p>
@@ -64,98 +60,103 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Phone Number : </p>
+                <p class="mb-0">Phone Number :</p>
               </div>
               <div class="col-sm-9">
                 <p class="text-muted mb-0"><%=userData.mobile%></p>
               </div>
             </div>
-            <hr>
-            <div class="row">
-              
-              <hr>
-              <button class="btn btn-primary" onclick="showEdit()" style="border-radius:7px;">Edit details</button>
-
+            <button  class="btn btn-primary float-right" onclick="showEdit()" style="border-radius: 7px;">Edit details</button>
           </div>
         </div>
-  
-        <div class="row edit-details" style="display: none;">
-          <div class="col-lg-8">
-       <form action="" method="post">
-            <div class="card mb-4">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">Name : </p>
-                  </div>
-                  <div class="col-sm-9">
-                   <input name="name" type=text value='<%=userData.name%>'>
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">Email :</p>
-                  </div>
-                  <div class="col-sm-9">
-                   <input disabled type=text value='<%=userData.email%>'></p>
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">Phone Number : </p>
-                  </div>
-                  <div class="col-sm-9">
-                   <input name="mobile" type=text value='<%=userData.mobile%>'></p>
-                  </div>
-                </div>
-                <hr>
-                
-                <hr>
-                <button class="btn btn-primary" type="submit" style="border-radius:7px;">Update details</button>
-    
-              </div>
-            </div>
-            </div>
+        <div class="bg-light p-30 mb-5">
+          <div class="row justify-content-end"> <!-- Add the 'justify-content-end' class to align the button to the right -->
+            <a href="/AddAddress">
+              <button class="btn btn-success font-weight-bold">
+                Add Address
+              </button>
+            </a>
           </div>
-        </form>
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-lg-4">
-      <div class="card mb-4">
-        <div class="card-body text-center">
-         
-         
-          <h5 class="my-3">Wallet</h5>
-          <div style="display: flex;">
-            <p style="padding: 30px;font-size: 20px;font-family: Georgia, 'Times New Roman', Times, serif   ;">Total Amount:</p>
-            <p style="padding: 30px;font-size: 20px;font-family: Georgia, 'Times New Roman', Times, serif   ;">amnt</p>  
-          </div>
-        <button type="button" class="btn btn-primary">ORDERS</button>
-          <div class="d-flex justify-content-center mb-2">
-           
-          </div>
-        </div>
-      </div>
-      <div class="card mb-4 mb-lg-0">
-        <div class="card-body p-0">
-          <ul class="list-group list-group-flush rounded-3">
+          
+          <br />
+          <% if (address) { for (let i = 0; i < address.length; i++) { %>
+          <div class="row">
             
-            </li>
-          </ul>
+            <div class="custom-control ">
+              
+              
+              <label class="custom-control-label" for="<%= address[i].userName %>">
+                Name:<%= address[i].userName %> <br>
+                House Name:<%= address[i].houseName %><br/>
+                Number:<%= address[i].mobile %> <br>
+                Alternative Number:<%= address[i].altrenativeMob %><br>
+                City:<%= address[i].city %><br/>
+                State:<%= address[i].state %><br>
+                PIN:<%= address[i].pincode %>
+              </label><br />
+              <a href="/editAddress/<%= address[i]._id %>">
+                <button style="border-radius: 7px;" class="btn btn-sm btn-danger font-weight-bold">
+                  Editt
+                </button>
+              </a>
+              <a class="btn btn-sm btn-outline-danger font-weight-bold  " type="button" style="border-radius: 7px;" onclick="deleteAddress('<%= address[i]._id %>')">Delete </a>
+              
+          </div>
+          
+            </div>
+            <br>
+            <% } } %>
         </div>
       </div>
     </div>
+    
+    
   </div>
-  <script>
-    function showEdit() {
-        let div = document.querySelector('.edit-details');
-        div.style.display = 'block';
-    }
-</script>
 </section>
+
+<script>
+  function deleteAddress(addressId) {
+Swal.fire({
+title: 'Are you sure?',
+text: 'You want to delete address',
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#3085d6',
+cancelButtonColor: '#d33',
+confirmButtonText: 'Yes, delete!'
+}).then((result) => {
+if (result.isConfirmed) {
+  $.ajax({
+    url: '/deleteAddress',
+    data: {
+      address: addressId,
+     
+    },
+    method: 'post',
+    success: (response) => {
+      location.reload();
+// $("#reloaddiv").load('/checkout #reloaddiv')
+      Swal.fire({
+        title: 'Deleted!',
+        text: 'Your item has been deleted.',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    },
+    error: (error) => {
+      console.log(error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'An error occurred while deleting the item.',
+        icon: 'error',
+        showConfirmButton: false
+      });
+    }
+  });
+}
+});
+}
+</script>
 
 <%- include('../layouts/user/footer.ejs') %>
