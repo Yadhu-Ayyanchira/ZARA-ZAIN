@@ -1,21 +1,21 @@
+// controller.js
+
 const category = require("../Models/categoryModel");
-//const categorymodel=require('../Models/categoryModel')
 const usermodal = require("../Models/userModel");
 const uc = require("upper-case");
-const session = require("express-session");
 
-const categoryList = async (req, res) => {
+const categoryList = async (req, res, next) => {
   try {
     const catData = await category.find({});
     const adminData = await usermodal.findById({ _id: req.session.user_id });
 
     res.render("categoryList", { category: catData, admin: adminData });
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const insertCategory = async (req, res) => {
+const insertCategory = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const catName = uc.upperCase(req.body.categoryName);
@@ -26,7 +26,7 @@ const insertCategory = async (req, res) => {
       } else {
         const categoryDatas = await category.findOne({ categoryName: catName });
         if (categoryDatas) {
-          mes = "This category is already exist";
+          mes = "This category already exists";
           res.redirect("/admin/categoryList");
         } else {
           const categoryData = await Category.save();
@@ -41,32 +41,33 @@ const insertCategory = async (req, res) => {
       res.redirect("/admin/categoryList");
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const unlistCategory = async (req, res) => {
+const unlistCategory = async (req, res, next) => {
   try {
     const categoryData = await category.findByIdAndUpdate(req.query.id, {
       $set: { is_delete: true },
     });
     res.redirect("/admin/categoryList");
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
-const listCategory = async (req, res) => {
+
+const listCategory = async (req, res, next) => {
   try {
     const categoryData = await category.findByIdAndUpdate(req.query.id, {
       $set: { is_delete: false },
     });
     res.redirect("/admin/categoryList");
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const saveCategory = async (req, res) => {
+const saveCategory = async (req, res, next) => {
   try {
     const name = uc.upperCase(req.body.categoryName);
     const catData = await category.findOneAndUpdate(
@@ -77,11 +78,11 @@ const saveCategory = async (req, res) => {
       res.redirect("categoryList");
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const editCategory = async (req, res) => {
+const editCategory = async (req, res, next) => {
   try {
     const id = req.query.id;
     const catDATA = await category.findById({ _id: id });
@@ -89,15 +90,15 @@ const editCategory = async (req, res) => {
 
     res.render("editCategory", { Category: catDATA, admin: adminData });
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
 module.exports = {
+  categoryList,
   insertCategory,
   unlistCategory,
   listCategory,
-  categoryList,
   saveCategory,
   editCategory,
 };

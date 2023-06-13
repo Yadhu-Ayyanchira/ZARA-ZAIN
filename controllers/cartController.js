@@ -4,7 +4,7 @@ const Category = require("../Models/categoryModel");
 const Cart = require("../Models/cartModel");
 const Address = require("../Models/addressModel");
 
-const loadEmptyCart = async (req, res) => {
+const loadEmptyCart = async (req, res, next) => {
   try {
     const session = req.session.user_id;
 
@@ -20,11 +20,11 @@ const loadEmptyCart = async (req, res) => {
       return res.render("emptyCart", { session });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const loadCart = async (req, res) => {
+const loadCart = async (req, res, next) => {
   try {
     let id = req.session.user_id;
     const session = req.session.user_id;
@@ -53,7 +53,7 @@ const loadCart = async (req, res) => {
               },
             },
           ]);
-          const Total = total.length > 0 ? total[0].total : 0;
+          const Total = total[0].total;
           const totalAmount = Total;
           const userId = userData._id;
           res.render("cart", {
@@ -85,11 +85,11 @@ const loadCart = async (req, res) => {
       res.redirect("/login");
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const addToCart = async (req, res) => {
+const addToCart = async (req, res, next) => {
   try {
     const userId = req.session.user_id;
     const userData = await User.findOne({ _id: userId });
@@ -139,12 +139,11 @@ const addToCart = async (req, res) => {
     }
     res.json({ success: true });
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ success: false, message: "Server Error" });
+    next(error);
   }
 };
 
-const changeProductCount = async (req, res) => {
+const changeProductCount = async (req, res, next) => {
   try {
     const userData = req.session.user_id;
     const proId = req.body.product;
@@ -185,12 +184,11 @@ const changeProductCount = async (req, res) => {
 
     res.json({ success: true });
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ success: false, error: error.message });
+    next(error);
   }
 };
 
-const removeProduct = async (req, res) => {
+const removeProduct = async (req, res, next) => {
   try {
     const user = req.session.user_id;
     const id = req.query.id;
@@ -201,7 +199,7 @@ const removeProduct = async (req, res) => {
     );
     res.redirect("/cart");
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
@@ -217,7 +215,7 @@ const removeProduct = async (req, res) => {
 //   }
 // }
 
-const loadCheckout = async (req, res) => {
+const loadCheckout = async (req, res, next) => {
   try {
     const session = req.session.user_id;
     const categoryData = await Category.find();
@@ -269,11 +267,11 @@ const loadCheckout = async (req, res) => {
       res.redirect("/");
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const loadAddAddress = async (req, res) => {
+const loadAddAddress = async (req, res, next) => {
   try {
     const session = req.session.user_id;
     const userId = req.session.user_id;
@@ -281,7 +279,7 @@ const loadAddAddress = async (req, res) => {
     const categoryData = await Category.find();
     res.render("addAddress", { categoryData, userData, session });
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 

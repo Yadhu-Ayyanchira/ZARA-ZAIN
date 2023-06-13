@@ -9,8 +9,8 @@
       <div class="card-body">
         <h4 class="card-title">PRODUCT LIST</h4>
         <div class="table">
-          <table class=" table-hover text-white">
-            <thead >
+          <table class="table-hover text-white">
+            <thead>
               <tr>
                 <th class="text-warning">No</th>
                 <th class="text-warning">Image</th>
@@ -25,41 +25,46 @@
             </thead>
             <tbody>
               <% if (products.length > 0) { %>
-                <% for (let i = 0; i < products.length; i++) { %>
-                  <tr>
-                    <td><%= i + 1 %></td>
-                    <td class="py-1">
-                      <% for (let j = 0; j < 1; j++) { %>
-                        <img style="width: 50px; height: 50px;" src="/adminAsset/adminImages/<%= products[i].image[j] %>" alt="image" />
-                      <% } %>
-                    </td>
-                    <td><%= products[i].productName %></td>
-                    <td><%= products[i].price %></td>
-                    <td><%= products[i].brand %></td>
-                    <td><%= products[i].category %></td>
-                    <td><%= products[i].StockQuantity %></td>
-                    <td><%= products[i].description %></td>
-                    <td>
-                      <!-- Add your action buttons or links here -->
-                      <a class="btn btn-success" href="editProduct?id=<%= products[i]._id %>">
-                        Edit
-                      </a>
-
-
-
-                      <a class="btn btn-danger" href="deleteProduct?id=<%= products[i]._id %>" onclick="return confirm('Are you sure you want to delete <%= products[i].productName%>?')">
-                        Delete
-                      </a>
-                    </td>
-                  </tr>
-                <% } %>
+              <% for (let i = 0; i < products.length; i++) { %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td class="py-1">
+                  <% for (let j = 0; j < 1; j++) { %>
+                  <img style="width: 50px; height: 50px;" src="/adminAsset/adminImages/<%= products[i].image[j] %>" alt="image" />
+                  <% } %>
+                </td>
+                <td><%= products[i].productName %></td>
+                <td><%= products[i].price %></td>
+                <td><%= products[i].brand %></td>
+                <td><%= products[i].category %></td>
+                <td><%= products[i].StockQuantity %></td>
+                <td>
+                  <% let description = products[i].description; %>
+                  <% if (description.length > 50) { %>
+                  <% description = description.substring(0, 50) + '...'; %>
+                  <% } %>
+                  <%= description %>
+                </td>
+                <td>
+                  <!-- Add your action buttons or links here -->
+                  <a class="btn btn-success" href="editProduct?id=<%= products[i]._id %>">
+                    Edit
+                  </a>
+                  <a class="btn btn-danger" href="deleteProduct?id=<%= products[i]._id %>"
+                    onclick="return confirm('Are you sure you want to delete <%= products[i].productName%>?')">
+                    Delete
+                  </a>
+                </td>
+              </tr>
+              <% } %>
               <% } else { %>
-                <tr>
-                  <td colspan="9">No products found.</td>
-                </tr>
+              <tr>
+                <td colspan="9">No products found.</td>
+              </tr>
               <% } %>
             </tbody>
           </table>
+          
         </div>
         <% if (typeof message !== 'undefined') { %>
           <p style="color: red;"><%= message %></p>

@@ -58,7 +58,7 @@ const sendverifyMail = async (name, email, otp) => {
   }
 };
 
-const loadHome = async (req, res) => {
+const loadHome = async (req, res, next) => {
   try {
     const categoryData = await categoryModel.find();
     const productData = await productmodel.find();
@@ -77,11 +77,11 @@ const loadHome = async (req, res) => {
       res.render("index", { session, productData, categoryData });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const loginLoad = async (req, res) => {
+const loginLoad = async (req, res, next) => {
   try {
     const categoryData = await categoryModel.find();
     if (req.session.user_id) {
@@ -100,11 +100,11 @@ const loginLoad = async (req, res) => {
       res.render("login", { session: session, message, categoryData });
     }
   } catch (err) {
-    console.log(err.message);
+    next(error);
   }
 };
 
-const loadRegister = async (req, res) => {
+const loadRegister = async (req, res, next) => {
   try {
     const categoryData = await categoryModel.find();
     if (req.session.user_id) {
@@ -121,13 +121,13 @@ const loadRegister = async (req, res) => {
       const session = null;
       res.render("registration", { session, categoryData });
     }
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    next(error);
   }
 };
 
 let email;
-const insertUser = async (req, res) => {
+const insertUser = async (req, res, next) => {
   try {
     const session = null;
     const categoryData = await categoryModel.find();
@@ -182,7 +182,7 @@ const insertUser = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 // verification page of user
@@ -195,7 +195,7 @@ const insertUser = async (req, res) => {
 //   }
 //   }
 
-const verifyLogin = async (req, res) => {
+const verifyLogin = async (req, res, next) => {
   try {
     const categoryData = await categoryModel.find();
     const session = null;
@@ -229,21 +229,21 @@ const verifyLogin = async (req, res) => {
         message: "s incorrect",
       });
     }
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    next(error);
   }
 };
 
-const userLogout = async (req, res) => {
+const userLogout = async (req, res, next) => {
   try {
     req.session.destroy();
     res.redirect("index");
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    next(error);
   }
 };
 
-const loadShop = async (req, res) => {
+const loadShop = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
@@ -263,10 +263,10 @@ const loadShop = async (req, res) => {
       res.render("shop", { session, productData: productData, categoryData });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
-const loadShowproduct = async (req, res) => {
+const loadShowproduct = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
@@ -288,13 +288,13 @@ const loadShowproduct = async (req, res) => {
       res.render("showProduct", { productData: data, session, categoryData });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
 //  Verifying the users otp and redirecting to login page
 //  =====================================================
-const verifyLoad = async (req, res) => {
+const verifyLoad = async (req, res, next) => {
   const otp2 = req.body.otp;
   try {
     const session = req.session.user_id;
@@ -318,11 +318,11 @@ const verifyLoad = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const loadCart = async (req, res) => {
+const loadCart = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       console.log("have session");
@@ -346,11 +346,11 @@ const loadCart = async (req, res) => {
       res.render("cart", { productData: data, session, categoryData });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const loadProfile = async (req, res) => {
+const loadProfile = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
@@ -368,7 +368,7 @@ const loadProfile = async (req, res) => {
       res.render("userProfile", { session, categoryData, userData });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 

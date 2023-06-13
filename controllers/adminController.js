@@ -14,17 +14,16 @@ const securePassword = async (password) => {
   }
 };
 
-const loadLogin = async (req, res) => {
+const loadLogin = async (req, res, next) => {
   try {
     console.log("nice");
     res.render("login", { message });
     message = null;
-  } catch (err) {
-    console.log(err.message);
-  }
+  } catch (error) {
+    next(error);  }
 };
 
-const verifyLogin = async (req, res) => {
+const verifyLogin = async (req, res, next) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
@@ -50,12 +49,11 @@ const verifyLogin = async (req, res) => {
     } else {
       res.render("login", { message: "Email and password incorrect" });
     }
-  } catch (err) {
-    console.log(err.message);
-  }
+  } catch (error) {
+    next(error);  }
 };
 
-const loadDashboard = async (req, res) => {
+const loadDashboard = async (req, res, next) => {
   try {
     const adminData = await User.findById({ _id: req.session.user_id });
     res.render("dashboard", { admin: adminData });
@@ -68,21 +66,21 @@ const logout = async (req, res) => {
   try {
     req.session.destroy();
     res.redirect("/admin");
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    next(error);
   }
 };
 
-const adminDashboard = async (req, res) => {
+const adminDashboard = async (req, res, next) => {
   try {
     const adminData = await usermodel.findById({ _id: req.session.user_id });
     res.render("dashboard", { admin: adminData });
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const editUserLoad = async (req, res) => {
+const editUserLoad = async (req, res, next) => {
   try {
     const id = req.query.id;
     const userData = await User.findById({ _id: id });
@@ -91,11 +89,11 @@ const editUserLoad = async (req, res) => {
     } else {
       res.redirect("/admin/dashboard");
     }
-  } catch (err) {
-    console.log(err.message);
-  }
+  } catch (error) {
+    next(error); 
+   }
 };
-const updateUsers = async (req, res) => {
+const updateUsers = async (req, res, next) => {
   try {
     console.log(req.body.name);
     const userData = await User.findByIdAndUpdate(
@@ -109,33 +107,33 @@ const updateUsers = async (req, res) => {
       }
     );
     res.redirect("/admin/dashboard");
-  } catch (err) {
-    console.log(err.message);
-  }
+  } catch (error) {
+    next(error);  
+    }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const id = req.query.id;
     await User.deleteOne({ _id: id });
     res.redirect("/admin/dashboard");
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    next(error);
   }
 };
 
-const newUserLoad = async (req, res) => {
+const newUserLoad = async (req, res, next) => {
   try {
     const userData = await usermodel.find({ is_admin: 0 });
     const adminData = await usermodel.findById({ _id: req.session.user_id });
 
     res.render("userList", { users: userData, admin: adminData });
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const addUser = async (req, res) => {
+const addUser = async (req, res, next) => {
   try {
     const spassword = await securePassword(req.body.password);
     console.log(req.body);
@@ -155,12 +153,12 @@ const addUser = async (req, res) => {
     } else {
       res.render("add", { message: "Your registration has been failed" });
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    next(error);
   }
 };
 
-const block = async (req, res) => {
+const block = async (req, res, next) => {
   try {
     const userData = await User.findByIdAndUpdate(req.query.id, {
       $set: { is_block: true },
@@ -168,11 +166,11 @@ const block = async (req, res) => {
     req.session.users = null;
     res.redirect("/admin/userList");
   } catch (error) {
-    console.log(error.me);
+    next(error);
   }
 };
 
-const unblock = async (req, res) => {
+const unblock = async (req, res, next) => {
   try {
     const userData = await User.findByIdAndUpdate(req.query.id, {
       $set: { is_block: false },
@@ -180,7 +178,7 @@ const unblock = async (req, res) => {
     req.session.users = null;
     res.redirect("/admin/userList");
   } catch (error) {
-    console.log(error.me);
+    next(error);
   }
 };
 

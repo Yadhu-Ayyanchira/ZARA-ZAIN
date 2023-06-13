@@ -48,14 +48,14 @@ user_route.get(
   userController.userLogout
 );
 
-user_route.get("/showProduct/:id", userController.loadShowproduct);
-user_route.get("/shop", userController.loadShop);
+user_route.get("/showProduct/:id",auth.isBlock, userController.loadShowproduct);
+user_route.get("/shop",auth.isBlock, userController.loadShop);
 user_route.post("/verifyOtp", userController.verifyLoad);
 
-user_route.get("/userProfile", auth.isLogin, userController.loadProfile);
+user_route.get("/userProfile",auth.isBlock, auth.isLogin, userController.loadProfile);
 
-user_route.get("/cart", auth.isLogin, cartController.loadCart);
-user_route.post("/addToCart", auth.isLogin, cartController.addToCart);
+user_route.get("/cart",auth.isBlock, auth.isLogin, cartController.loadCart);
+user_route.post("/addToCart",auth.isBlock, auth.isLogin, cartController.addToCart);
 user_route.get("/removeProduct", cartController.removeProduct);
 user_route.post(
   "/changeQuantity",
@@ -64,5 +64,8 @@ user_route.post(
 );
 user_route.get("/checkout", auth.isLogin, cartController.loadCheckout);
 user_route.get("/addAddress", auth.isLogin, cartController.loadAddAddress);
-user_route.post("/addAddress", addressController.insertAddresss);
+user_route.post("/addAddress", addressController.insertAddress);
+user_route.post("/deleteAddress",auth.isBlock , auth.isLogin, addressController.deleteAddress);
+user_route.get('/editAddress/:id',auth.isLogin,addressController.loadEditAddress)
+user_route.post('/editAddress/:id',auth.isLogin,addressController.editAddress)
 module.exports = user_route;

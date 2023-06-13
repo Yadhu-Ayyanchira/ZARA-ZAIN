@@ -3,7 +3,7 @@ const Address = require("../Models/addressModel");
 const Category = require("../Models/categoryModel");
 
 //-------- Address loding section  -----------//
-const loadAddress = async (req, res) => {
+const loadAddress = async (req, res, next) => {
   try {
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
@@ -23,12 +23,12 @@ const loadAddress = async (req, res) => {
       res.redirect("/home", { user: userData, session });
     }
   } catch (error) {
-    log(error.message);
+    next(error);
   }
 };
 
 //-------- load  Address inserting section  -----------//
-const loadInsertAddress = async (req, res) => {
+const loadInsertAddress = async (req, res, next) => {
   try {
     const session = req.session.user_id;
 
@@ -43,23 +43,24 @@ const loadInsertAddress = async (req, res) => {
       return res.render("insertAddress", { session });
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-//-------- Adrees inserting section  -----------//
-const insertAddresss = async (req, res) => {
+
+
+const insertAddress = async (req, res, next) => {
   try {
     const session = req.session.user_id;
-    const userId = req.session.user_id;
-    console.log(userId);
-    const userData = await User.findOne({ _id: userId });
+    const userid = req.session.user_id;
+    console.log(userid);
+    const userData = await User.findOne({ _id: userid });
     const categoryData = await Category.find();
     const addressDetails = await Address.findOne({
       userId: req.session.user_id,
     });
-    console.log(addressDetails);
     if (addressDetails) {
+      console.log('wrkingggg');
       const updateOne = await Address.updateOne(
         { userId: req.session.user_id },
         {
@@ -67,7 +68,7 @@ const insertAddresss = async (req, res) => {
             addresses: {
               userName: req.body.userName,
               mobile: req.body.mobile,
-              altrenativeMob: req.body.mobile2,
+              altrenativeMob: req.body.mobile2, 
               houseName: req.body.house,
               landmark: req.body.landmark,
               city: req.body.city,
@@ -77,12 +78,19 @@ const insertAddresss = async (req, res) => {
           },
         }
       );
-      if (updateOne) {
+      if (updateOne.nModified > 0) {
+        console.log('wrkin');
         console.log("here");
-        const address = await Address.find();
-        res.render("checkout", { address, categoryData, session, userData });
+        const addresses = await Address.find(); // Renamed 'address' to 'addresses'
+        console.log(addresses);
+        return res.render("checkout", {
+          address:addresses,
+          categoryData,
+          session,
+          userData,
+        });
       } else {
-        res.render("checkout", { address, categoryData, session, userData });
+        return res.redirect("/checkout");
       }
     } else {
       const address = new Address({
@@ -102,15 +110,24 @@ const insertAddresss = async (req, res) => {
       });
       console.log(address);
       const addressData = await address.save();
-      const addresses = await Address.find();
+
       if (addressData) {
-        console.log("here111");
-        res.render("checkout", { address, categoryData, session, userData });
+        console.log("here1111");
+        const addresses = await Address.find(); // Renamed 'address' to 'addresses'
+        console.log(addresses);
+        return res.render("checkout", {
+          address:addresses,
+          categoryData,
+          session,
+          userData,
+        });
       } else {
         console.log("here222");
 
-        res.render("checkout", {
-          address: addresses,
+        const addresses = await Address.find(); // Renamed 'address' to 'addresses'
+        console.log(addresses);
+        return res.render("checkout", {
+          address:addresses,
           categoryData,
           session,
           userData,
@@ -118,12 +135,113 @@ const insertAddresss = async (req, res) => {
       }
     }
   } catch (error) {
+    next(error);
+  }
+};
+
+const deleteAddress = async (req,res) => {
+  try {
+      const id = req.session.user_id
+      const addressId = req.body.address
+      console.log(addressId);
+      const addressData = await Address.findOne({userId:id})
+      if(addressData.addresses.length === 1){
+          await Address.deleteOne({userId:id})
+      }else{
+          await Address.updateOne({userId:id},{$pull:{addresses:{_id:addressId}}})
+      }
+      res.status(200).json({message:"Address Deleted Successfully"})        
+  } catch (error) {
+      console.log(error.message);
+      res.status(500).json({ error: "An error occurred while deleting the address" });
+  }
+}
+
+
+const editAddress = async (req, res) => {
+  console.log('yes iam out');
+
+  if (
+    req.body.userName.trim() === "" ||
+    req.body.mobile.trim() === "" ||
+    req.body.mobile2.trim() === "" ||
+    req.body.house.trim() === "" ||
+    req.body.landmark.trim() === "" ||
+    req.body.city.trim() === "" ||
+    req.body.state.trim() === "" ||
+    req.body.pincode.trim() === ""
+  ) {
+    console.log('yes iam inn');
+    const id = req.params.id;
+    const session = req.session.user_id;
+    const userData = await User.findOne({ _id: req.session.user_id });
+    const addressDetails = await Address.findOne(
+      { userId: session },
+      { addresses: { $elemMatch: { _id: id } } }
+    );
+    const address = addressDetails.addresses;
+    res.render("editAddress", {
+      session,
+      userData: userData,
+      address: address[0],
+    });
+  } else {
+    try {
+      const id = req.params.id;
+      await Address.updateOne(
+        { userId: req.session.user_id, "addresses._id": id },
+        {
+          $set: {
+            "addresses.$": {
+              userName: req.body.name,
+              mobile: req.body.mobile,
+              houseName: req.body.house,
+              landmark: req.body.landmark,
+              city: req.body.city,
+              state: req.body.state,
+              pincode: req.body.pincode,
+            },
+          },
+        }
+      );
+      res.redirect("/checkout");
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+};
+
+
+const loadEditAddress = async (req, res) => {
+  try {
+    console.log('yes iam inn');
+    const id = req.params.id;
+    const session = req.session.user_id;
+    const userData = await User.findOne({ _id: req.session.user_id });
+    const categoryData = await Category.find();
+    const addressDetails = await Address.findOne(
+      { userId: session },
+      { addresses: { $elemMatch: { _id: id } } }
+    );
+    const address = addressDetails.addresses;
+    res.render("editAddress", {
+      session,
+      userData: userData,
+      address: address[0],
+      categoryData
+    });
+  } catch (error) {
     console.log(error.message);
   }
 };
 
+
+
 module.exports = {
   loadAddress,
   loadInsertAddress,
-  insertAddresss,
+  insertAddress,
+  deleteAddress,
+  editAddress,
+  loadEditAddress
 };

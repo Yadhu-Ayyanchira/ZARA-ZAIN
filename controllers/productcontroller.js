@@ -3,17 +3,17 @@ const productmodel = require("../Models/productmodel");
 const categorymodel = require("../Models/categoryModel");
 const usermodal = require("../Models/userModel");
 
-const productList = async (req, res) => {
+const productList = async (req, res, next) => {
   try {
     const productData = await productmodel.find({});
     const adminData = await usermodal.findById({ _id: req.session.user_id });
     res.render("productList", { products: productData, admin: adminData });
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const AddProducts = async (req, res) => {
+const AddProducts = async (req, res, next) => {
   try {
     const productData = await productmodel.find({});
     const categoryData = await categorymodel.find({ is_delete: false });
@@ -25,11 +25,11 @@ const AddProducts = async (req, res) => {
       admin: adminData,
     });
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const insertProduct = async (req, res) => {
+const insertProduct = async (req, res, next) => {
   try {
     const image = [];
     if (req.files && req.files.length > 0) {
@@ -56,11 +56,11 @@ const insertProduct = async (req, res) => {
       return res.redirect("/admin/addProduct");
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
   try {
     const id = req.query.id;
     const dlt = await productmodel.deleteOne({ _id: id });
@@ -70,11 +70,11 @@ const deleteProduct = async (req, res) => {
       res.redirect("/admin/productList");
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const editProduct = async (req, res) => {
+const editProduct = async (req, res, next) => {
   try {
     const id = req.query.id;
     const prodata = await productmodel.findById({ _id: id });
@@ -85,11 +85,11 @@ const editProduct = async (req, res) => {
       res.redirect("/admin/dashboard");
     }
   } catch (error) {
-    console.log(error.message);
+    next(error);
   }
 };
 
-const updateProduct = async (req, res) => {
+const updateProduct = async (req, res, next) => {
   try {
     //   for (let i = 0; i < req.files.length; i++) {
     //     const imageupload = req.files[i].path;
@@ -136,7 +136,7 @@ const updateProduct = async (req, res) => {
       res.redirect("/admin/productList");
     }
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
