@@ -53,14 +53,14 @@ const verifyLogin = async (req, res, next) => {
     next(error);  }
 };
 
-const loadDashboard = async (req, res, next) => {
-  try {
-    const adminData = await User.findById({ _id: req.session.user_id });
-    res.render("dashboard", { admin: adminData });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+// const loadDashboard = async (req, res, next) => {
+//   try {
+//     const adminData = await User.findById({ _id: req.session.user_id });
+//     res.render("dashboard", { admin: adminData });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 const logout = async (req, res) => {
   try {
@@ -80,47 +80,47 @@ const adminDashboard = async (req, res, next) => {
   }
 };
 
-const editUserLoad = async (req, res, next) => {
-  try {
-    const id = req.query.id;
-    const userData = await User.findById({ _id: id });
-    if (userData) {
-      res.render("edit-user", { user: userData });
-    } else {
-      res.redirect("/admin/dashboard");
-    }
-  } catch (error) {
-    next(error); 
-   }
-};
-const updateUsers = async (req, res, next) => {
-  try {
-    console.log(req.body.name);
-    const userData = await User.findByIdAndUpdate(
-      { _id: req.body.id },
-      {
-        $set: {
-          name: req.body.name,
-          email: req.body.email,
-          mobile: req.body.mob,
-        },
-      }
-    );
-    res.redirect("/admin/dashboard");
-  } catch (error) {
-    next(error);  
-    }
-};
+// const editUserLoad = async (req, res, next) => {
+//   try {
+//     const id = req.query.id;
+//     const userData = await User.findById({ _id: id });
+//     if (userData) {
+//       res.render("edit-user", { user: userData });
+//     } else {
+//       res.redirect("/admin/dashboard");
+//     }
+//   } catch (error) {
+//     next(error); 
+//    }
+// };
+// const updateUsers = async (req, res, next) => {
+//   try {
+//     console.log(req.body.name);
+//     const userData = await User.findByIdAndUpdate(
+//       { _id: req.body.id },
+//       {
+//         $set: {
+//           name: req.body.name,
+//           email: req.body.email,
+//           mobile: req.body.mob,
+//         },
+//       }
+//     );
+//     res.redirect("/admin/dashboard");
+//   } catch (error) {
+//     next(error);  
+//     }
+// };
 
-const deleteUser = async (req, res, next) => {
-  try {
-    const id = req.query.id;
-    await User.deleteOne({ _id: id });
-    res.redirect("/admin/dashboard");
-  } catch (error) {
-    next(error);
-  }
-};
+// const deleteUser = async (req, res, next) => {
+//   try {
+//     const id = req.query.id;
+//     await User.deleteOne({ _id: id });
+//     res.redirect("/admin/dashboard");
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const newUserLoad = async (req, res, next) => {
   try {
@@ -133,30 +133,30 @@ const newUserLoad = async (req, res, next) => {
   }
 };
 
-const addUser = async (req, res, next) => {
-  try {
-    const spassword = await securePassword(req.body.password);
-    console.log(req.body);
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      mobile: req.body.mob,
-      password: spassword,
-      is_admin: 0,
-    });
+// const addUser = async (req, res, next) => {
+//   try {
+//     const spassword = await securePassword(req.body.password);
+//     console.log(req.body);
+//     const user = new User({
+//       name: req.body.name,
+//       email: req.body.email,
+//       mobile: req.body.mob,
+//       password: spassword,
+//       is_admin: 0,
+//     });
 
-    const userData = await user.save();
+//     const userData = await user.save();
 
-    if (userData) {
-      const userData = await User.findById({ _id: req.session.user_id });
-      res.redirect("/admin/dashboard");
-    } else {
-      res.render("add", { message: "Your registration has been failed" });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
+//     if (userData) {
+//       const userData = await User.findById({ _id: req.session.user_id });
+//       res.redirect("/admin/dashboard");
+//     } else {
+//       res.render("add", { message: "Your registration has been failed" });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const block = async (req, res, next) => {
   try {
@@ -185,14 +185,14 @@ const unblock = async (req, res, next) => {
 module.exports = {
   loadLogin,
   verifyLogin,
-  loadDashboard,
   logout,
   adminDashboard,
-  editUserLoad,
-  updateUsers,
-  deleteUser,
   newUserLoad,
-  addUser,
   block,
   unblock,
+  // editUserLoad,
+  // updateUsers,
+  // deleteUser,
+  // addUser,
+  // addUser,
 };

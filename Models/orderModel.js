@@ -1,67 +1,60 @@
 const mongoose = require('mongoose');
+
 const orderSchema = new mongoose.Schema({
-
-deliveryAddress:{
-    type:String,
-    required:true
-},
-userId:{
-    type:String,
-    required:true
-},
-userName:{
-    type:String,
-    required:true
-},
-paymentMethod:{
-    type:String,
-    required:true
-},
-paymentId:{
-    type:String
-},
-products: [{
-    productid:{
-        type:String,
-        required:true,
-        ref:"product"
+  deliveryAddress: {
+    type: String,
+    required: true
+  },
+  userId: {
+    type: String,
+    required: true
+  },
+  userName: {
+    type: String,
+    required: true
+  },
+  products: [{
+    productId: {
+      type: String,
+      required: true,
+      ref: 'Product'
     },
-    count:{
-        type:Number,
-        default:1,
+    count: {
+      type: Number,
+      default: 1
     },
-    productPrice:{
-        type:Number,
-        required:true,
+    productPrice: {
+      type: Number,
+      required: true
     },
-    totalPrice:{
-        type:Number,
-        default:0,
+    totalPrice: {
+      type: Number,
+      required: true
     }
-}],
-totalAmount:{
-    type:Number,
-    required:true
-},
-Amount:{
-    type:Number,
-    required:true
-},
-date:{
-    type:Date
-},
-status:{
+  }],
+  totalAmount: {
+    type: Number,
+    required: true
+  },  
+  date: {
+    type: Date
+  },
+  status: {
+    type: String
+  },
+  paymentMethod: {
     type:String
-},
-orderWallet:{
-    type:Number
-},
-},
-// {timestamps:true}
-)
+  },
+  paymentId:{
+    type:String
+  },
+  is_cancelled:{
+    type:Boolean,
+    default:false
+  },
+  orderId:{
+    type:String,
+  },
+});
 
-const ordermodel = mongoose.model("order",orderSchema);
-module.exports = ordermodel;
-
-
-
+    module.exports = mongoose.model('Order', orderSchema);

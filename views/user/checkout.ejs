@@ -16,6 +16,7 @@
 
 <!-- Checkout Start -->
 <div class="container-fluid">
+  <form action="#" id="checkout">
   <div class="row px-xl-5">
     <div class="col-lg-8">
       <h5 class="section-title position-relative text-uppercase mb-3">
@@ -39,8 +40,9 @@
             <input
               type="radio"
               class="custom-control-input"
-              name="payment"
+              name="selectAddress"
               id="<%= address[i].userName %>"
+              value="<%=address[i].userName %>,<%=address[i].mobile %>,<%=address[i].altrenativeMob %>,<%=address[i].houseName %>,<%=address[i].city %>,<%=address[i].state %>,<%=address[i].pincode %>,<%=address[i].landmark %>"
             />
             <label class="custom-control-label" for="<%= address[i].userName %>">
               Name:<%= address[i].userName %> <br>
@@ -51,7 +53,7 @@
               State:<%= address[i].state %><br>
               PIN:<%= address[i].pincode %>
             </label><br /><br />
-            <a href="/editAddress/<%= address._id %>">
+            <a href="/editAddress/<%= address[i]._id %>">
               <button class="btn btn-sm btn-danger font-weight-bold">
                 Editt
               </button>
@@ -65,7 +67,7 @@
       </div>
     </div>
     <div class="col-lg-4">
-      <form class="mb-30" action="">
+      <!-- <form class="mb-30" action="">
         <div class="input-group">
           <input
             type="text"
@@ -76,7 +78,7 @@
             <button class="btn btn-primary">Apply Coupon</button>
           </div>
         </div>
-      </form>
+      </form> -->
       <h5 class="section-title position-relative text-uppercase mb-3">
         <span class="bg-secondary pr-3">Order Total</span>
       </h5>
@@ -103,7 +105,7 @@
         <div class="pt-2">
           <div class="d-flex justify-content-between mt-2">
             <h5>Total</h5>
-            <h5>$<%= totalAmount+10 %></h5>
+            <td >$<span id="total"><%= totalAmount+10 %>.00</span></td>
           </div>
         </div>
       </div>
@@ -114,52 +116,97 @@
         <div class="bg-light p-30">
           <div class="form-group">
             <div class="custom-control custom-radio">
-              <input
-                type="radio"
-                class="custom-control-input"
-                name="payment"
-                id="paypal"
-              />
-              <label class="custom-control-label" for="paypal">Paypal</label>
+              <input type="radio" class="custom-control-input" id="COD" name="payment" value="COD">
+              <label class="custom-control-label" for="COD" >COD</label>
             </div>
           </div>
+
           <div class="form-group">
             <div class="custom-control custom-radio">
-              <input
-                type="radio"
-                class="custom-control-input"
-                name="payment"
-                id="directcheck"
-              />
-              <label class="custom-control-label" for="directcheck">
-                Direct Check
-              </label>
+              <input type="radio" class="custom-control-input" name="payment" id="onlinPayment" value="onlinPayment">
+              <label class="custom-control-label" for="onlinPayment">ONLINE</label>
             </div>
           </div>
-          <div class="form-group mb-4">
-            <div class="custom-control custom-radio">
-              <input
-                type="radio"
-                class="custom-control-input"
-                name="payment"
-                id="banktransfer"
-              />
-              <label class="custom-control-label" for="banktransfer">
-                Bank Transfer
-              </label>
-            </div>
-          </div>
-          <button class="btn btn-block btn-primary font-weight-bold py-3">
-            Place Order
+          
+          <button type="submit" class="btn btn-block btn-primary font-weight-bold py-3">
+            PLACE ORDER
           </button>
         </div>
+      
       </div>
     </div>
   </div>
+</form>
 </div>
 <!-- Checkout End -->
 
 <script>
+
+$("#checkout").submit((e) => {
+      let address = $("input[name=selectAddress]:checked").val();
+      let total = document.getElementById("total").innerHTML;
+      let payment=$("input[name=payment]:checked").val();
+      e.preventDefault();
+      $.ajax({
+        url: "/checkout",
+        method: "post",
+        data: {
+          Total: total,
+          address: address,
+          payment:payment
+        },
+        success: (response) => {
+          if (response.codsuccess == true) {
+            swal.fire({
+              positon: 'center',
+              icon: "success",
+              title: 'Order Placed Successfully',
+              showConfirmButton: false,
+              showCancelButton: true,
+              cancelButtonText: "Go to Shop",
+            }).then((result) => {
+              if (result.dismiss === swal.DismissReason.cancel) {
+                // Redirect to the shop page
+                window.location.href = "/shop";
+              }
+            });
+          }else{
+            razorpayPayment(response.order);
+          }
+        }
+      });
+    });
+
+
+    function razorpayPayment(order){
+  var options = {
+    "key": "rzp_test_Fi6xAYymt9QpSY", // Enter the Key ID generated from the Dashboard
+    "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp", //your business name
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function(response) {
+       verifyPayment(response, order);
+    },
+    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+        "name": "Gaurav Kumar", //your customer's name
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+    rzp1.open();
+}
+
+
   function deleteAddress(addressId) {
 Swal.fire({
 title: 'Are you sure?',

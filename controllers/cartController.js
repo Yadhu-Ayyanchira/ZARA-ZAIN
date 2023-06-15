@@ -4,25 +4,25 @@ const Category = require("../Models/categoryModel");
 const Cart = require("../Models/cartModel");
 const Address = require("../Models/addressModel");
 
-const loadEmptyCart = async (req, res, next) => {
-  try {
-    const session = req.session.user_id;
+// const loadEmptyCart = async (req, res, next) => {
+//   try {
+//     const session = req.session.user_id;
 
-    if (!session) {
-      return res.render("emptyCart", { session: session });
-    }
+//     if (!session) {
+//       return res.render("emptyCart", { session: session });
+//     }
 
-    const userData = await User.findById(req.session.user_id);
-    if (userData) {
-      return res.render("emptyCart", { user: userData, session });
-    } else {
-      const session = null;
-      return res.render("emptyCart", { session });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
+//     const userData = await User.findById(req.session.user_id);
+//     if (userData) {
+//       return res.render("emptyCart", { user: userData, session });
+//     } else {
+//       const session = null;
+//       return res.render("emptyCart", { session });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const loadCart = async (req, res, next) => {
   try {
@@ -282,7 +282,7 @@ module.exports = {
   loadCart,
   addToCart,
   changeProductCount,
-  loadEmptyCart,
+  //loadEmptyCart,
   removeProduct,
   loadCheckout,
   loadAddAddress,

@@ -25,6 +25,9 @@ const auth = require("../middleware.js/auth");
 const cartController = require("../controllers/cartController");
 const userController = require("../controllers/userController");
 const addressController = require("../controllers/addressController");
+const orderController = require("../controllers/orderController");
+
+
 
 user_route.get(["/", "/index"], auth.isBlock, userController.loadHome);
 
@@ -68,4 +71,7 @@ user_route.post("/addAddress", addressController.insertAddress);
 user_route.post("/deleteAddress",auth.isBlock , auth.isLogin, addressController.deleteAddress);
 user_route.get('/editAddress/:id',auth.isLogin,addressController.loadEditAddress)
 user_route.post('/editAddress/:id',auth.isLogin,addressController.editAddress)
+user_route.post('/checkout', auth.isLogin,orderController.placeOrder)
+
+
 module.exports = user_route;

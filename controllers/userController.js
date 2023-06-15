@@ -313,33 +313,33 @@ const verifyLoad = async (req, res, next) => {
   }
 };
 
-const loadCart = async (req, res, next) => {
-  try {
-    if (req.session.user_id) {
+// const loadCart = async (req, res, next) => {
+//   try {
+//     if (req.session.user_id) {
       
-      const session = req.session.user_id;
-      const id = req.params.id;
-      const userData = await User.findById({ _id: req.session.user_id });
-      const categoryData = await categoryModel.find();
-      const data = await productmodel.findOne({ _id: id });
-      res.render("cart", {
-        productData: data,
-        session,
-        categoryData,
-        userData,
-      });
-    } else {
+//       const session = req.session.user_id;
+//       const id = req.params.id;
+//       const userData = await User.findById({ _id: req.session.user_id });
+//       const categoryData = await categoryModel.find();
+//       const data = await productmodel.findOne({ _id: id });
+//       res.render("cart", {
+//         productData: data,
+//         session,
+//         categoryData,
+//         userData,
+//       });
+//     } else {
      
-      const session = null;
-      const id = req.params.id;
-      const categoryData = await categoryModel.find();
-      const data = await productmodel.findOne({ _id: id });
-      res.render("cart", { productData: data, session, categoryData });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
+//       const session = null;
+//       const id = req.params.id;
+//       const categoryData = await categoryModel.find();
+//       const data = await productmodel.findOne({ _id: id });
+//       res.render("cart", { productData: data, session, categoryData });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const loadProfile = async (req, res, next) => {
   try {
@@ -377,6 +377,5 @@ module.exports = {
   loadShowproduct,
   verifyLoad,
   sendverifyMail,
-  loadCart,
   loadProfile,
 };

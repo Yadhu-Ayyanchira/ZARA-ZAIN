@@ -3,49 +3,49 @@ const Address = require("../Models/addressModel");
 const Category = require("../Models/categoryModel");
 
 //-------- Address loding section  -----------//
-const loadAddress = async (req, res, next) => {
-  try {
-    const session = req.session.user_id;
-    const userData = await User.findOne({ _id: req.session.user_id });
-    const addressData = await Address.findOne({ userId: req.session.user_id });
-    if (session) {
-      if (addressData) {
-        const address = addressData.addresses;
-        res.render("userAddress", {
-          user: userData,
-          session,
-          address: address,
-        });
-      } else {
-        res.render("emptyUserAddress", { user: userData, session });
-      }
-    } else {
-      res.redirect("/home", { user: userData, session });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
+// const loadAddress = async (req, res, next) => {
+//   try {
+//     const session = req.session.user_id;
+//     const userData = await User.findOne({ _id: req.session.user_id });
+//     const addressData = await Address.findOne({ userId: req.session.user_id });
+//     if (session) {
+//       if (addressData) {
+//         const address = addressData.addresses;
+//         res.render("userAddress", {
+//           user: userData,
+//           session,
+//           address: address,
+//         });
+//       } else {
+//         res.render("emptyUserAddress", { user: userData, session });
+//       }
+//     } else {
+//       res.redirect("/home", { user: userData, session });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 //-------- load  Address inserting section  -----------//
-const loadInsertAddress = async (req, res, next) => {
-  try {
-    const session = req.session.user_id;
+// const loadInsertAddress = async (req, res, next) => {
+//   try {
+//     const session = req.session.user_id;
 
-    if (!session) {
-      return res.render("insertAddress", { session: session });
-    }
-    const userData = await User.findById({ _id: req.session.user_id });
-    if (userData) {
-      return res.render("insertAddress", { user: userData, session });
-    } else {
-      const session = null;
-      return res.render("insertAddress", { session });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
+//     if (!session) {
+//       return res.render("insertAddress", { session: session });
+//     }
+//     const userData = await User.findById({ _id: req.session.user_id });
+//     if (userData) {
+//       return res.render("insertAddress", { user: userData, session });
+//     } else {
+//       const session = null;
+//       return res.render("insertAddress", { session });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 
 
@@ -242,8 +242,8 @@ const loadEditAddress = async (req, res) => {
 
 
 module.exports = {
-  loadAddress,
-  loadInsertAddress,
+  // loadAddress,
+  // loadInsertAddress,
   insertAddress,
   deleteAddress,
   editAddress,
