@@ -177,10 +177,46 @@ $("#checkout").submit((e) => {
       });
     });
 
+    function verifyPayment(payment,order){
+    const amount2 = document.getElementById("total").innerHTML;
+    $.ajax({
+      url:"/verify-payment",
+      method:"post",
+      data:{
+        payment: payment,
+        amount2: amount2,
+        order: order
+      },
+      success:(response)=>{
+        if(response.success){
+          swal.fire({
+            positon: 'center',
+            icon: "success",
+            title: 'Order Placed Successfully',
+            showConfirmButton: false,
+            showCancelButton: true,
+            cancelButtonText: "Go to Shop",
+        }).then((result) => {
+            if (result.dismiss === swal.DismissReason.cancel) {
+              window.location.href = "/shop";
+            }
+          });
+        }else{
+          swal.fire({
+            positon: 'center',
+            icon: "error",
+            title: 'payment failed',
+            showConfirmButton: false,
+            timer:1500,
+        })
+        }
+}})}
+
 
     function razorpayPayment(order){
+      alert(order)
   var options = {
-    "key": "rzp_test_Fi6xAYymt9QpSY", // Enter the Key ID generated from the Dashboard
+    "key": "rzp_test_BpxFTyg8nttczU", // Enter the Key ID generated from the Dashboard
     "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
     "currency": "INR",
     "name": "Acme Corp", //your business name

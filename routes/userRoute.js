@@ -72,6 +72,8 @@ user_route.post("/deleteAddress",auth.isBlock , auth.isLogin, addressController.
 user_route.get('/editAddress/:id',auth.isLogin,addressController.loadEditAddress)
 user_route.post('/editAddress/:id',auth.isLogin,addressController.editAddress)
 user_route.post('/checkout', auth.isLogin,orderController.placeOrder)
+user_route.post('/verify-payment',auth.isLogin,orderController.verifyPayment)
+user_route.get('/myOrders',auth.isLogin,orderController.loadOrder)
 
 
 module.exports = user_route;

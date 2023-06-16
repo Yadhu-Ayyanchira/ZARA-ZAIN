@@ -1,113 +1,54 @@
 <%- include('../layouts/user/header.ejs') %>
 
-<!-- Ec breadcrumb start -->
-<div class="sticky-header-next-sec  ec-breadcrumb section-space-mb">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="row ec_breadcrumb_inner">
-                    <div class="col-md-6 col-sm-12">
-                        <h2 class="ec-breadcrumb-title">User Profile</h2>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
-                        <!-- ec-breadcrumb-list start -->
-                        <ul class="ec-breadcrumb-list">
-                            <li class="ec-breadcrumb-item"><a href="index.html">Home</a></li>
-                            <li class="ec-breadcrumb-item active">My Order</li>
-                        </ul>
-                        <!-- ec-breadcrumb-list end -->
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+      <div class="col-12">
+        <nav class="breadcrumb bg-light mb-30">
+          <a class="breadcrumb-item text-dark" href="#">Home</a>
+          <a class="breadcrumb-item text-dark" href="#">Shop</a>
+          <span class="breadcrumb-item active">Shopping Cart</span>
+        </nav>
+      </div>
     </div>
-</div>
-<!-- Ec breadcrumb end -->
-
-<!-- User profile section -->
-<section class="ec-page-content ec-vendor-uploads ec-user-account pb-5">
-    <div class="container">
-        <div class="row">
-            <!-- Sidebar Area Start -->
-            <div class="ec-shop-leftside ec-vendor-sidebar col-lg-3 col-md-12">
-                <div class="ec-sidebar-wrap">
-                    <!-- Sidebar Category Block -->
-                    <div class="ec-sidebar-block">
-                        <div class="ec-vendor-block">
-                            <div class="ec-vendor-block-bg"></div>
-                            <div class="ec-vendor-block-detail">
-                                <img class="v-img" src="assets/images/user/1.jpg" alt="vendor image">
-                                <h5>
-                                    <%= user.name %>
-                                </h5>
-                            </div>
-                            <div class="ec-vendor-block-items">
-                                <ul>
-                                    <li><a href="/user-profile">User Profile</a></li>
-                                    <li><a href="/my-orders">My Orders</a></li>
-                                    <li><a href="/cart-page">My cart</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="ec-shop-rightside col-lg-9 col-md-12">
-
-                <table class="table">
-                    <thead>
-                        <tr>
-
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Transaction Id</th>
-                            <th scope="col">Total Price</th>
-                            <th scope="col">Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (orderData.length > 0) {
-                          orderData.forEach((order) => {
-                            order.products.forEach((product) => { 
-                        %>
-                        <tr>
-                            
-                          <td>
-                            <img width="50px" height="50px" src="/adminAssets/adminImages/<%= product.productid.image[0] %>" alt="">
-                            <%= product.productid.productname %>
-                          
-                        </td>
-                    <%}) %>
-                         
-                            <td><%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %></td>
-                          
-                          <td class="text-center">
-                            <%= order._id %>
-                          </td>
-                          <td class="text-center">
-                            <%= order.totalAmount %>
-                          </td>
-                          <td>
-                            <a href="/single-order-page/<%= order._id %>">
-                              <button type="button" class="btn btn-outline-success">Details</button>
-                            </a>
-                          </td>
-                          
-                        </tr>
-                        <% }); } %>
-                      </tbody>
-                      
-                </table>
-
-
-
-
-            </div>
-        </div>
+  </div>
+  <!-- Breadcrumb End -->
+  
+  <!-- Cart Start -->
+  <div class="container-fluid" id="reloadDiv">
+    <div class="row px-xl-5">
+      <div class=" table-responsive mb-5">
+        <table
+          class="table table-light table-borderless table-hover  mb-0"
+        >
+          <thead class="thead-dark">
+            <tr>
+              <th>Product Name</th>
+              <th>Date</th>
+              <th>Transaction ID</th>
+              <th>Total Price</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody class="align-middle">
+            <!-- //if condition goes here -->
+  
+            <tr>
+              <td class="align-middle">
+                <img src="" alt="" style="width: 50px"/>product name</td>
+              <td class="align-middle">product name</td>
+              <td class="align-middle">product name</td>
+              <td class="align-middle">product name</td>
+              <td class="align-middle">
+              <a href="/removeProduct?"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></a>                
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
     </div>
-
-
-</section>
-<!-- End User profile section -->
+  </div>
+  <!-- Cart End -->
 
 <%- include('../layouts/user/footer.ejs') %>

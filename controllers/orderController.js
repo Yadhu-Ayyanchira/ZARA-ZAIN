@@ -2,6 +2,7 @@ const Cart = require("../Models/cartModel");
 const User = require("../Models/userModel");
 const Product = require("../Models/productmodel");
 const Order = require('../Models/orderModel')
+const Category = require('../Models/categoryModel')
 const razorpay = require('razorpay');
 const env = require('dotenv')
 env.config();
@@ -29,7 +30,8 @@ const placeOrder = async (req, res) => {
         products: products,
         totalAmount: total,
         status: status,
-        date: new Date(), 
+        date: new Date(),
+        order
       });
       
   
@@ -44,11 +46,9 @@ const placeOrder = async (req, res) => {
         }
   
         if (order.status === 'placed') {
-            console.log('yessssqqq');
           await Cart.deleteOne({ userId: req.session.user_id });
           res.json({ codsuccess: true });
         } else {
-            console.log('yesssszzzz');
           const orderId = orderData._id;
           const totalAmount = orderData.totalAmount;
           var options = {
@@ -72,6 +72,41 @@ const placeOrder = async (req, res) => {
   };
 
 
+  const verifyPayment = async (req,res)=>{
+    try{
+      const details = req.body
+      const crypto = require('crypto');
+      const hmac = crypto.createHmac('sha256', process.env.Razorpay_Key_Secret);
+      hmac.update(details.payment.razorpay_order_id + '|' + details.payment.razorpay_payment_id);
+      const hmacValue = hmac.digest('hex');
+    
+      if(hmacValue === details.payment.razorpay_signature){
+        await Order.findByIdAndUpdate({_id:details.order.receipt},{$set:{status:"placed"}});
+        await Order.findByIdAndUpdate({_id:details.order.receipt},{$set:{paymentId:details.payment.razorpay_payment_id}});
+        await Cart.deleteOne({userId:req.session.user_id});
+        res.json({success:true});
+      }else{
+        await Order.findByIdAndRemove({_id:details.order.receipt});
+        res.json({success:false});
+      }
+    }catch(error){
+        console.log(error.message)
+   }
+  }
+
+  const loadOrder = async (req,res) => {
+    try{
+    const session = req.session.user_id;
+    const categoryData = await Category.find();
+    const userData = await User.findById(req.session.user_id);
+    res.render('myOrders',{session,categoryData,userData})
+    }catch(error){
+      console.log(error);
+    }
+  }
+
  module.exports ={
-    placeOrder
+    placeOrder,
+    verifyPayment,
+    loadOrder
  }
