@@ -8,6 +8,7 @@ const auth = require("../middleware.js/adminAuth");
 const categoryController = require("../controllers/categoryController");
 const adminController = require("../controllers/adminController");
 const productController = require("../controllers/productcontroller");
+const adminOrderController = require('../controllers/adminOrderController.js')
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -84,5 +85,7 @@ admin_route.post(
   [auth.isLogin],
   productController.updateProduct
 );
+admin_route.get('/orderList',auth.isLogin,adminOrderController.loadOrderList)
+admin_route.get('/singleOrderList/:id',adminOrderController.loadSingleOrderList)
 
 module.exports = admin_route;

@@ -7,7 +7,7 @@ const uc = require("upper-case");
 const categoryList = async (req, res, next) => {
   try {
     const catData = await category.find({});
-    const adminData = await usermodal.findById({ _id: req.session.user_id });
+    const adminData = await usermodal.findById({ _id: req.session.Auser_id });
 
     res.render("categoryList", { category: catData, admin: adminData });
   } catch (error) {
@@ -17,7 +17,7 @@ const categoryList = async (req, res, next) => {
 
 const insertCategory = async (req, res, next) => {
   try {
-    if (req.session.user_id) {
+    if (req.session.Auser_id) {
       const catName = uc.upperCase(req.body.categoryName);
       const Category = new category({ categoryName: catName });
       if (catName.trim().length === 0) {
@@ -86,7 +86,7 @@ const editCategory = async (req, res, next) => {
   try {
     const id = req.query.id;
     const catDATA = await category.findById({ _id: id });
-    const adminData = await usermodal.findById({ _id: req.session.user_id });
+    const adminData = await usermodal.findById({ _id: req.session.Auser_id });
 
     res.render("editCategory", { Category: catDATA, admin: adminData });
   } catch (error) {

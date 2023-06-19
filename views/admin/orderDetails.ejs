@@ -1,0 +1,75 @@
+<%- include('../layouts/adminLayout/header.ejs') %>
+    <%- include('../layouts/adminLayout/sidebar.ejs') %>
+        <%- include('../layouts/adminLayout/navbar.ejs') %>
+
+
+        <div class="main-panel bg-warning">
+            <div class="content-wrapper">
+                <div class="row bg-dark">
+
+
+
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card-body">
+                            <div class="card-body">
+                                <h4 class="card-title">Order Details</h4> 
+                                <div class="table-responsive">
+                                    <table class="table table-hover text-white ">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">No</th>
+                                                <th scope="col">Image</th>
+                                                <th scope="col">product Name</th>
+                                                <th scope="col">product Brand</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
+                                              </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            <% if(order.products.length > 0){
+                                                order.products.forEach((order,i)=>{ 
+                                                  %>
+                                              <tr>
+                                                <td><%= i + 1 %></td>
+                                                <td class="py-1">
+                                                
+                                                    <img style="width: 45px; height: 45px;" src="/adminAssets/adminImages/<%= order.productId.image[0]%>" alt="image" />
+                                                </td>
+                                                <td><%= order.productId.productName%></td>
+                                                <td><%= order.productId.brand%></td>
+                                                <td><%= order.productPrice%></td>
+                                                <td><%= order.status%></td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= i %>" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        Actions
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= i %>">
+                                                        <li><a class="dropdown-item" href="#">Action 1</a></li>
+                                                        <li><a class="dropdown-item" href="#">Action 2</a></li>
+                                                        <li><a class="dropdown-item" href="#">Action 3</a></li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                </td>
+                                              </tr>
+                                              <%
+                                                })
+                                                }else{ %>
+                                                    <h1 class="d-flex justify-content-center">You Have No Orders</h1>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        
+
+
+                    </div>
+                </div>
+            </div>
+
+        
+<%- include('../layouts/adminLayout/footer.ejs') %>

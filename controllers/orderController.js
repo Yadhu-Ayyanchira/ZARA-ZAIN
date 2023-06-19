@@ -31,7 +31,6 @@ const placeOrder = async (req, res) => {
         totalAmount: total,
         status: status,
         date: new Date(),
-        order
       });
       
   
@@ -94,19 +93,83 @@ const placeOrder = async (req, res) => {
    }
   }
 
-  const loadOrder = async (req,res) => {
-    try{
-    const session = req.session.user_id;
-    const categoryData = await Category.find();
-    const userData = await User.findById(req.session.user_id);
-    res.render('myOrders',{session,categoryData,userData})
-    }catch(error){
-      console.log(error);
+  
+  const loadOrder = async (req, res) => {
+    try {
+      const session = req.session.user_id;
+      const user = await User.findById(session);
+      const orderData = await Order.find({ userId: session }).populate("products.productId").sort({ date: -1 });
+      const categoryData = await Category.find();
+      const userData = await User.findById(req.session.user_id);
+      
+      const orderProducts = orderData.map(order => order.products); 
+  
+      res.render('myOrders', { session, user, orderProducts,orderData,categoryData,userData });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const loadSingleOrder = async(req,res)=>{
+    try {
+      const id = req.params.id
+      const session = req.session.user_id
+      const categoryData = await Category.find();
+      const userData = await User.findById(req.session.user_id);
+      const orderData = await Order.findOne({_id : id }).populate(
+        "products.productId"
+      );
+      const orderDate = orderData.date
+      console.log(orderData);
+      const expectedDate  = new Date(orderDate.getTime() + (5 * 24 * 60 * 60 * 1000));
+      res.render('singleOrder', { session,orders:orderData,expectedDate,categoryData,userData});
+    } catch (error) {
+      console.log(error.message);
     }
   }
+
+  const orderCancel = async (req, res) => {
+    console.log('come on baby');
+    try {
+      const id = req.body.id;
+      const userData = await Order.findById(req.session.user_id)
+      const orderData = await Order.findOne({ userId: req.session.user_id, 'products._id': id})
+      const product = orderData.products.find((p) => p._id.toString() === id);
+      const cancelledAmount = product.totalPrice     
+      const updatedOrder = await Order.findOneAndUpdate(
+        {
+          userId: req.session.user_id,
+          'product._id': id
+        },
+        {
+          $set: {
+            'product.$.status': 'cancelled'
+          }
+        },
+        { new: true }
+      );
+
+  
+      if (updatedOrder) {
+        if(orderData.paymentMethod === 'online-payment'){
+           await User.findByIdAndUpdate({_id:req.session.user_id},{$inc:{wallet:cancelledAmount}})
+           res.json({ success: true });
+        }else{
+           res.json({ success: true });
+        }
+      } else {
+        res.json({ success: false });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
  module.exports ={
     placeOrder,
     verifyPayment,
-    loadOrder
+    loadOrder,
+    loadSingleOrder,
+    orderCancel,
+
  }

@@ -6,7 +6,7 @@ const usermodal = require("../Models/userModel");
 const productList = async (req, res, next) => {
   try {
     const productData = await productmodel.find({});
-    const adminData = await usermodal.findById({ _id: req.session.user_id });
+    const adminData = await usermodal.findById({ _id: req.session.Auser_id });
     res.render("productList", { products: productData, admin: adminData });
   } catch (error) {
     next(error);
@@ -17,7 +17,7 @@ const AddProducts = async (req, res, next) => {
   try {
     const productData = await productmodel.find({});
     const categoryData = await categorymodel.find({ is_delete: false });
-    const adminData = await usermodal.findById({ _id: req.session.user_id });
+    const adminData = await usermodal.findById({ _id: req.session.Auser_id });
 
     res.render("addProduct", {
       category: categoryData,
@@ -78,7 +78,7 @@ const editProduct = async (req, res, next) => {
   try {
     const id = req.query.id;
     const prodata = await productmodel.findById({ _id: id });
-    const adminData = await usermodal.findById({ _id: req.session.user_id });
+    const adminData = await usermodal.findById({ _id: req.session.Auser_id });
     if (prodata) {
       res.render("editProduct", { product: prodata, admin: adminData });
     } else {

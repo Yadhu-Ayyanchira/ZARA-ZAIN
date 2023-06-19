@@ -74,6 +74,9 @@ user_route.post('/editAddress/:id',auth.isLogin,addressController.editAddress)
 user_route.post('/checkout', auth.isLogin,orderController.placeOrder)
 user_route.post('/verify-payment',auth.isLogin,orderController.verifyPayment)
 user_route.get('/myOrders',auth.isLogin,orderController.loadOrder)
+user_route.get('/singleOrder/:id',orderController.loadSingleOrder)
+user_route.post('/cancelOrder',auth.isLogin,auth.isBlock,orderController.orderCancel)
+
 
 
 module.exports = user_route;

@@ -32,17 +32,24 @@
           </thead>
           <tbody class="align-middle">
             <!-- //if condition goes here -->
+            <% if (orderData.length > 0) {
+                orderData.forEach((order) => {
+                  order.products.forEach((product) => { 
+              %>
   
             <tr>
               <td class="align-middle">
-                <img src="" alt="" style="width: 50px"/>product name</td>
-              <td class="align-middle">product name</td>
-              <td class="align-middle">product name</td>
-              <td class="align-middle">product name</td>
-              <td class="align-middle">
-              <a href="/removeProduct?"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></a>                
-              </td>
+                <img width="30px" height="40px" src="/adminAsset/adminImages/<%=product.productId.image[0]%>" alt="">&nbsp<%=product.productId.productName %></td>
+                <%}) %>
+              <td class="align-middle"><%= order.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %></td>
+              <td class="align-middle"><%= order._id %></td>
+              <td class="align-middle"><%= order.totalAmount %></td>
+              <td class="align-middle"><a href="/singleOrder/<%= order._id %>"><button type="button" class="btn btn-outline-success">Details</button></a> </td>
             </tr>
+            <% }); }else{ %>
+                                    
+                <h1>No any item in orders</h1>
+                <% } %>
           </tbody>
         </table>
       </div>

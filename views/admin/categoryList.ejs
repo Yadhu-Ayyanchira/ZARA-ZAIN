@@ -15,43 +15,8 @@
                                     <h4 class="card-title">Category List</h4>                
                                    <a data-bs-toggle="modal" data-bs-target="#addcategory"><button type="button" class="btn btn-success m-2 float-right">Add Category</button></a>
 
-                                   <% if(message) { %>
-                                    <p class="text-danger"><%= message %></p>
-                                    <% } %>
-                                
-
-
-
-                                    <!-- ================================ ADD CATEGORY ============================= -->
-                                    
-                                    <div class="modal fade" id="addcategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <!-- <h4 class="modal-title fs-5" id="exampleModalLabel">ADD PRODUCT</h4> -->
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                    
-                                                    <form class="forms-sample" method="post" action="/admin/insertCategory">
-                                                        <div class="form-group">
-                                                            <label for="exampleInputName1">CATEGORY NAME</label>
-                                                            <input type="text" class="form-control" id="exampleInputName1" placeholder="Name"
-                                                                name="categoryName">
-                                                        </div>
-                                    
-                                                        <a href="/admin/categoryList"> <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                                            <button class="btn btn-dark" id="Cancel">Cancel</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="table-responsive">
+                                   
+                                     <div class="table-responsive">
                                         <table class="table table-hover text-white ">
                                             <thead>
                                                 <tr>
