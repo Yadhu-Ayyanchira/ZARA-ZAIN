@@ -55,10 +55,9 @@ const placeOrder = async (req, res) => {
             currency: 'INR',
             receipt: '' + orderId,
           };
-  
+ 
           instance.orders.create(options, function (err, order) {
               res.json({ order });
-            
           });
         }
       } else {

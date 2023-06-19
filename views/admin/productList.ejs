@@ -33,7 +33,11 @@
                   <img style="width: 50px; height: 50px;" src="/adminAsset/adminImages/<%= products[i].image[j] %>" alt="image" />
                   <% } %>
                 </td>
-                <td><%= products[i].productName %></td>
+                <td><% let productName = products[i].productName; %>
+                  <% if (productName.length > 15) { %>
+                  <% productName = productName.substring(0, 15) + '...'; %>
+                  <% } %>
+                  <%= productName %></td>
                 <td><%= products[i].price %></td>
                 <td><%= products[i].brand %></td>
                 <td><%= products[i].category %></td>

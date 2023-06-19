@@ -123,7 +123,18 @@ const addToCart = async (req, res, next) => {
             },
           }
         );
+        
       }
+      const updatedProduct = cartData.products.find((product) => product.productId.toString() === productId.toString());
+      const updatedQuantity = updatedProduct ? updatedProduct.count : 0;
+  
+      if (updatedQuantity + 1 > productQuantity) {
+        return res.json({
+          success: false,
+          message: "Quantity limit reached!",
+        });
+      }
+    }
     } else {
       const newCart = new Cart({
         userId: userData._id,
@@ -136,7 +147,7 @@ const addToCart = async (req, res, next) => {
         ],
       });
       await newCart.save();
-    }
+      
     res.json({ success: true });
   } catch (error) {
     next(error);

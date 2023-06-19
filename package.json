@@ -28,6 +28,7 @@
     "path": "^0.12.7",
     "randomstring": "^1.2.3",
     "razorpay": "^2.8.6",
+    "sharp": "^0.32.1",
     "upper-case": "^2.0.2"
   }
 }

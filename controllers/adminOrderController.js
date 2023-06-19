@@ -30,7 +30,7 @@ const loadOrderList = async (req,res,next)=>{
       const id = req.params.id;
       const adminData = await User.findById(req.session.Auser_id);  
       const orderData = await Order.findOne({_id:id}).populate("products.productId")
-      res.render('orderDetails', {session, categoryData ,admin: adminData, activePage: 'orderList',order:orderData});
+      res.render('orderDetails', {session,admin: adminData, activePage: 'orderList',order:orderData});
     }catch(err){
       next(err);
     }

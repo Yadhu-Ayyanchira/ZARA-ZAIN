@@ -332,26 +332,7 @@
     });
   }
 
-  function addToWishlist(productId) {
-    $.ajax({
-      url: "/addToWishlist",
-      method: "post",
-      data: {
-        id: productId,
-      },
-      success: (response) => {
-        if (response.success) {
-          swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Product added to wishlist",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      },
-    });
-  }
+  
 </script>
 
 <%- include('../layouts/user/footer.ejs') %>

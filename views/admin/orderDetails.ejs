@@ -29,20 +29,20 @@
                                         <tbody>
                                             
                                             <% if(order.products.length > 0){
-                                                order.products.forEach((order,i)=>{ 
+                                                order.products.forEach((orders,i)=>{ 
                                                   %>
                                               <tr>
                                                 <td><%= i + 1 %></td>
                                                 <td class="py-1">
                                                 
-                                                    <img style="width: 45px; height: 45px;" src="/adminAssets/adminImages/<%= order.productId.image[0]%>" alt="image" />
+                                                    <img style="width: 45px; height: 45px;" src="/adminAsset/adminImages/<%= orders.productId.image[0]%>" alt="image" />
                                                 </td>
-                                                <td><%= order.productId.productName%></td>
-                                                <td><%= order.productId.brand%></td>
-                                                <td><%= order.productPrice%></td>
-                                                <td><%= order.status%></td>
+                                                <td><%= orders.productId.productName%></td>
+                                                <td><%= orders.productId.brand%></td>
+                                                <td><%= orders.productPrice%></td>
+                                                <td><%= orders.status%></td>
                                                 <td>
-                                                    <div class="dropdown">
+                                                    <!-- <div class="dropdown">
                                                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= i %>" data-bs-toggle="dropdown" aria-expanded="false">
                                                         Actions
                                                         </button>
@@ -51,7 +51,15 @@
                                                         <li><a class="dropdown-item" href="#">Action 2</a></li>
                                                         <li><a class="dropdown-item" href="#">Action 3</a></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
+                                                    <div class="col-sm-9">
+                                                        <select class="form-control" name="brand">
+                                                          <option>Action</option>
+                                                          <option>Action</option>
+                                                          <option>Action</option>
+                                                          <option>Action</option>
+                                                        </select>
+                                                      </div>
                                             
                                                 </td>
                                               </tr>
