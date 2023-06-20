@@ -139,7 +139,7 @@ const insertAddress = async (req, res, next) => {
   }
 };
 
-const deleteAddress = async (req,res) => {
+const deleteAddress = async (req,res, next) => {
   try {
       const id = req.session.user_id
       const addressId = req.body.address
@@ -152,13 +152,12 @@ const deleteAddress = async (req,res) => {
       }
       res.status(200).json({message:"Address Deleted Successfully"})        
   } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: "An error occurred while deleting the address" });
+    next(error)
   }
 }
 
 
-const editAddress = async (req, res) => {
+const editAddress = async (req, res, next) => {
   console.log('yes edit address');
 
   if (
@@ -210,13 +209,13 @@ const editAddress = async (req, res) => {
       );
       res.redirect("/checkout");
     } catch (error) {
-      console.log(error.message);
+      next(error)
     }
   }
 };
 
 
-const loadEditAddress = async (req, res) => {
+const loadEditAddress = async (req, res, next) => {
   try {
     const id = req.params.id;
     console.log(id);
@@ -235,7 +234,7 @@ const loadEditAddress = async (req, res) => {
       categoryData
     });
   } catch (error) {
-    console.log(error.message);
+    next(error)
   }
 };
 

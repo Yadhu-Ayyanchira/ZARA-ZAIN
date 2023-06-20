@@ -12,7 +12,7 @@ var instance = new razorpay({
   key_secret: process.env.Razorpay_Key_Secret,
 });
 
-const placeOrder = async (req, res) => {
+const placeOrder = async (req, res, next) => {
     try {
       const userData = await User.findOne({ _id: req.session.user_id });
       const address = req.body.address;
@@ -64,13 +64,12 @@ const placeOrder = async (req, res) => {
         res.redirect('/');
       }
     } catch (error) {
-      console.log(error.message);
-      res.status(500).json({ error: 'Internal server error' });
+      next(error)
     }
   };
 
 
-  const verifyPayment = async (req,res)=>{
+  const verifyPayment = async (req,res, next)=>{
     try{
       const details = req.body
       const crypto = require('crypto');
@@ -88,12 +87,12 @@ const placeOrder = async (req, res) => {
         res.json({success:false});
       }
     }catch(error){
-        console.log(error.message)
+      next(error)
    }
   }
 
   
-  const loadOrder = async (req, res) => {
+  const loadOrder = async (req, res, next) => {
     try {
       const session = req.session.user_id;
       const user = await User.findById(session);
@@ -105,11 +104,11 @@ const placeOrder = async (req, res) => {
   
       res.render('myOrders', { session, user, orderProducts,orderData,categoryData,userData });
     } catch (error) {
-      console.log(error.message);
+      next(error)
     }
   };
 
-  const loadSingleOrder = async(req,res)=>{
+  const loadSingleOrder = async(req,res, next)=>{
     try {
       const id = req.params.id
       const session = req.session.user_id
@@ -123,11 +122,11 @@ const placeOrder = async (req, res) => {
       const expectedDate  = new Date(orderDate.getTime() + (5 * 24 * 60 * 60 * 1000));
       res.render('singleOrder', { session,orders:orderData,expectedDate,categoryData,userData});
     } catch (error) {
-      console.log(error.message);
+      next(error)
     }
   }
 
-  const orderCancel = async (req, res) => {
+  const orderCancel = async (req, res, next) => {
     console.log('come on baby');
     try {
       const id = req.body.id;
@@ -160,7 +159,7 @@ const placeOrder = async (req, res) => {
         res.json({ success: false });
       }
     } catch (error) {
-      console.log(error.message);
+      next(error)
     }
   };
 

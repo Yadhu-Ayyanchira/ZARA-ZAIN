@@ -21,7 +21,7 @@ app.use("/admin", adminRoute);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).send("Internal Server Error");
+  res.render('404');
 });
 
 app.listen(3000, function () {

@@ -1,6 +1,8 @@
 const User = require("../Models/userModel");
 const bcrypt = require("bcrypt");
 const usermodel = require("../Models/userModel");
+const productmodel = require("../Models/productmodel")
+const Order = require('../Models/orderModel')
 const session = require("express-session");
 
 let message;
@@ -73,8 +75,10 @@ const logout = async (req, res) => {
 
 const adminDashboard = async (req, res, next) => {
   try {
+    const orderData = await Order.find({ });
+    const products = await productmodel.find({});
     const adminData = await usermodel.findById({ _id: req.session.Auser_id });
-    res.render("dashboard", { admin: adminData });
+    res.render("dashboard", { admin: adminData, products, order:orderData });
   } catch (error) {
     next(error);
   }

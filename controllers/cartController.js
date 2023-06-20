@@ -89,115 +89,231 @@ const loadCart = async (req, res, next) => {
   }
 };
 
-const addToCart = async (req, res, next) => {
+// const addToCart = async (req, res, next) => {
+//   try {
+//     const userId = req.session.user_id;
+//     const userData = await User.findOne({ _id: userId });
+//     const productId = req.body.id;
+//     const productData = await Product.findOne({ _id: productId });
+//     const cartData = await Cart.findOne({ userId: userData._id });
+
+//     if (cartData) {
+//       const productExists = cartData.products.some(
+//         (product) => product.productId == productId
+//       );
+//       if (productExists) {
+//         await Cart.findOneAndUpdate(
+//           {
+//             userId: userId,
+//             "products.productId": productId,
+//           },
+//           {
+//             $inc: { "products.$.count": 1 },
+//           }
+//         );
+//       } else {
+//         await Cart.findOneAndUpdate(
+//           { userId: userId },
+//           {
+//             $push: {
+//               products: {
+//                 productId: productId,
+//                 productPrice: productData.price,
+//               },
+//             },
+//           }
+//         );
+//       }
+//     } else {
+//       const newCart = new Cart({
+//         userId: userData._id,
+//         userName: userData.name,
+//         products: [
+//           {
+//             productId: productData._id,
+//             productPrice: productData.price,
+//           },
+//         ],
+//       });
+//       await newCart.save();
+//       const updatedProduct = cartData.products.find((product) => product.productId.toString() === productId.toString());
+//       const updatedQuantity = updatedProduct ? updatedProduct.count : 0;
+  
+//       if (updatedQuantity + 1 > productQuantity) {
+//         return res.json({
+//           success: false,
+//           message: "Quantity limit reached!",
+//         });
+//       }
+//     }
+//     res.json({ success: true });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+const addToCart = async (req,res,next) => {
   try {
     const userId = req.session.user_id;
     const userData = await User.findOne({ _id: userId });
+   
     const productId = req.body.id;
     const productData = await Product.findOne({ _id: productId });
-    const cartData = await Cart.findOne({ userId: userData._id });
 
-    if (cartData) {
-      const productExists = cartData.products.some(
-        (product) => product.productId == productId
-      );
-      if (productExists) {
-        await Cart.findOneAndUpdate(
-          {
-            userId: userId,
-            "products.productId": productId,
-          },
-          {
-            $inc: { "products.$.count": 1 },
-          }
-        );
-      } else {
-        await Cart.findOneAndUpdate(
-          { userId: userId },
-          {
-            $push: {
-              products: {
-                productId: productId,
-                productPrice: productData.price,
-              },
-            },
-          }
-        );
-        
-      }
-      const updatedProduct = cartData.products.find((product) => product.productId.toString() === productId.toString());
-      const updatedQuantity = updatedProduct ? updatedProduct.count : 0;
-  
-      if (updatedQuantity + 1 > productQuantity) {
-        return res.json({
-          success: false,
-          message: "Quantity limit reached!",
-        });
-      }
-    }
-    } else {
-      const newCart = new Cart({
-        userId: userData._id,
-        userName: userData.name,
-        products: [
-          {
-            productId: productData._id,
-            productPrice: productData.price,
-          },
-        ],
+    const productQuantity = productData.stockQuantity;
+
+    const cartData = await Cart.findOneAndUpdate(
+      { userId: userId },
+      {
+        $setOnInsert: {
+          userId: userId,
+          userName: userData.name,
+          products: [],
+        },
+      },
+      { upsert: true, new: true }
+    );
+    const updatedProduct = cartData.products.find((product) => product.productId.toString() === productId.toString());
+    const updatedQuantity = updatedProduct ? updatedProduct.count : 0;
+
+    if (updatedQuantity + 1 > productQuantity) {
+      return res.json({
+        success: false,
+        message: "Quantity limit reached!",
       });
-      await newCart.save();
-      
+    }
+
+    const cartProduct = cartData.products.find((product) => product.productId.toString() === productId.toString());
+
+    if (cartProduct) {
+      await Cart.updateOne(
+        { userId: userId, "products.productId": productId },
+        {
+          $inc: {
+            "products.$.count": 1,
+            "products.$.totalPrice": productData.price,
+          },
+        }
+      );
+    } else {
+      cartData.products.push({
+        productId: productId,
+        productPrice: productData.price,
+        totalPrice: productData.price,
+      });
+      await cartData.save();
+    }
+
     res.json({ success: true });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-const changeProductCount = async (req, res, next) => {
+// const changeProductCount = async (req, res, next) => {
+//   try {
+//     const userData = req.session.user_id;
+//     const proId = req.body.product;
+//     let count = req.body.count;
+//     count = parseInt(count);
+//     const cartData = await Cart.findOne({ userId: userData });
+//     const product = cartData.products.find(
+//       (product) => product.productId.toString() === proId
+//     );
+//     const quantity = product.count;
+//     const productData = await Product.findOne({ _id: proId });
+
+//     await Cart.updateOne(
+//       { userId: userData, "products.productId": proId },
+//       { $inc: { "products.$.count": count } }
+//     );
+
+//     if (quantity < 1) {
+//       await Cart.updateOne(
+//         { userId: userData },
+//         {
+//           $pull: { products: { productId: proId } },
+//         }
+//       );
+//     }
+
+//     const updatedCartData = await Cart.findOne({ userId: userData });
+//     const updatedProduct = updatedCartData.products.find(
+//       (product) => product.productId.toString() === proId
+//     );
+//     const updatedQuantity = updatedProduct.count;
+//     const price = updatedQuantity * productData.price;
+
+//     await Cart.updateOne(
+//       { userId: userData, "products.productId": proId },
+//       { $set: { "products.$.totalPrice": price } }
+//     );
+
+//     res.json({ success: true });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+
+const changeProductCount = async (req,res,next) => {
   try {
     const userData = req.session.user_id;
     const proId = req.body.product;
     let count = req.body.count;
     count = parseInt(count);
     const cartData = await Cart.findOne({ userId: userData });
-    const product = cartData.products.find(
-      (product) => product.productId.toString() === proId
-    );
-    const quantity = product.count;
+    const product = cartData.products.find((product) => product.productId === proId);
     const productData = await Product.findOne({ _id: proId });
+    
+    const productQuantity = productData.stockQuantity
+    const updatedCartData = await Cart.findOne({ userId: userData });
+    const updatedProduct = updatedCartData.products.find((product) => product.productId === proId);
+    const updatedQuantity = updatedProduct.count;
+    console.log(updatedQuantity+'hahaha');
+    console.log(count+'hpkokp');
+    
+    if (count > 0) {
+      console.log('im innnn');
+      // Quantity is being increased
+      if (updatedQuantity + count > productQuantity) {
+        res.json({ success: false, message: 'Quantity limit reached!' });
+        return;
+      }
+    } else if (count < 0) {
+      // Quantity is being decreased
+      if (updatedQuantity <= 1 || Math.abs(count) > updatedQuantity) {
+        // await Cart.updateOne(
+        //   { userId: userData },
+        //   { $pull: { products: { productid: proId } } }
+        // );
+        res.json({ success: true });
+        return;
+      }
+    }
 
-    await Cart.updateOne(
+    const cartdata = await Cart.updateOne(
       { userId: userData, "products.productId": proId },
       { $inc: { "products.$.count": count } }
     );
 
-    if (quantity < 1) {
-      await Cart.updateOne(
-        { userId: userData },
-        {
-          $pull: { products: { productId: proId } },
-        }
-      );
-    }
 
-    const updatedCartData = await Cart.findOne({ userId: userData });
-    const updatedProduct = updatedCartData.products.find(
-      (product) => product.productId.toString() === proId
-    );
-    const updatedQuantity = updatedProduct.count;
-    const price = updatedQuantity * productData.price;
+    const updateCartData = await Cart.findOne({ userId: userData });
+    const updateProduct = updateCartData.products.find((product) => product.productId === proId);
+    const updateQuantity = updateProduct.count;
+    
+    const price = updateQuantity * productData.price;
 
     await Cart.updateOne(
       { userId: userData, "products.productId": proId },
       { $set: { "products.$.totalPrice": price } }
-    );
-
+    ); 
     res.json({ success: true });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
+
 
 const removeProduct = async (req, res, next) => {
   try {
@@ -279,11 +395,15 @@ const loadCheckout = async (req, res, next) => {
 
 const loadAddAddress = async (req, res, next) => {
   try {
+    let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
+      "products.productId"
+    );
+    const products = cartData.products;
     const session = req.session.user_id;
     const userId = req.session.user_id;
     const userData = await User.findOne({ _id: userId });
     const categoryData = await Category.find();
-    res.render("addAddress", { categoryData, userData, session });
+    res.render("addAddress", { categoryData, userData, session, products });
   } catch (error) {
     next(error);
   }
