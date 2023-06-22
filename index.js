@@ -1,12 +1,9 @@
-const dotenv = require("dotenv");
-dotenv.config();
-const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGO);
-
 const express = require("express");
 const app = express();
+require('./config/config')
 const path = require("path");
-
+app.set("view engine", "ejs");
+app.set("views", "./views/user");
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +18,8 @@ app.use("/admin", adminRoute);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err);
-  res.render('404');
+  //res.status(500).send('Internal Server Error')
+  res.render('404')
 });
 
 app.listen(3000, function () {

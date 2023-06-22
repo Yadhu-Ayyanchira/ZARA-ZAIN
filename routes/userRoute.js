@@ -75,8 +75,8 @@ user_route.post('/checkout', auth.isLogin,orderController.placeOrder)
 user_route.post('/verify-payment',auth.isLogin,orderController.verifyPayment)
 user_route.get('/myOrders',auth.isLogin,orderController.loadOrder)
 user_route.get('/singleOrder/:id',orderController.loadSingleOrder)
-user_route.post('/cancelOrder',auth.isLogin,auth.isBlock,orderController.orderCancel)
-
+user_route.post('/cancelOrder',auth.isLogin,orderController.orderCancel)
+user_route.get('/changePassword',userController.changePassword)
 
 
 module.exports = user_route;

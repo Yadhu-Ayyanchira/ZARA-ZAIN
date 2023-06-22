@@ -297,7 +297,12 @@ const verifyLoad = async (req, res, next) => {
         { $set: { is_verified: 1 } }
       );
       if (UserData) {
-        res.redirect("/");
+        const userData = await User.findById({ _id: req.session.user_id });
+        res.render("/", {
+          session,
+          categoryData,
+          userData
+        });
       } else {
         console.log("something went wrong");
       }
@@ -313,33 +318,6 @@ const verifyLoad = async (req, res, next) => {
   }
 };
 
-// const loadCart = async (req, res, next) => {
-//   try {
-//     if (req.session.user_id) {
-      
-//       const session = req.session.user_id;
-//       const id = req.params.id;
-//       const userData = await User.findById({ _id: req.session.user_id });
-//       const categoryData = await categoryModel.find();
-//       const data = await productmodel.findOne({ _id: id });
-//       res.render("cart", {
-//         productData: data,
-//         session,
-//         categoryData,
-//         userData,
-//       });
-//     } else {
-     
-//       const session = null;
-//       const id = req.params.id;
-//       const categoryData = await categoryModel.find();
-//       const data = await productmodel.findOne({ _id: id });
-//       res.render("cart", { productData: data, session, categoryData });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 const loadProfile = async (req, res, next) => {
   try {
@@ -348,19 +326,38 @@ const loadProfile = async (req, res, next) => {
       const categoryData = await categoryModel.find();
       const userData = await User.findById({ _id: req.session.user_id });
       const addressData = await Address.findOne({ userId: req.session.user_id });
+      if(addressData){
       const address = addressData.addresses;
       res.render("userProfile", {
         userData: userData,
         session: session,
         categoryData,
         address
-      });
+      });}else{
+        res.render("userProfile", {
+          userData: userData,
+          session: session,
+          categoryData,
+          address:0
+        });
+      }
     } else {
       const userData = await User.findById({ _id: "646dd35cb3f71f9940575fad" });
       const session = null;
       const categoryData = await categoryModel.find();
       res.render("userProfile", { session, categoryData, userData });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const changePassword = async (req, res, next) => {
+  try {
+    const session = req.session.user_id;
+    const categoryData = await categoryModel.find();
+    const userData = await User.findById({ _id: req.session.user_id });
+    res.render("passwordOtp",{session,categoryData,userData});
   } catch (error) {
     next(error);
   }
@@ -378,4 +375,5 @@ module.exports = {
   verifyLoad,
   sendverifyMail,
   loadProfile,
+  changePassword
 };

@@ -118,7 +118,6 @@ const placeOrder = async (req, res, next) => {
         "products.productId"
       );
       const orderDate = orderData.date
-      console.log(orderData);
       const expectedDate  = new Date(orderDate.getTime() + (5 * 24 * 60 * 60 * 1000));
       res.render('singleOrder', { session,orders:orderData,expectedDate,categoryData,userData});
     } catch (error) {
@@ -127,7 +126,6 @@ const placeOrder = async (req, res, next) => {
   }
 
   const orderCancel = async (req, res, next) => {
-    console.log('come on baby');
     try {
       const id = req.body.id;
       const userData = await Order.findById(req.session.user_id)
@@ -137,11 +135,11 @@ const placeOrder = async (req, res, next) => {
       const updatedOrder = await Order.findOneAndUpdate(
         {
           userId: req.session.user_id,
-          'product._id': id
+          'products._id': id
         },
         {
           $set: {
-            'product.$.status': 'cancelled'
+            'products.$.status': 'cancelled'
           }
         },
         { new: true }
@@ -149,12 +147,12 @@ const placeOrder = async (req, res, next) => {
 
   
       if (updatedOrder) {
-        if(orderData.paymentMethod === 'online-payment'){
-           await User.findByIdAndUpdate({_id:req.session.user_id},{$inc:{wallet:cancelledAmount}})
+        //if(orderData.paymentMethod === 'online-payment'){
+          // await User.findByIdAndUpdate({_id:req.session.user_id},{$inc:{wallet:cancelledAmount}})
            res.json({ success: true });
-        }else{
-           res.json({ success: true });
-        }
+        //}else{
+          // res.json({ success: true });
+       // }
       } else {
         res.json({ success: false });
       }

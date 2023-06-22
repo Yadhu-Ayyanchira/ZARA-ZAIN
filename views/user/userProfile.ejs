@@ -25,16 +25,11 @@
               <a class="text-body mr-3" href="/logout"><i></i>
               <button type="button" style="border-radius: 7px;" class="btn btn-outline-danger ms-1">Log out</button></a>
             </div>
+            <a href="/changePassword">Change password</a>
           </div>
         </div>
         <div class="card mb-4 mb-lg-0">
-          <div class="card-body p-0">
-            <ul class="list-unstyled list-group-flush rounded-3">
-              <li><button class="btn btn-primary m-2" onclick="showEdit()" style="border-radius: 7px;">Edit details</button></li>
-              <li><button class="btn btn-primary m-2" onclick="showEdit()" style="border-radius: 7px;">Edit details</button></li>
-              <li><button class="btn btn-primary m-2" onclick="showEdit()" style="border-radius: 7px;">Edit details</button></li>
-            </ul>
-          </div>
+          
         </div>
       </div>
       <div class="col-lg-8">
@@ -105,7 +100,9 @@
           
             </div>
             <br>
-            <% } } %>
+            <% } }else{ %>
+              <h3>No Addresses</h3>
+              <%}%>
         </div>
       </div>
     </div>

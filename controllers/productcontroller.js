@@ -2,6 +2,7 @@ const session = require("express-session");
 const productmodel = require("../Models/productmodel");
 const categorymodel = require("../Models/categoryModel");
 const usermodal = require("../Models/userModel");
+const Sharp = require('sharp')
 
 const productList = async (req, res, next) => {
   try {
@@ -35,6 +36,11 @@ const insertProduct = async (req, res, next) => {
     if (req.files && req.files.length > 0) {
       for (i = 0; i < req.files.length; i++) {
         image[i] = req.files[i].filename;
+        await Sharp('./public/adminAsset/adminImages/' +req.files[i].filename)  // added await to ensure image is resized before uploading
+        .resize(400, 400)
+        .toFile(
+          "./public/adminAsset/adminImages/productImage/" + req.files[i].filename
+        );
       }
     }
     // const category = await categorymodel.findById(req.body.id);

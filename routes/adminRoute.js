@@ -87,5 +87,6 @@ admin_route.post(
 );
 admin_route.get('/orderList',auth.isLogin,adminOrderController.loadOrderList)
 admin_route.get('/singleOrderList/:id',adminOrderController.loadSingleOrderList)
+admin_route.post('/changeStatus',adminOrderController.changeStatus);
 
 module.exports = admin_route;

@@ -23,7 +23,7 @@
                                                 <th scope="col">product Brand</th>
                                                 <th scope="col">Price</th>
                                                 <th scope="col">Status</th>
-                                                <th scope="col">Action</th>
+                                                <th scope="col" class="pl-5">Action</th>
                                               </tr>
                                         </thead>
                                         <tbody>
@@ -41,26 +41,28 @@
                                                 <td><%= orders.productId.brand%></td>
                                                 <td><%= orders.productPrice%></td>
                                                 <td><%= orders.status%></td>
-                                                <td>
-                                                    <!-- <div class="dropdown">
-                                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton<%= i %>" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Actions
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<%= i %>">
-                                                        <li><a class="dropdown-item" href="#">Action 1</a></li>
-                                                        <li><a class="dropdown-item" href="#">Action 2</a></li>
-                                                        <li><a class="dropdown-item" href="#">Action 3</a></li>
-                                                        </ul>
-                                                    </div> -->
-                                                    <div class="col-sm-9">
-                                                        <select class="form-control" name="brand">
-                                                          <option>Action</option>
-                                                          <option>Action</option>
-                                                          <option>Action</option>
-                                                          <option>Action</option>
+                                                <% if (orders.status === 'Delivered') { %>
+                                                    <td>Delivered</td>
+                                                <%}else if(orders.status === 'return'){ %>
+                                                    <td>
+                                                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBa">View Reason</button> -->
+                                                    </td>
+                                                <% } else if (orders.status === 'cancelled') { %>
+                                                    <td>
+                                                        <button type="button" class="btn disabled">cancelled</button>
+                                                    </td>
+                                                <% } else { %>
+                                                <td> 
+                                                    
+                                                        <select class="form-control w-50" name="status" onchange="changeStatus(this.value, '<%= orders._id %>', '<%= order.userId %>')">
+                                                            <option selected ="Shipped">Placed</option>
+                                                            <option value="Shipped">Shipped</option>
+                                                            <option value="Delivered">Delivered</option>
+                                                            <option value="Out for Delivery">Out for Delivery</option>
+                                                            <option value="return">return</option>
                                                         </select>
-                                                      </div>
-                                            
+                                                      
+                                            <%}%>
                                                 </td>
                                               </tr>
                                               <%
@@ -78,6 +80,23 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                function changeStatus(status, orderId, userId) {
+                    $.ajax({
+                        method: 'post',
+                        url: '/admin/changeStatus',
+                        data: {
+                            status: status,
+                            orderId: orderId,
+                            userId: userId
+                        },
+                        success: (response) => {
+                            location.reload();
+                        }
+                    });
+                }
+            </script>
 
         
 <%- include('../layouts/adminLayout/footer.ejs') %>

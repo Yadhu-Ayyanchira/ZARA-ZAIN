@@ -53,10 +53,8 @@
               State:<%= address[i].state %><br>
               PIN:<%= address[i].pincode %>
             </label><br /><br />
-            <a href="/editAddress/<%= address[i]._id %>">
-              <button class="btn btn-sm btn-danger font-weight-bold">
+            <a href="/editAddress/<%= address[i]._id %>" class="btn btn-sm btn-danger font-weight-bold ">
                 Editt
-              </button>
             </a>
             <a class="btn btn-sm btn-danger font-weight-bold " type="button" onclick="deleteAddress('<%= address[i]._id %>')">Delete </a>
             
