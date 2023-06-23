@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const usermodel = require("../Models/userModel");
 const productmodel = require("../Models/productmodel")
 const Order = require('../Models/orderModel')
+const Banner = require('../Models/bannerModel')
 const session = require("express-session");
 
 let message;
@@ -22,7 +23,8 @@ const loadLogin = async (req, res, next) => {
     res.render("login", { message });
     message = null;
   } catch (error) {
-    next(error);  }
+    next(error);
+  }
 };
 
 const verifyLogin = async (req, res, next) => {
@@ -52,7 +54,8 @@ const verifyLogin = async (req, res, next) => {
       res.render("login", { message: "Email and password incorrect" });
     }
   } catch (error) {
-    next(error);  }
+    next(error);
+  }
 };
 
 // const loadDashboard = async (req, res, next) => {
@@ -75,10 +78,10 @@ const logout = async (req, res) => {
 
 const adminDashboard = async (req, res, next) => {
   try {
-    const orderData = await Order.find({ });
+    const orderData = await Order.find({});
     const products = await productmodel.find({});
     const adminData = await usermodel.findById({ _id: req.session.Auser_id });
-    res.render("dashboard", { admin: adminData, products, order:orderData });
+    res.render("dashboard", { admin: adminData, products, order: orderData });
   } catch (error) {
     next(error);
   }
@@ -186,6 +189,48 @@ const unblock = async (req, res, next) => {
   }
 };
 
+const loadAddBanner = async (req, res) => {
+  try {
+    const adminData = await usermodel.findById({ _id: req.session.Auser_id });
+    //const banner= await Banner.find({})
+
+    res.render('addBanner', { admin: adminData, })
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
+const addBanner = async (req, res) => {
+  try {
+
+    const adminid = req.session.Auser_id;
+    const adminData = await User.findOne({ _id: adminid });
+    const banner = new Banner({
+      mainText:req.body.mainText,
+      discription:req.body.discription,
+      image: req.file.filename
+    });
+
+    const bannerData = await banner.save();
+
+    if (bannerData) {
+      res.render("bannerlist", {
+        message: "Product added successfully",
+        admin: adminData,
+        banner: bannerData
+      });
+    } else {
+      return res.render("bannerlist", {
+        message: "Enter valid details",
+        admin: adminData,
+
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 module.exports = {
   loadLogin,
   verifyLogin,
@@ -194,6 +239,8 @@ module.exports = {
   newUserLoad,
   block,
   unblock,
+  loadAddBanner,
+  addBanner
   // editUserLoad,
   // updateUsers,
   // deleteUser,
