@@ -1,99 +1,144 @@
 <%- include('../layouts/user/header.ejs') %>
 
-<div id="reloadDiv">
-   
-
-    <!-- User profile section -->
-    <section class="ec-page-content ec-vendor-uploads ec-user-account pb-5">
-        <div class="d-flex justify-content-center ">
-            <div class="p-5 w-50 h-50" style="border: 1px solid #dee2e6">
-                <h1>Order Details</h1>
-                <span>Order Date :</span><span class="font-weight-bold"><%= orders.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %></span><br>
-                <span>Total Amount : <span class="font-weight-bold"><%= orders.totalAmount %></span></span><br>
-                <span>Payment Method :<span class="font-weight-bold"><%= orders.paymentMethod %></span></span><br>
-                <span> Order Id:</span><span class="font-weight-bold"><%= orders._id %></span></span><br>
-                <span>Address :</span><span class="font-weight-bold"><%= orders.deliveryAddress %></span></span><br>
-                <span>Expected Date :</span><span class="font-weight-bold"><%= expectedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %></span></span><br>
+    <div id="reloadDiv">
+        <!-- User profile section -->
+        <section class="ec-page-content ec-vendor-uploads ec-user-account pb-5">
+            <div class="d-flex justify-content-center">
+                <div class="p-5 w-50 h-50" style="border: 1px solid #dee2e6">
+                    <h1>Order Details</h1>
+                    <span>Order Date :</span><span class="font-weight-bold">
+                        <%= orders.date.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                            }).replace(/\//g,'-') %>
+                    </span><br>
+                    <span>Total Amount : <span class="font-weight-bold">
+                            <%= orders.totalAmount %>
+                        </span></span><br>
+                    <span>Payment Method :<span class="font-weight-bold">
+                            <%= orders.paymentMethod %>
+                        </span></span><br>
+                    <span>Order Id:</span><span class="font-weight-bold">
+                        <%= orders._id %>
+                    </span></span><br>
+                    <span>Address :</span><span class="font-weight-bold">
+                        <%= orders.deliveryAddress %>
+                    </span></span><br>
+                    <span>Expected Date :</span><span class="font-weight-bold">
+                        <%= expectedDate.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                            }).replace(/\//g,'-') %>
+                    </span></span><br>
+                </div>
             </div>
-        </div>
 
-        <div class="container p-1">
-            <div class="ec-shop-rightside col-lg-12 col-md-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Transaction Id</th>
-                            <th scope="col">Total Price</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% if (orders.products.length > 0) {
-                        orders.products.forEach((orders) => { %>
-                        <tr>
-                            <td>
-                                <img width="50px" height="50px" src="/adminAsset/adminImages/<%=orders.productId.image[0]%>" alt="">
-                                <%= orders.productId.productName %>
-                            </td>
-                            <td><%= orders.count %></td>
-                            <td><%= orders.productId._id %></td>
-                            <td><%= orders.productPrice %></td>
-                            <td><%= orders.status %></td>
-                            <td>
-                                <% if (orders.status === 'cancelled') { %>
-                                    <button class="btn btn-dark disabled">Cancelled</button>
-                                <% } else if (orders.status === 'Delivered') { %>
-                                <button class="btn btn-outline-dark">Return</button>
-                                <% } else { %>
-                                <button onclick="cancelOrder('<%= orders._id %>')" class="btn btn-outline-danger">Cancel</button>
-                                <% } %>
-                            </td>
-                        </tr>
-                        <% }) } %>
-                    </tbody>
-                </table>
+            <div class="container p-1">
+                <div class="ec-shop-rightside col-lg-12 col-md-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Transaction Id</th>
+                                <th scope="col">Total Price</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (orders.products.length> 0) {
+                                orders.products.forEach((order) => { %>
+                                <tr>
+                                    <td>
+                                        <img width="50px" height="50px"
+                                            src="/adminAsset/adminImages/<%= order.productId.image[0] %>" alt="">
+                                        <%= order.productId.productName %>
+                                    </td>
+                                    <td>
+                                        <%= order.count %>
+                                    </td>
+                                    <td>
+                                        <%= order.productId._id %>
+                                    </td>
+                                    <td>
+                                        <%= order.productPrice %>
+                                    </td>
+                                    <td>
+                                        <%= order.status %>
+                                    </td>
+                                    <td>
+                                        <% if (order.status==='cancelled' ) { %>
+                                            <button class="btn btn-dark disabled">Cancelled</button>
+                                            <% } else if (order.status==='Delivered' ) { %>
+                                                <% if ((new Date() - orders.date) / (1000 * 60 * 60 * 24) <=2) { %>
+                                                    <button class="btn btn-outline-dark">Return</button>
+                                                    <% } else { %>
+                                                        <button class="btn btn-outline-dark disabled">Return</button>
+                                                        <% } %>
+                                                            <% } else { %>
+                                                                <button onclick="cancelOrder('<%= order._id %>')"
+                                                                    class="btn btn-outline-danger">Cancel</button>
+                                                                <% } %>
+                                    </td>
+                                </tr>
+                                <% }) } %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </section>
-</div>
-<!-- End User profile section -->
+        </section>
+    </div>
 
-<script>
-    function cancelOrder(order) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You want to cancel the order!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "/cancelOrder",
-                    data: {
-                        id: order
-                    },
-                    method: 'post',
-                    success: (response) => {
-                        location.reload();
-                    },
-                    error: (error) => {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred while deleting the item.',
-                            icon: 'error',
-                            showConfirmButton: false
-                        });
-                    }
-                });
+    <!-- End User profile section -->
+
+    <script>
+        function calculateDateDifference() {
+            alert('im calculate')
+            var orderDate = new Date("<%= orders.date %>");
+            var currentDate = new Date();
+            var timeDifference = currentDate.getTime() - orderDate.getTime();
+            var daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            return daysDifference;
+        }
+
+        window.onload = function () {
+            var returnButton = document.querySelector('.btn-outline-dark');
+            var daysDifference = calculateDateDifference();
+
+            if (daysDifference > 7) {
+                returnButton.disabled = true;
+                returnButton.classList.add('disabled');
             }
-        });
-    }
-</script>
+        };
+        function cancelOrder(order) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to cancel the order!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/cancelOrder",
+                        data: {
+                            id: order
+                        },
+                        method: 'post',
+                        success: (response) => {
+                            location.reload();
+                        },
+                        error: (error) => {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An error occurred while deleting the item.',
+                                icon: 'error',
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
 
-<%- include('../layouts/user/footer.ejs') %>
+    <%- include('../layouts/user/footer.ejs') %>

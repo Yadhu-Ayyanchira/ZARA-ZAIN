@@ -5,12 +5,16 @@ const banner=mongoose.Schema({
     mainText:{
         type:String
     },
-    discription:{
+    description:{
         type:String
     },
     image:{
         type:String,
         required:true
+    },
+    status:{
+        type:Boolean,
+        default:true
     }
 });
 

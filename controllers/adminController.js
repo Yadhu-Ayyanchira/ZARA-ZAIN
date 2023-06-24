@@ -207,7 +207,7 @@ const addBanner = async (req, res) => {
     const adminData = await User.findOne({ _id: adminid });
     const banner = new Banner({
       mainText:req.body.mainText,
-      discription:req.body.discription,
+      description:req.body.description,
       image: req.file.filename
     });
 

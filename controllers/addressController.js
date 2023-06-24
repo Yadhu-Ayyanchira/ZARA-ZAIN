@@ -110,7 +110,10 @@ const insertAddress = async (req, res, next) => {
       });
       console.log(address);
       const addressData = await address.save();
-
+      let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
+        "products.productId"
+      );
+      const products = cartData.products;
       if (addressData) {
         console.log("here1111");
         const addresses = await Address.find(); // Renamed 'address' to 'addresses'
@@ -120,6 +123,7 @@ const insertAddress = async (req, res, next) => {
           categoryData,
           session,
           userData,
+          products
         });
       } else {
         console.log("here222");

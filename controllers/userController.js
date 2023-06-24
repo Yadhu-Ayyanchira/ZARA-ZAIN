@@ -6,6 +6,7 @@ const session = require("express-session");
 const nodemailer = require("nodemailer");
 const randomString = require("randomstring");
 const Address = require("../Models/addressModel");
+const Banner = require('../Models/bannerModel')
 const dotenv = require("dotenv");
 dotenv.config();
 let message;
@@ -60,6 +61,7 @@ const sendverifyMail = async (name, email, otp) => {
 
 const loadHome = async (req, res, next) => {
   try {
+    const banner = await Banner.find({})
     const categoryData = await categoryModel.find();
     const productData = await productmodel.find();
     if (req.session.user_id) {
@@ -70,11 +72,12 @@ const loadHome = async (req, res, next) => {
         session: session,
         productData: productData,
         categoryData,
+        banner
       });
     } else {
       console.log("destroyyyyy");
       const session = null;
-      res.render("index", { session, productData, categoryData });
+      res.render("index", { session, productData, categoryData,banner });
     }
   } catch (error) {
     next(error);
@@ -188,6 +191,7 @@ const insertUser = async (req, res, next) => {
 
 const verifyLogin = async (req, res, next) => {
   try {
+    const banner = await Banner.find({})
     const categoryData = await categoryModel.find();
     const session = null;
     const email = req.body.email;
@@ -202,7 +206,7 @@ const verifyLogin = async (req, res, next) => {
       if (passwordMatch) {
         req.session.user_id = userData._id;
         const session = req.session.user_id;
-        res.render("index", { userData, session, productData, categoryData });
+        res.render("index", { userData, session, productData, categoryData,banner });
       } else {
         res.render("login", {
           userData: userData,

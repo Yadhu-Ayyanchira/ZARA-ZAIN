@@ -3,23 +3,45 @@ const Order = require('../Models/orderModel');
 const Category = require('../Models/categoryModel');
 
 
-const loadOrderList = async (req,res,next)=>{
-    try{
-        const session = req.session.Auser_id
-      const categoryData = await Category.find();
-      const adminData = await User.findById(req.session.Auser_id);  
-      const DeletePending = await Order.deleteMany({status:'pending'})
-      const orderData = await Order.find().populate("products.productId")
-      if(orderData.length > 0){
-        res.render('orderList', {session, categoryData ,admin: adminData, activePage: 'orderList',order:orderData});
-      }else{
-        res.render('orderList', {session, categoryData ,admin: adminData, activePage: 'orderList',order:[]});
-      }
+// const loadOrderList = async (req,res,next)=>{
+//     try{
+//         const session = req.session.Auser_id
+//       const categoryData = await Category.find();
+//       const adminData = await User.findById(req.session.Auser_id);  
+//       const DeletePending = await Order.deleteMany({status:'pending'})
+//       const orderData = await Order.find().populate("products.productId")
+//       if(orderData.length > 0){
+//         res.render('orderList', {session, categoryData ,admin: adminData, activePage: 'orderList',order:orderData});
+//       }else{
+//         res.render('orderList', {session, categoryData ,admin: adminData, activePage: 'orderList',order:[]});
+//       }
       
-    }catch(err){
-      next(err);
+//     }catch(err){
+//       next(err);
+//     }
+//   }
+
+const loadOrderList = async (req, res, next) => {
+  try {
+    const session = req.session.Auser_id;
+    const categoryData = await Category.find();
+    const adminData = await User.findById(req.session.Auser_id);
+    const DeletePending = await Order.deleteMany({ status: 'pending' });
+    let orderData = await Order.find().populate("products.productId");
+
+    // Sort the orderData in ascending order based on a specific property (e.g., createdAt)
+    orderData.sort((a, b) => b.date - a.date );
+
+    if (orderData.length > 0) {
+      res.render('orderList', { session, categoryData, admin: adminData, activePage: 'orderList', order: orderData });
+    } else {
+      res.render('orderList', { session, categoryData, admin: adminData, activePage: 'orderList', order: [] });
     }
+  } catch (err) {
+    next(err);
   }
+};
+
 
 
   const loadSingleOrderList = async (req,res,next)=>{
