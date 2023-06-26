@@ -61,5 +61,7 @@ admin_route.get('/deleteBanner', auth.isLogin, adminController.deleteBanner)
 admin_route.get('/editBanner/:id', auth.isLogin, adminController.editBanner);
 admin_route.get('/editBanner/:id', auth.isLogin, adminController.editBanner);
 
+admin_route.get("/salesReport", auth.isLogin, adminController.loadSalesReport);
+
 
 module.exports = admin_route;

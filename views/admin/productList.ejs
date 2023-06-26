@@ -3,79 +3,94 @@
   <%- include('../layouts/adminLayout/sidebar.ejs') %>
     <%- include('../layouts/adminLayout/navbar.ejs') %>
 
-<div class="main-panel bg-warning">
-  <div class="content-wrapper">
-    <div class="row bg-dark">
-      <div class="card-body">
-        <h4 class="card-title">PRODUCT LIST</h4>
-        <div class="table">
-          <table class="table-hover text-white">
-            <thead>
-              <tr>
-                <th class="text-warning">No</th>
-                <th class="text-warning">Image</th>
-                <th class="text-warning">Product Name</th>
-                <th class="text-warning">Price</th>
-                <th class="text-warning">Brand</th>
-                <th class="text-warning">Category</th>
-                <th class="text-warning">Stock</th>
-                <th class="text-warning">Description</th>
-                <th class="text-warning">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if (products.length > 0) { %>
-              <% for (let i = 0; i < products.length; i++) { %>
-              <tr>
-                <td><%= i + 1 %></td>
-                <td class="py-1">
-                  <% for (let j = 0; j < 1; j++) { %>
-                  <img style="width: 50px; height: 50px;" src="/adminAsset/adminImages/<%= products[i].image[j] %>" alt="image" />
-                  <% } %>
-                </td>
-                <td><% let productName = products[i].productName; %>
-                  <% if (productName.length > 15) { %>
-                  <% productName = productName.substring(0, 15) + '...'; %>
-                  <% } %>
-                  <%= productName %></td>
-                <td><%= products[i].price %></td>
-                <td><%= products[i].brand %></td>
-                <td><%= products[i].category %></td>
-                <td><%= products[i].StockQuantity %></td>
-                <td>
-                  <% let description = products[i].description; %>
-                  <% if (description.length > 50) { %>
-                  <% description = description.substring(0, 50) + '...'; %>
-                  <% } %>
-                  <%= description %>
-                </td>
-                <td>
-                  <!-- Add your action buttons or links here -->
-                  <a class="btn btn-success" href="editProduct?id=<%= products[i]._id %>">
-                    Edit
-                  </a>
-                  <a class="btn btn-danger" href="deleteProduct?id=<%= products[i]._id %>"
-                    onclick="return confirm('Are you sure you want to delete <%= products[i].productName%>?')">
-                    Delete
-                  </a>
-                </td>
-              </tr>
-              <% } %>
-              <% } else { %>
-              <tr>
-                <td colspan="9">No products found.</td>
-              </tr>
-              <% } %>
-            </tbody>
-          </table>
-          
-        </div>
-        <% if (typeof message !== 'undefined') { %>
-          <p style="color: red;"><%= message %></p>
-        <% } %>
-      </div>
-    </div>
-  </div>
-</div>
+      <div class="main-panel bg-warning">
+        <div class="content-wrapper">
+          <div class="row bg-dark">
+            <div class="card-body">
+              <h4 class="card-title">PRODUCT LIST</h4>
+              <div class="table">
+                <table class="table-hover text-white">
+                  <thead>
+                    <tr>
+                      <th class="text-warning">No</th>
+                      <th class="text-warning">Image</th>
+                      <th class="text-warning">Product Name</th>
+                      <th class="text-warning">Price</th>
+                      <th class="text-warning">Brand</th>
+                      <th class="text-warning">Category</th>
+                      <th class="text-warning">Stock</th>
+                      <th class="text-warning">Description</th>
+                      <th class="text-warning">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if (products.length> 0) { %>
+                      <% for (let i=0; i < products.length; i++) { %>
+                        <tr>
+                          <td>
+                            <%= i + 1 %>
+                          </td>
+                          <td class="py-1">
+                            <% for (let j=0; j < 1; j++) { %>
+                              <img style="width: 50px; height: 50px;"
+                                src="/adminAsset/adminImages/<%= products[i].image[j] %>" alt="image" />
+                              <% } %>
+                          </td>
+                          <td>
+                            <% let productName=products[i].productName; %>
+                              <% if (productName.length> 15) { %>
+                                <% productName=productName.substring(0, 15) + '...' ; %>
+                                  <% } %>
+                                    <%= productName %>
+                          </td>
+                          <td>
+                            <%= products[i].price %>
+                          </td>
+                          <td>
+                            <%= products[i].brand %>
+                          </td>
+                          <td>
+                            <%= products[i].category %>
+                          </td>
+                          <td>
+                            <%= products[i].StockQuantity %>
+                          </td>
+                          <td>
+                            <% let description=products[i].description; %>
+                              <% if (description.length> 50) { %>
+                                <% description=description.substring(0, 50) + '...' ; %>
+                                  <% } %>
+                                    <%= description %>
+                          </td>
+                          <td>
+                            <!-- Add your action buttons or links here -->
+                            <a class="btn btn-success" href="editProduct?id=<%= products[i]._id %>">
+                              Edit
+                            </a>
+                            <a class="btn btn-danger" href="deleteProduct?id=<%= products[i]._id %>"
+                              onclick="return confirm('Are you sure you want to delete <%= products[i].productName%>?')">
+                              Delete
+                            </a>
+                          </td>
+                        </tr>
+                        <% } %>
+                          <% } else { %>
+                            <tr>
+                              <td colspan="9">No products found.</td>
+                            </tr>
+                            <% } %>
+                  </tbody>
+                </table>
 
-<%- include('../layouts/adminLayout/footer.ejs') %>
+              </div>
+              <% if (typeof message !=='undefined' ) { %>
+                <p style="color: red;">
+                  <%= message %>
+                </p>
+                <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%- include('../layouts/adminLayout/footer.ejs') %>

@@ -132,6 +132,8 @@ const placeOrder = async (req, res, next) => {
       const userData = await Order.findById(req.session.user_id)
       const orderData = await Order.findOne({ userId: req.session.user_id, 'products._id': id})
       const product = orderData.products.find((p) => p._id.toString() === id);
+      const procount = product.count;
+      const proId = product.productId;
       const cancelledAmount = product.totalPrice    
       const updatedOrder = await Order.findOneAndUpdate(
         {
@@ -146,6 +148,7 @@ const placeOrder = async (req, res, next) => {
         { new: true }
       );
       if (updatedOrder) {
+        await Product.findByIdAndUpdate({ _id: proId }, { $inc: { stockQuantity: procount } });
         if (orderData.paymentMethod === 'onlinPayment'){
            await User.findByIdAndUpdate({_id:req.session.user_id},{$inc:{wallet:cancelledAmount}})
            res.json({ success: true });
