@@ -159,8 +159,43 @@ const adminDashboard = async (req, res, next) => {
     if (onlineResult.length > 0) {
       onlineTotal = onlineResult[0].total;
     }
-console.log('online:'+onlineTotal+'  cod:'+codTotal+'   total:'+total);
-    res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, total });
+
+
+
+    const weeklySalesCursor = Order.aggregate([
+      {
+        $unwind: "$products"
+      },
+      {
+        $match: {
+          'products.status': 'Delivered'
+        }
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%d-%m-%Y", date: "$date" } },
+          sales: { $sum: '$products.totalPrice' }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      },
+      {
+        $limit: 7
+      }
+    ]);
+
+    const weeklySales = await weeklySalesCursor.exec();
+    console.log(weeklySalesCursor);
+
+    const dates = weeklySales.map(item => item._id);
+    const sales = weeklySales.map(item => item.sales);
+    const salesSum = (weeklySales.reduce((accumulator, item) => accumulator + item.sales, 0)).toFixed(2);
+
+    console.log(sales, dates);
+
+
+    res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, total, sales, dates });
   } catch (error) {
     next(error);
   }

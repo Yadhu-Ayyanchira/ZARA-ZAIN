@@ -293,6 +293,7 @@ const verifyLoad = async (req, res, next) => {
   const otp2 = req.body.otp;
   try {
     const session = req.session.user_id;
+    console.log(session+'helloo');
     const categoryData = await categoryModel.find();
     if (otp2 == otp) {
       
