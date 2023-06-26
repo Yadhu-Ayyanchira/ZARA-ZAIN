@@ -27,7 +27,7 @@ const productSchemaa=new mongoose.Schema({
         required:true,
     },
     StockQuantity:{
-        type :String,
+        type :Number,
         required:true,
     },
     Status:{

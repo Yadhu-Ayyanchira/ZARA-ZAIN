@@ -40,8 +40,9 @@ const placeOrder = async (req, res, next) => {
         console.log('yessss');
         for (let i = 0; i < products.length; i++) {
           const pro = products[i].productId;
-          const count = products[i].count;
-          await Product.findByIdAndUpdate({ _id: pro }, { $inc: { quantity: -count } });
+          const count = parseInt( products[i].count)
+          console.log('pro:'+pro+'  count:'+count);
+          await Product.findByIdAndUpdate({ _id: pro }, { $inc: { StockQuantity:  -count } });
         }
   
         if (order.status === 'placed') {
@@ -131,7 +132,7 @@ const placeOrder = async (req, res, next) => {
       const userData = await Order.findById(req.session.user_id)
       const orderData = await Order.findOne({ userId: req.session.user_id, 'products._id': id})
       const product = orderData.products.find((p) => p._id.toString() === id);
-      const cancelledAmount = product.totalPrice     
+      const cancelledAmount = product.totalPrice    
       const updatedOrder = await Order.findOneAndUpdate(
         {
           userId: req.session.user_id,
@@ -144,15 +145,13 @@ const placeOrder = async (req, res, next) => {
         },
         { new: true }
       );
-
-  
       if (updatedOrder) {
-        //if(orderData.paymentMethod === 'online-payment'){
-          // await User.findByIdAndUpdate({_id:req.session.user_id},{$inc:{wallet:cancelledAmount}})
+        if (orderData.paymentMethod === 'onlinPayment'){
+           await User.findByIdAndUpdate({_id:req.session.user_id},{$inc:{wallet:cancelledAmount}})
            res.json({ success: true });
-        //}else{
-          // res.json({ success: true });
-       // }
+        }else{
+           res.json({ success: true });
+        }
       } else {
         res.json({ success: false });
       }

@@ -1,6 +1,7 @@
 const User = require("../Models/userModel");
 const Address = require("../Models/addressModel");
 const Category = require("../Models/categoryModel");
+const Cart =require ('../Models/cartModel')
 
 //-------- Address loding section  -----------//
 // const loadAddress = async (req, res, next) => {
@@ -118,13 +119,7 @@ const insertAddress = async (req, res, next) => {
         console.log("here1111");
         const addresses = await Address.find(); // Renamed 'address' to 'addresses'
         console.log(addresses);
-        return res.render("checkout", {
-          address:addresses,
-          categoryData,
-          session,
-          userData,
-          products
-        });
+        return res.redirect("/checkout");
       } else {
         console.log("here222");
 

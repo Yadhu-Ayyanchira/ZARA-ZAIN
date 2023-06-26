@@ -209,18 +209,26 @@ const changeProductCount = async (req,res,next) => {
 };
 
 
-const removeProduct = async (req, res, next) => {
+const deletecart = async (req, res, next) => {
+
   try {
-    const user = req.session.user_id;
-    const id = req.query.id;
-    console.log(id, user);
-    await Cart.updateOne(
-      { userId: user },
-      { $pull: { products: { productId: id } } }
-    );
-    res.redirect("/cart");
+    const userData = req.session.user_id;
+
+    const proId = req.body.products;
+    const cartData = await Cart.findOne({ userId: userData });
+    if (cartData.products.length === 1) {
+      const c = await Cart.deleteOne({ userId: userData });
+
+    } else {
+      const v = await Cart.updateOne(
+        { userId: userData },
+        { $pull: { products: { productId: proId } } }
+      );
+    }
+    res.json({ success: true });
   } catch (error) {
-    next(error);
+    next(error)
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -308,7 +316,7 @@ module.exports = {
   addToCart,
   changeProductCount,
   //loadEmptyCart,
-  removeProduct,
+  deletecart,
   loadCheckout,
   loadAddAddress,
 };

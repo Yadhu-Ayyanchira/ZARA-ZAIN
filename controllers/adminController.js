@@ -81,7 +81,86 @@ const adminDashboard = async (req, res, next) => {
     const orderData = await Order.find({});
     const products = await productmodel.find({});
     const adminData = await usermodel.findById({ _id: req.session.Auser_id });
-    res.render("dashboard", { admin: adminData, products, order: orderData });
+    const userData = await User.find({ is_block: false })
+
+
+    //find total delivered sale
+
+    const result = await Order.aggregate([
+      { $unwind: "$products" },
+      { $match: { 'products.status': 'Delivered' } },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$products.totalPrice' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          total: 1
+        }
+      }
+    ]);
+
+
+    let total = 0
+    if (result.length > 0) {
+       total = result[0].total;
+    }
+
+
+
+
+    //total cod sale
+
+    const codResult = await Order.aggregate([
+      { $unwind: "$products" },
+      { $match: { 'products.status': 'Delivered', paymentMethod: 'COD' } },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$products.totalPrice' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          total: 1
+        }
+      }
+    ]);
+
+    let codTotal = 0
+    if (codResult.length > 0) {
+      codTotal = codResult[0].total;
+    }
+
+
+    //total online payment and wallet
+    const onlineResult = await Order.aggregate([
+      { $unwind: "$products" },
+      { $match: { 'products.status': 'Delivered', 'paymentMethod': { $ne: 'COD' } } },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$products.totalPrice' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          total: 1
+        }
+      }
+    ]);
+
+    let onlineTotal = 0;
+    if (onlineResult.length > 0) {
+      onlineTotal = onlineResult[0].total;
+    }
+console.log('online:'+onlineTotal+'  cod:'+codTotal+'   total:'+total);
+    res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, total });
   } catch (error) {
     next(error);
   }
@@ -231,6 +310,50 @@ const addBanner = async (req, res) => {
   }
 };
 
+
+const bannerList = async (req, res, next) => {
+  try {
+
+    const adminData = await User.findById({ _id: req.session.Auser_id });
+
+    const bannerData = await Banner.find();
+    res.render('bannerList', { banners: bannerData, admin: adminData })
+
+  } catch (error) {
+    next(error)
+  }
+}
+
+//Deleting the banner
+const deleteBanner = async (req, res) => {
+  try {
+    const dlt = await Banner.deleteOne({ _id: req.query.id }, { $set: { is_delete: true } })
+
+    if (dlt) {
+      res.redirect('/admin/bannerList')
+    }
+    else {
+      res.redirect('/admin/bannerList')
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+
+//Edit Banner
+const editBanner = async (req, res) => {
+  try {
+    const BanData = await Banner.findById({ _id: req.params.id });
+    const adminData = await User.findById({ _id: req.session.Auser_id });
+    res.render('editBanner', { banner: BanData, admin: adminData })
+
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   loadLogin,
   verifyLogin,
@@ -240,7 +363,10 @@ module.exports = {
   block,
   unblock,
   loadAddBanner,
-  addBanner
+  addBanner,
+  bannerList,
+  deleteBanner,
+  editBanner
   // editUserLoad,
   // updateUsers,
   // deleteUser,

@@ -1,0 +1,56 @@
+<%- include('../layouts/adminLayout/header.ejs') %>
+
+    <%- include('../layouts/adminLayout/sidebar.ejs') %>
+        <%- include('../layouts/adminLayout/navbar.ejs') %>
+
+
+            <div class="main-panel bg-warning">
+                <div class="content-wrapper">
+                    <div class="row bg-dark">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card-body">
+                                <div class="card-body">
+                                    <h4 class="card-title">Banner List</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover text-white ">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-warning" scope="col">Image</th>
+                                                    <th class="text-warning" scope="col">Title</th>
+                                                    <th class="text-warning" scope="col">Description</th>
+                                                    <th class="text-warning" scope="col">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if(banners.length>0){
+                                                    for(let i=0;i<banners.length;i++){ %>
+                                                    <tr>
+                                                        <td>
+                                                            <img src="/adminAsset/bannerImages/<%=banners[i].image%>" alt="image" />
+                                                        </td>
+                                                        <td>
+                                                            <%=banners[i].mainText %>
+                                                        </td>
+                                                        <td>
+                                                            <%=banners[i]. description %>
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-success" href="/admin/editBanner/<%= banners[i]._id %>">
+                                                                Edit
+                                                            </a>
+                                                            <a class="btn btn-danger" href="deleteBanner?id=<%= banners[i]._id %>"
+                                                                onclick="return confirm('Are you sure you want to Delete <%= banners[i].banner %>?')">Delete</a>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                    <%} }%>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <%- include('../layouts/adminLayout/footer.ejs') %>

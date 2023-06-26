@@ -3,100 +3,138 @@
         <%- include('../layouts/adminLayout/navbar.ejs') %>
 
 
-        <div class="main-panel bg-warning">
-            <div class="content-wrapper">
-                <div class="row bg-dark">
-
-
-
-                    <div class="col-lg-12 grid-margin stretch-card">
-                        <div class="card-body">
-                            <div class="card-body">
-                                <h4 class="card-title">Order Details</h4> 
-                                <div class="table-responsive">
-                                    <table class="table table-hover text-white ">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-warning" scope="col">No</th>
-                                                <th class="text-warning" scope="col">Image</th>
-                                                <th class="text-warning" scope="col">product Name</th>
-                                                <th class="text-warning" scope="col">product Brand</th>
-                                                <th class="text-warning" scope="col">Price</th>
-                                                <th class="text-warning" scope="col">Status</th>
-                                                <th class="text-warning" scope="col" class="pl-5">Action</th>
-                                              </tr>
-                                        </thead>
-                                        <tbody>
-                                            
-                                            <% if(order.products.length > 0){
-                                                order.products.forEach((orders,i)=>{ 
-                                                  %>
-                                              <tr>
-                                                <td><%= i + 1 %></td>
-                                                <td class="py-1">
-                                                
-                                                    <img style="width: 45px; height: 45px;" src="/adminAsset/adminImages/<%= orders.productId.image[0]%>" alt="image" />
-                                                </td>
-                                                <td><%= orders.productId.productName%></td>
-                                                <td><%= orders.productId.brand%></td>
-                                                <td><%= orders.productPrice%></td>
-                                                <td><%= orders.status%></td>
-                                                <% if (orders.status === 'Delivered') { %>
-                                                    <td>Delivered</td>
-                                                <%}else if(orders.status === 'return'){ %>
-                                                    <td>
-                                                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBa">View Reason</button> -->
-                                                    </td>
-                                                <% } else if (orders.status === 'cancelled') { %>
-                                                    <td>
-                                                        <button type="button" class="btn disabled">cancelled</button>
-                                                    </td>
-                                                <% } else { %>
-                                                <td> 
-                                                    
-                                                        <select class="form-control w-50" name="status" onchange="changeStatus(this.value, '<%= orders._id %>', '<%= order.userId %>')">
-                                                            <option selected ="Shipped">Placed</option>
-                                                            <option value="Shipped">Shipped</option>
-                                                            <option value="Delivered">Delivered</option>
-                                                            <option value="Out for Delivery">Out for Delivery</option>
-                                                            <option value="return">return</option>
-                                                        </select>
-                                                      
-                                            <%}%>
-                                                </td>
-                                              </tr>
-                                              <%
-                                                })
-                                                }else{ %>
-                                                    <h1 class="d-flex justify-content-center">You Have No Orders</h1>
-                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        
-
-
+            <div class="main-panel bg-warning">
+                <div class="d-flex justify-content-center">
+                    <div class="p-5 w-50 h-100" style="border: 2px solid #dee2e6">
+                        <h1>Order Details</h1>
+                        <span>Name :<span class="font-weight-bold">
+                                <%= order.userName %>
+                            </span></span><br>
+                        <span>Order Date :</span><span class="font-weight-bold">
+                            <%= order.date.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' ,
+                                day: '2-digit' }).replace(/\//g,'-') %>
+                        </span><br>
+                        <span>Total Amount : <span class="font-weight-bold">
+                                <%= order.totalAmount %>
+                            </span></span><br>
+                        <span>Payment Method :<span class="font-weight-bold">
+                                <%= order.paymentMethod %>
+                            </span></span><br>
+                        <span>Order Id:</span><span class="font-weight-bold">
+                            <%= order._id %>
+                        </span></span><br>
+                        <span>Address :</span><span class="font-weight-bold">
+                            <%= order.deliveryAddress %>
+                        </span></span><br>
                     </div>
                 </div>
-            </div>
+                <div class="content-wrapper">
+                    <div class="row bg-dark">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card-body">
+                                <div class="card-body">
+                                    <h4 class="card-title">Order Details</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover text-white ">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-warning" scope="col">No</th>
+                                                    <th class="text-warning" scope="col">Image</th>
+                                                    <th class="text-warning" scope="col">product Name</th>
+                                                    <th class="text-warning" scope="col">product Brand</th>
+                                                    <th class="text-warning" scope="col">Price</th>
+                                                    <th class="text-warning" scope="col">Status</th>
+                                                    <th class="text-warning" scope="col" class="pl-5">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
 
-            <script>
-                function changeStatus(status, orderId, userId) {
-                    $.ajax({
-                        method: 'post',
-                        url: '/admin/changeStatus',
-                        data: {
-                            status: status,
-                            orderId: orderId,
-                            userId: userId
-                        },
-                        success: (response) => {
-                            location.reload();
+                                                <% if(order.products.length> 0){
+                                                    order.products.forEach((orders,i)=>{
+                                                    %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= i + 1 %>
+                                                        </td>
+                                                        <td class="py-1">
+
+                                                            <img style="width: 45px; height: 45px;"
+                                                                src="/adminAsset/adminImages/<%= orders.productId.image[0]%>"
+                                                                alt="image" />
+                                                        </td>
+                                                        <td>
+                                                            <%= orders.productId.productName%>
+                                                        </td>
+                                                        <td>
+                                                            <%= orders.productId.brand%>
+                                                        </td>
+                                                        <td>
+                                                            <%= orders.productPrice%>
+                                                        </td>
+                                                        <td>
+                                                            <%= orders.status%>
+                                                        </td>
+                                                        <% if (orders.status==='Delivered' ) { %>
+                                                            <td>Delivered</td>
+                                                            <%}else if(orders.status==='return' ){ %>
+                                                                <td>
+                                                                    <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBa">View Reason</button> -->
+                                                                </td>
+                                                                <% } else if (orders.status==='cancelled' ) { %>
+                                                                    <td>
+                                                                        <button type="button"
+                                                                            class="btn disabled">cancelled</button>
+                                                                    </td>
+                                                                    <% } else { %>
+                                                                        <td>
+
+                                                                            <select class="form-control w-50"
+                                                                                name="status"
+                                                                                onchange="changeStatus(this.value, '<%= orders._id %>', '<%= order.userId %>')">
+                                                                                <option selected="Shipped">Placed
+                                                                                </option>
+                                                                                <option value="Shipped">Shipped</option>
+                                                                                <option value="Delivered">Delivered
+                                                                                </option>
+                                                                                <option value="Out for Delivery">Out for
+                                                                                    Delivery</option>
+                                                                                <option value="return">return</option>
+                                                                            </select>
+
+                                                                            <%}%>
+                                                                        </td>
+                                                    </tr>
+                                                    <% }) }else{ %>
+                                                        <h1 class="d-flex justify-content-center">You Have No Orders
+                                                        </h1>
+                                                        <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function changeStatus(status, orderId, userId) {
+                            $.ajax({
+                                method: 'post',
+                                url: '/admin/changeStatus',
+                                data: {
+                                    status: status,
+                                    orderId: orderId,
+                                    userId: userId
+                                },
+                                success: (response) => {
+                                    location.reload();
+                                }
+                            });
                         }
-                    });
-                }
-            </script>
+                    </script>
 
-        
-<%- include('../layouts/adminLayout/footer.ejs') %>
+
+                    <%- include('../layouts/adminLayout/footer.ejs') %>

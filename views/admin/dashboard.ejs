@@ -89,26 +89,174 @@
                   <canvas id="transaction-history" class="transaction-chart"></canvas>
                   <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
                     <div class="text-md-center text-xl-left">
-                      <h6 class="mb-1">Transfer to Paypal</h6>
+                      <h6 class="mb-1">Total COD</h6>
                       <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p>
                     </div>
                     <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
-                      <h6 class="font-weight-bold mb-0">$2360</h6>
+                      <h6 class="font-weight-bold mb-0"><%= codTotal %></h6>
                     </div>
                   </div>
                   <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row py-3 px-4 px-md-3 px-xl-4 rounded mt-3">
                     <div class="text-md-center text-xl-left">
-                      <h6 class="mb-1">Tranfer to Stripe</h6>
+                      <h6 class="mb-1">Total Online Payment</h6>
                       <p class="text-muted mb-0">07 Jan 2019, 09:12AM</p>
                     </div>
                     <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
-                      <h6 class="font-weight-bold mb-0">$593</h6>
+                      <h6 class="font-weight-bold mb-0"><%= onlineTotal %></h6>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Bar chart</h4>
+                  <canvas id="barChart" style="height:230px"></canvas>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var ctx = document.getElementById("transaction-history").getContext("2d");
+   var areaData = {
+      labels: ["Wallet", "Online", "COD"],
+      datasets: [{
+        data: ['<%= codTotal %>', '<%= onlineTotal %>', '<%= codTotal %>'],
+        backgroundColor: [
+          "#dc3545", "#00d25b", "#ffab00"
+        ]
+      }
+      ]
+    };
+    var areaOptions = {
+      responsive: true,
+      maintainAspectRatio: true,
+      segmentShowStroke: false,
+      cutoutPercentage: 70,
+      elements: {
+        arc: {
+          borderWidth: 0
+        }
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: true
+      }
+    }
+    var transactionhistoryChartPlugins = {
+      beforeDraw: function (chart) {
+        var width = chart.chart.width,
+          height = chart.chart.height,
+          ctx = chart.chart.ctx;
+
+        ctx.restore();
+        var fontSize = 1;
+        ctx.font = fontSize + "rem sans-serif";
+        ctx.textAlign = 'left';
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#ffffff";
+
+        var text = "$1200",
+          textX = Math.round((width - ctx.measureText(text).width) / 2),
+          textY = height / 2.4;
+
+        ctx.fillText(text, textX, textY);
+
+        ctx.restore();
+        var fontSize = 0.75;
+        ctx.font = fontSize + "rem sans-serif";
+        ctx.textAlign = 'left';
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#6c7293";
+
+        var texts = "Total",
+          textsX = Math.round((width - ctx.measureText(text).width) / 1.93),
+          textsY = height / 1.7;
+
+        ctx.fillText(texts, textsX, textsY);
+        ctx.save();
+      }
+    }
+    var transactionhistoryChartCanvas = $("#transaction-history").get(0).getContext("2d");
+    var transactionhistoryChart = new Chart(transactionhistoryChartCanvas, {
+      type: 'doughnut',
+      data: areaData,
+      options: areaOptions,
+      plugins: transactionhistoryChartPlugins
+    });
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+      var ctx = document.getElementById("barChart").getContext("2d");
+    
+    var data = {
+      labels: ["2013", "2014", "2014", "2015", "2016", "2017", "2018"],
+      datasets: [{
+        label: '# of Votes',
+        data: [10, 19, 3, 5, 2, 23,5],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 159, 94, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255, 159, 94, 1)'
+        ],
+        borderWidth: 1,
+        fill: false
+      }]
+    };
+    var options = {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          },
+          gridLines: {
+            color: "rgba(204, 204, 204,0.1)"
+          }
+        }],
+        xAxes: [{
+          gridLines: {
+            color: "rgba(204, 204, 204,0.1)"
+          }
+        }]
+      },
+      legend: {
+        display: false
+      },
+      elements: {
+        point: {
+          radius: 0
+        }
+      }
+    };
+
+      var barCanvas = $("#barChart").get(0).getContext("2d");
+      var transactionhistoryChart = new Chart(barCanvas, {
+        type: 'bar',
+        data: data,
+        options: options,
+        
+      });
+    });
+</script>
+
       <%- include('../layouts/adminLayout/footer.ejs') %>

@@ -56,6 +56,10 @@ admin_route.get('/singleOrderList/:id', adminOrderController.loadSingleOrderList
 admin_route.post('/changeStatus', adminOrderController.changeStatus);
 admin_route.get('/addBanner', auth.isLogin, adminController.loadAddBanner);
 admin_route.post('/addBanner', bannerUploads.bannerUpload.single("image"), adminController.addBanner);
+admin_route.get('/bannerList', auth.isLogin, adminController.bannerList)
+admin_route.get('/deleteBanner', auth.isLogin, adminController.deleteBanner)
+admin_route.get('/editBanner/:id', auth.isLogin, adminController.editBanner);
+admin_route.get('/editBanner/:id', auth.isLogin, adminController.editBanner);
 
 
 module.exports = admin_route;

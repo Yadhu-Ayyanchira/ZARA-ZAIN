@@ -59,7 +59,7 @@ user_route.get("/userProfile",auth.isBlock, auth.isLogin, userController.loadPro
 
 user_route.get("/cart",auth.isBlock, auth.isLogin, cartController.loadCart);
 user_route.post("/addToCart",auth.isBlock, auth.isLogin, cartController.addToCart);
-user_route.get("/removeProduct", cartController.removeProduct);
+user_route.post("/deleteCart", auth.isBlock, auth.isLogin, cartController.deletecart);
 user_route.post(
   "/changeQuantity",
   auth.isLogin,
