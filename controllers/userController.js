@@ -63,7 +63,7 @@ const loadHome = async (req, res, next) => {
   try {
     const banner = await Banner.find({})
     const categoryData = await categoryModel.find();
-    const productData = await productmodel.find();
+    const productData = await productmodel.find({ is_delete: false });
     if (req.session.user_id) {
       const session = req.session.user_id;
       const userData = await User.findById({ _id: req.session.user_id });
@@ -198,7 +198,7 @@ const verifyLogin = async (req, res, next) => {
     const password = req.body.password;
 
     const userData = await User.findOne({ email: email });
-    const productData = await productmodel.find();
+    const productData = await productmodel.find({ is_delete: false });
 
     if (userData && userData.is_block == false) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
@@ -242,7 +242,7 @@ const loadShop = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
-      const productData = await productmodel.find();
+      const productData = await productmodel.find({ is_delete: false });
       const categoryData = await categoryModel.find();
       const userData = await User.findById({ _id: req.session.user_id });
       res.render("shop", {

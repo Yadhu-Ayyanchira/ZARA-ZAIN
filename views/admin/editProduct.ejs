@@ -2,65 +2,94 @@
     <%- include('../layouts/adminLayout/sidebar.ejs') %>
         <%- include('../layouts/adminLayout/navbar.ejs') %>
 
+            <div class="card-body">
+                <h3 class="card-title">Edit Product</h3>
 
-        <div class="card-body">
-            <h3 class="card-title">Edit Product</h3>
-        
-            <form action="" method="POST" class="form-group m-2 mt-3" enctype="multipart/form-data">
-                <label class="text-warning">PRODUCT</label>
-                <input type="name" class="form-control form-control-lg" name="name" placeholder="Enter Name"
-                    value="<%=product.productName %>" required>
-                <br>
-                <label class="text-warning">STOCK</label>
-        
-                <input type="text" class="form-control form-control-lg" name="stock" placeholder="Enter stock"
-                    value="<%=product.StockQuantity %>" required>
-                <br>
-                <label class="text-warning">PRICE</label>
-        
-                <input type="text" class="form-control form-control-lg" name="price" placeholder="Enter price"
-                    value="<%=product.price %>" required>
-                <br>
-        
-                <div class="point col-md-12" style="display: flex;">
-                    <% for(let i=0;i<product.image.length;i++){ %>
-        
-                        <div>
-                            <label for="image" class="text-warning">Image</label>
-                            <img style="width: 150px; height: 150px;margin: 20px;"
-                                src="/adminAsset/adminImages/<%=product.image[i]%>" width="100" height="100">
-                            <button type="button" class="btn btn-danger"
-                                onclick="remove('<%=product._id%>','<%=i%>')">Remove</button>
+                <form action="/admin/editProduct/<%- product._id %>" method="POST" class="form-group m-2 mt-5 pt-5" >
+                    <label>PRODUCT</label>
+                    <input type="name" class="form-control form-control-lg" name="product"
+                        value="<%= product.productName %>" required>
+                    <br>
+                    <label>STOCK</label>
+                    <input type="text" class="form-control form-control-lg" name="stock" value="<%= product.StockQuantity %>"
+                        required>
+                    <br>
+                    <label>PRICE</label>
+                    <input type="text" class="form-control form-control-lg" name="price" value="<%= product.price %>"
+                        required>
+                    <br>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail3">Size</label>
+                        <select name="size" class="form-control" id="exampleInputEmail3" required>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                        </select>
+                    </div>
+
+                    <label>DESCRIPTION</label>
+                    <input type="text" class="form-control form-control-lg" name="description"
+                        value="<%= product.description %>" required>
+                    <br>
+
+                    <div class="form-group">
+                        <label>File upload</label>
+                        <div class="input-group col-xs-12">
+                            <% if (product.image && product.image.length> 0) { %>
+                                <% product.image.forEach((x, index)=> { %>
+                                    <img src="/adminAsset/adminImages/<%= x %>" alt="" width="60px" height="50">
+                                    <% }); %>
+                                        <% } %>
                         </div>
-                        <% } %>
-                </div>
-                <input type="file" class="form-control form-control-lg" name="image" accept="Image/*"
-                    placeholder="Enter image path" multiple>
-        
-                <br>
-                <label class="text-warning">CATEGORY</label>
-        
-                <input type="text" class="form-control form-control-lg" name="category" placeholder="Enter catogery"
-                    value="<%=product.category %>" required>
-                <br>
-        
-        
-                <label class="text-warning">STATUS</label>
-        
-                <input type="text" class="form-control form-control-lg" name="status" placeholder="Enter status"
-                    value="<%=product.Status %>" required>
-                <br>
-                <label class="text-warning">DESCRIPTION</label>
-        
-                <input type="text" class="form-control form-control-lg" name="description" placeholder="Enter discription"
-                    value="<%=product.description %>" required>
-                <br>
-        
-                <input type="hidden" class="" name="id" value="<%=product._id %>">
-                <input class="btn btn-block btn-facebook auth-form-btn" type="submit" value="Update product">
-        
-            </form>
-        </div>
-        <a href="/admin/">Go Dashboard</a>
+                    </div>
 
-        <%- include('../layouts/adminLayout/footer.ejs') %>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Edit Image
+                    </button>
+
+                    <br>
+
+                    <input type="hidden" name="id" value="<%= product._id %>">
+                    <input class="btn btn-block btn-facebook auth-form-btn" type="submit" value="Update Product">
+                </form>
+            </div>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Image Editing</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <!-- form starts -->
+                        <form action="/admin/editProduct/updateimage/<%- product._id %>" method="post"
+                            enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <input multiple type="file" class="form-control" id="basic-default-name" name="image" />
+                                <br>
+                                <% if (product.image && product.image.length> 0) { %>
+                                    <% product.image.forEach((x, index)=> { %>
+                                        <img class="mb-3" src="/adminAsset/adminImages/<%= x %>" alt="product image"
+                                            width="60px" height="50">
+                                        <a href="/admin/deleteimg/<%= x %>/<%= product._id %>">
+                                            <button type="button" class="btn btn-danger mb-4"
+                                                data-bs-dismiss="modal">Delete</button>
+                                        </a>
+                                        <br>
+                                        <% }); %>
+                                            <% } %>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <%- include('../layouts/adminLayout/footer.ejs') %>
