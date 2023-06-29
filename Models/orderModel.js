@@ -34,7 +34,11 @@ const orderSchema = new mongoose.Schema({
     status:{
       type:String,
       default:'placed'
-  }
+    },
+    deliveryDate: {
+      type: Date
+    },
+
   }],
   totalAmount: {
     type: Number,

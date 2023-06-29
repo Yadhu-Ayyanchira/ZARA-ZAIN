@@ -76,125 +76,180 @@ const logout = async (req, res) => {
   }
 };
 
+// const adminDashboard = async (req, res, next) => {
+//   try {
+//     const orderData = await Order.find({});
+//     const products = await productmodel.find({});
+//     const adminData = await usermodel.findById({ _id: req.session.Auser_id });
+//     const userData = await User.find({ is_block: false })
+
+
+//     //find total delivered sale
+
+//     const result = await Order.aggregate([
+//       { $unwind: "$products" },
+//       { $match: { 'products.status': 'Delivered' } },
+//       {
+//         $group: {
+//           _id: null,
+//           total: { $sum: '$products.totalPrice' }
+//         }
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           total: 1
+//         }
+//       }
+//     ]);
+
+
+//     let total = 0
+//     if (result.length > 0) {
+//        total = result[0].total;
+//     }
+
+
+
+
+//     //total cod sale
+
+//     const codResult = await Order.aggregate([
+//       { $unwind: "$products" },
+//       { $match: { 'products.status': 'Delivered', paymentMethod: 'COD' } },
+//       {
+//         $group: {
+//           _id: null,
+//           total: { $sum: '$products.totalPrice' }
+//         }
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           total: 1
+//         }
+//       }
+//     ]);
+
+//     let codTotal = 0
+//     if (codResult.length > 0) {
+//       codTotal = codResult[0].total;
+//     }
+
+
+//     //total online payment and wallet
+//     const onlineResult = await Order.aggregate([
+//       { $unwind: "$products" },
+//       { $match: { 'products.status': 'Delivered', 'paymentMethod': { $ne: 'COD' } } },
+//       {
+//         $group: {
+//           _id: null,
+//           total: { $sum: '$products.totalPrice' }
+//         }
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           total: 1
+//         }
+//       }
+//     ]);
+
+//     let onlineTotal = 0;
+//     if (onlineResult.length > 0) {
+//       onlineTotal = onlineResult[0].total;
+//     }
+
+
+
+//     const weeklySalesCursor = Order.aggregate([
+//       {
+//         $unwind: "$products"
+//       },
+//       {
+//         $match: {
+//           'products.status': 'Delivered'
+//         }
+//       },
+//       {
+//         $group: {
+//           _id: { $dateToString: { format: "%d-%m-%Y", date: "$date" } },
+//           sales: { $sum: '$products.totalPrice' }
+//         }
+//       },
+//       {
+//         $sort: { _id: 1 }
+//       },
+//       {
+//         $limit: 7
+//       }
+//     ]);
+
+//     const weeklySales = await weeklySalesCursor.exec();
+//     const dates = weeklySales.map(item => item._id);
+//     const sales = weeklySales.map(item => item.sales);
+//     const salesSum = (weeklySales.reduce((accumulator, item) => accumulator + item.sales, 0)).toFixed(2);
+//     console.log(sales, dates);
+//     res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, total, sales, dates });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 const adminDashboard = async (req, res, next) => {
   try {
-    const orderData = await Order.find({});
-    const products = await productmodel.find({});
-    const adminData = await usermodel.findById({ _id: req.session.Auser_id });
-    const userData = await User.find({ is_block: false })
-
-
-    //find total delivered sale
+    const [orderData, products, adminData, userData] = await Promise.all([
+      Order.find({}),
+      productmodel.find({}),
+      usermodel.findById({ _id: req.session.Auser_id }),
+      User.find({ is_block: false })
+    ]);
 
     const result = await Order.aggregate([
       { $unwind: "$products" },
       { $match: { 'products.status': 'Delivered' } },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$products.totalPrice' }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          total: 1
-        }
-      }
+      { $group: { _id: null, total: { $sum: '$products.totalPrice' } } },
+      { $project: { _id: 0, total: 1 } }
     ]);
 
-
-    let total = 0
-    if (result.length > 0) {
-       total = result[0].total;
-    }
-
-
-
-
-    //total cod sale
+    const total = result.length > 0 ? result[0].total : 0;
 
     const codResult = await Order.aggregate([
       { $unwind: "$products" },
       { $match: { 'products.status': 'Delivered', paymentMethod: 'COD' } },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$products.totalPrice' }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          total: 1
-        }
-      }
+      { $group: { _id: null, total: { $sum: '$products.totalPrice' } } },
+      { $project: { _id: 0, total: 1 } }
     ]);
 
-    let codTotal = 0
-    if (codResult.length > 0) {
-      codTotal = codResult[0].total;
-    }
+    const codTotal = codResult.length > 0 ? codResult[0].total : 0;
 
-
-    //total online payment and wallet
     const onlineResult = await Order.aggregate([
       { $unwind: "$products" },
-      { $match: { 'products.status': 'Delivered', 'paymentMethod': { $ne: 'COD' } } },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$products.totalPrice' }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          total: 1
-        }
-      }
+      { $match: { 'products.status': 'Delivered', paymentMethod: { $ne: 'COD' } } },
+      { $group: { _id: null, total: { $sum: '$products.totalPrice' } } },
+      { $project: { _id: 0, total: 1 } }
     ]);
 
-    let onlineTotal = 0;
-    if (onlineResult.length > 0) {
-      onlineTotal = onlineResult[0].total;
-    }
-
-
+    const onlineTotal = onlineResult.length > 0 ? onlineResult[0].total : 0;
 
     const weeklySalesCursor = Order.aggregate([
-      {
-        $unwind: "$products"
-      },
-      {
-        $match: {
-          'products.status': 'Delivered'
-        }
-      },
-      {
-        $group: {
-          _id: { $dateToString: { format: "%d-%m-%Y", date: "$date" } },
-          sales: { $sum: '$products.totalPrice' }
-        }
-      },
-      {
-        $sort: { _id: 1 }
-      },
-      {
-        $limit: 7
-      }
+      { $unwind: "$products" },
+      { $match: { 'products.status': 'Delivered' } },
+      { $group: { _id: { $dateToString: { format: "%d-%m-%Y", date: "$date" } }, sales: { $sum: '$products.totalPrice' } } },
+      { $sort: { _id: 1 } },
+      { $limit: 7 }
     ]);
 
     const weeklySales = await weeklySalesCursor.exec();
     const dates = weeklySales.map(item => item._id);
     const sales = weeklySales.map(item => item.sales);
-    const salesSum = (weeklySales.reduce((accumulator, item) => accumulator + item.sales, 0)).toFixed(2);
-    console.log(sales, dates);
+    const salesSum = weeklySales.reduce((accumulator, item) => accumulator + item.sales, 0).toFixed(2);
+
     res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, total, sales, dates });
   } catch (error) {
     next(error);
   }
 };
+
 
 // const editUserLoad = async (req, res, next) => {
 //   try {
@@ -384,13 +439,150 @@ const editBanner = async (req, res) => {
   }
 }
 
+// const loadSalesReport = async (req, res) => {
+//   try {
+//     const adminData = await User.findById({ _id: req.session.Auser_id });
+//     const order = await Order.aggregate([
+//       { $unwind: "$products" },
+//       { $match: { 'products.status': 'Delivered' } },
+//       { $sort: { date: -1 } },
+//       {
+//         $lookup: {
+//           from: 'products',
+//           let: { productId: { $toObjectId: '$products.productId' } },
+//           pipeline: [
+//             { $match: { $expr: { $eq: ['$_id', '$$productId'] } } }
+//           ],
+//           as: 'products.productDetails'
+//         }
+//       },
+//       {
+//         $addFields: {
+//           'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] }
+//         }
+//       }
+//     ]);
+//     res.render("salesReport", { order, admin: adminData });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// }
 const loadSalesReport = async (req, res) => {
   try {
-    const adminData = await User.findById({ _id: req.session.Auser_id });
+    const adminData = await User.findById(req.session.Auser_id);
     const order = await Order.aggregate([
       { $unwind: "$products" },
       { $match: { 'products.status': 'Delivered' } },
       { $sort: { date: -1 } },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'products.productId',
+          foreignField: '_id',
+          as: 'products.productDetails'
+        }
+      },
+      { $addFields: { 'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] } } }
+    ]);
+    res.render("salesReport", { order, admin: adminData });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+const updateBanner = async (req, res) => {
+  if (req.body.description.trim() === "") {
+    const id = req.params.id
+    const bannerData = await Banner.findOne({ _id: id })
+
+    const adminData = await User.findById({ _id: req.session.auser_id })
+    res.render('editBanner', { admin: adminData, banners: bannerData, message: "All fields required" })
+  } else {
+    try {
+      const arrayimg = []
+      for (file of req.files) {
+        arrayimg.push(file.filename)
+      }
+      const id = req.params.id
+      let c = await Banner.updateOne({ _id: id }, {
+        $set: {
+          mainText:req.body.mainText,
+          description: req.body.description,
+        }
+      })
+
+      res.redirect('/admin/bannerList')
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+}
+
+// const sortReport = async (req, res) => {
+//   try {
+//     const adminData = await User.findById({ _id: req.session.Auser_id });
+//     const id = parseInt(req.params.id);
+//     const from = new Date();
+//     const to = new Date(from.getTime() - id * 24 * 60 * 60 * 1000);
+
+//     const order = await Order.aggregate([
+//       { $unwind: "$products" },
+//       {
+//         $match: {
+//           'products.status': 'Delivered',
+//           $and: [
+//             { 'products.deliveryDate': { $gt: to } },
+//             { 'products.deliveryDate': { $lt: from } }
+//           ]
+//         }
+//       },
+//       { $sort: { date: -1 } },
+//       {
+//         $lookup: {
+//           from: 'products',
+//           let: { productId: { $toObjectId: '$products.productId' } },
+//           pipeline: [
+//             { $match: { $expr: { $eq: ['$_id', '$$productId'] } } }
+//           ],
+//           as: 'products.productDetails'
+//         }
+//       },
+//       {
+//         $addFields: {
+//           'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] }
+//         }
+//       }
+//     ]);
+//     console.log(order)
+
+//     res.render("salesReport", { order, admin: adminData });
+
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// }
+
+const sortReport = async (req, res) => {
+  try {
+    const adminData = await User.findById(req.session.Auser_id);
+    const id = parseInt(req.params.id);
+    const from = new Date();
+    const to = new Date(from.getTime() - id * 24 * 60 * 60 * 1000);
+
+    const order = await Order.aggregate([
+      {
+        $unwind: "$products"
+      },
+      {
+        $match: {
+          'products.status': 'Delivered',
+          'products.deliveryDate': { $gt: to, $lt: from }
+        }
+      },
+      {
+        $sort: { date: -1 }
+      },
       {
         $lookup: {
           from: 'products',
@@ -407,11 +599,14 @@ const loadSalesReport = async (req, res) => {
         }
       }
     ]);
+
+    console.log(order);
     res.render("salesReport", { order, admin: adminData });
   } catch (error) {
     console.log(error.message);
   }
-}
+};
+
 
 module.exports = {
   loadLogin,
@@ -426,7 +621,9 @@ module.exports = {
   bannerList,
   deleteBanner,
   editBanner,
-  loadSalesReport
+  updateBanner,
+  loadSalesReport,
+  sortReport,
   // editUserLoad,
   // updateUsers,
   // deleteUser,

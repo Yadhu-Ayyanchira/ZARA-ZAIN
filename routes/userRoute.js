@@ -74,8 +74,9 @@ user_route.post('/editAddress/:id',auth.isLogin,addressController.editAddress)
 user_route.post('/checkout', auth.isLogin,orderController.placeOrder)
 user_route.post('/verify-payment',auth.isLogin,orderController.verifyPayment)
 user_route.get('/myOrders',auth.isLogin,orderController.loadOrder)
-user_route.get('/singleOrder/:id',orderController.loadSingleOrder)
+user_route.get('/singleOrder/:id',auth.isLogin, orderController.loadSingleOrder)
 user_route.post('/cancelOrder',auth.isLogin,orderController.orderCancel)
+user_route.post('/returnOrder', orderController.returnOrder);
 user_route.get('/changePassword',userController.changePassword)
 
 

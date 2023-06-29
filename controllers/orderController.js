@@ -14,6 +14,7 @@ var instance = new razorpay({
 
 const placeOrder = async (req, res, next) => {
     try {
+      const id = req.session.user_id
       const userData = await User.findOne({ _id: req.session.user_id });
       const address = req.body.address;
       const cartData = await Cart.findOne({ userId: req.session.user_id });
@@ -35,7 +36,6 @@ const placeOrder = async (req, res, next) => {
       
   
       const orderData = await order.save();
-      console.log(orderData);
       if (orderData) {
         console.log('yessss');
         for (let i = 0; i < products.length; i++) {
@@ -49,6 +49,23 @@ const placeOrder = async (req, res, next) => {
           await Cart.deleteOne({ userId: req.session.user_id });
           res.json({ codsuccess: true });
         } else {
+          if (paymentMethod === 'wallet') {
+            const wallet = userData.wallet;
+            if (wallet >= total) {
+              await User.findByIdAndUpdate({ _id: id }, { $inc: { wallet: -total } })
+              await Cart.deleteOne({ userId: id });
+              for (let i = 0; i < products.length; i++) {
+                const pro = products[i].productId
+                const count = products[i].count
+                await Product.findByIdAndUpdate({ _id: pro }, { $inc: { stockQuantity: -count } })
+              }
+              const orderId = order._id;
+              await Order.findByIdAndUpdate({ _id: orderId }, { $set: { status: 'placed' } });
+              res.json({ codsuccess: true });
+            } else {
+              res.json({ walletFailed: true });
+            }
+          } else {
           const orderId = orderData._id;
           const totalAmount = orderData.totalAmount;
           var options = {
@@ -61,6 +78,7 @@ const placeOrder = async (req, res, next) => {
               res.json({ order });
           });
         }
+      }
       } else {
         res.redirect('/');
       }
@@ -163,11 +181,50 @@ const placeOrder = async (req, res, next) => {
     }
   };
 
+const returnOrder = async (req, res, next) => {
+  try {
+    const id = req.body.order;
+    const ordId = req.body.orders;
+    const session = req.session.user_id;
+    const orderData = await Order.findOne({ userId: session, 'products._id': id })
+    const product = orderData.products.find((p) => p._id.toString() === id);
+    const returnAmount = product.totalPrice;
+    const procount = product.count;
+    const proId = product.productId;
+    const updatedOrder = await Order.findOneAndUpdate({
+      userId: session,
+      'products._id': id,
+    }, {
+      $set: {
+        'products.$.status': 'return',
+      }
+    }, {
+      new: true
+    }
+    );
+    if (updatedOrder) {
+      await Product.findByIdAndUpdate({ _id: proId }, { $inc: { StockQuantity: procount } });
+      if (orderData.paymentMethod === 'onlinPayment' || orderData.paymentMethod === 'COD') {
+        await User.findByIdAndUpdate({ _id: session }, { $inc: { wallet: returnAmount } })
+        //await Order.findByIdAndUpdate(session, { $inc: { totalAmount: -returnAmount } });
+        res.redirect("/singleOrder/" + ordId)
+      } else {
+        res.redirect("/singleOrder/" + ordId);
+      }
+    } else {
+      res.redirect("/singleOrder/" + ordId);
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
  module.exports ={
     placeOrder,
     verifyPayment,
     loadOrder,
     loadSingleOrder,
     orderCancel,
+    returnOrder
 
  }

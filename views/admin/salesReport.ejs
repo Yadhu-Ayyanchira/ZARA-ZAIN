@@ -9,65 +9,74 @@
                         <div class="col-lg-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Sales Report</h4>
-
-                                    <div class="table-responsive">
-                                        <table class="table table-hover" id="sales">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-warning">Product</th>
-                                                    <th class="text-warning">User Name</th>
-                                                    <th class="text-warning">Order No</th>
-                                                    <th class="text-warning">Total Amount</th>
-                                                    <th class="text-warning">Quantity</th>
-                                                    <th class="text-warning">Payment Mode</th>
-                                                    <th class="text-warning">Status</th>
-                                                    <th class="text-warning">Order Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="text-white">
-                                                <% order.forEach((orderItem)=> { %>
-                                                    <tr>
-                                                        <td>
-                                                            <%= orderItem.products.productDetails.product %>
-                                                        </td>
-                                                        <td>
-                                                            <%= orderItem.userName %>
-                                                        </td>
-                                                        <td>
-                                                            <%= orderItem.products._id %>
-                                                        </td>
-                                                        <td>
-                                                            <%= orderItem.products.totalPrice %>
-                                                        </td>
-                                                        <td>
-                                                            <%= orderItem.products.count %>
-                                                        </td>
-                                                        <td>
-                                                            <%= orderItem.paymentMethod %>
-                                                        </td>
-                                                        <td>
-                                                            <%= orderItem.products.status %>
-                                                        </td>
-                                                        <td>
-                                                            <%= orderItem.date.toLocaleDateString('en-US', {
-                                                                year: 'numeric' , month: 'short' , day: '2-digit'
-                                                                }).replace(/\//g,'-') %>
-                                                        </td>
-                                                    </tr>
-                                                    <%})%>
-                                            </tbody>
-                                        </table>
+                                    <div class="d-flex justify-content-between">
+                                        <h4 class="card-title">Sales Report</h4>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                               Choose
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="/admin/salesReportsort/<%=1%>">Day</a></li>
+                                                <li><a class="dropdown-item" href="/admin/salesReportsort/<%=7%>">Week</a></li>
+                                                <li><a class="dropdown-item" href="/admin/salesReportsort/<%=30%>">Month</a></li>
+                                                <li><a class="dropdown-item" href="/admin/salesReportsort/<%=365%>">Year</a></li>
+                                            </ul>
+                                        </div>                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="sales">
+                                <thead>
+                                    <tr>
+                                        <th class="text-warning">Product</th>
+                                        <th class="text-warning">User Name</th>
+                                        <th class="text-warning">Order No</th>
+                                        <th class="text-warning">Total Amount</th>
+                                        <th class="text-warning">Quantity</th>
+                                        <th class="text-warning">Payment Mode</th>
+                                        <th class="text-warning">Status</th>
+                                        <th class="text-warning">Order Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-white">
+                                    <% order.forEach((orderItem)=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= orderItem.products.productDetails.product %>
+                                            </td>
+                                            <td>
+                                                <%= orderItem.userName %>
+                                            </td>
+                                            <td>
+                                                <%= orderItem.products._id %>
+                                            </td>
+                                            <td>
+                                                <%= orderItem.products.totalPrice %>
+                                            </td>
+                                            <td>
+                                                <%= orderItem.products.count %>
+                                            </td>
+                                            <td>
+                                                <%= orderItem.paymentMethod %>
+                                            </td>
+                                            <td>
+                                                <%= orderItem.products.status %>
+                                            </td>
+                                            <td>
+                                                <%= orderItem.date.toLocaleDateString('en-US', { year: 'numeric' ,
+                                                    month: 'short' , day: '2-digit' }).replace(/\//g,'-') %>
+                                            </td>
+                                        </tr>
+                                        <%})%>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-
-
             </div>
-
+          
 
 
 
@@ -93,7 +102,7 @@
             </style>
 
 
-            
+
 
 
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
@@ -125,15 +134,13 @@
                 src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
 
 
-                <script>
-                    $(document).ready(function () {
-                        $('#sales').DataTable({
-                            dom: 'Bfrtip',
-                            buttons: [
-                                'excel', 'pdf'
-                            ]
-                        });
+            <script>
+                $(document).ready(function () {
+                    $('#sales').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'excel', 'pdf'
+                        ]
                     });
-                </script>
-
-            
+                });
+            </script>
