@@ -10,6 +10,7 @@ const categoryController = require("../controllers/categoryController");
 const adminController = require("../controllers/adminController");
 const productController = require("../controllers/productcontroller");
 const adminOrderController = require('../controllers/adminOrderController.js')
+const couponController = require('../controllers/couponController.js')
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -62,10 +63,12 @@ admin_route.get('/bannerList', auth.isLogin, adminController.bannerList)
 admin_route.get('/deleteBanner', auth.isLogin, adminController.deleteBanner)
 admin_route.get('/editBanner/:id', auth.isLogin, adminController.editBanner);
 admin_route.post('/editBanner/:id', upload.upload.array("image", 1), adminController.updateBanner);
+
 admin_route.get('/salesReportSort/:id', auth.isLogin, adminController.sortReport)
-
-
 admin_route.get("/salesReport", auth.isLogin, adminController.loadSalesReport);
+
+admin_route.get('/couponList', auth.isLogin, couponController.loadCopon);
+admin_route.post('/addCoupon', couponController.addCoupon);
 
 
 module.exports = admin_route;

@@ -3,6 +3,7 @@ const Product = require("../Models/productmodel");
 const Category = require("../Models/categoryModel");
 const Cart = require("../Models/cartModel");
 const Address = require("../Models/addressModel");
+const Coupon = require("../Models/couponModel")
 
 // const loadEmptyCart = async (req, res, next) => {
 //   try {
@@ -239,6 +240,7 @@ const loadCheckout = async (req, res, next) => {
     const session = req.session.user_id;
     const categoryData = await Category.find();
     const userData = await User.findOne({ _id: req.session.user_id });
+    const couponData = await Coupon.find({}); 
     const addressData = await Address.findOne({ userId: req.session.user_id });
     let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
       "products.productId"
@@ -269,7 +271,8 @@ const loadCheckout = async (req, res, next) => {
             totalAmount,
             categoryData,
             userData,
-            products
+            products,
+            coupon: couponData
           });
         } else {
           res.render("emptyCheckout", {

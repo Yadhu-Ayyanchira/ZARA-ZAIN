@@ -22,6 +22,16 @@
         <h5 class="section-title position-relative text-uppercase mb-3">
           <span class="bg-secondary pr-3">Billing Address</span>
         </h5>
+          <!-- form start -->
+          <form class="mb-30" action="">
+            <div class="input-group">
+              <input type="text" class="form-control border-0 p-4" placeholder="coupon Code" required id="code" />
+              <div class="input-group-append">
+                <button class="btn btn-primary" onclick="applycoupon($('#code').val())">Apply coupon</button>
+              </div>
+            </div>
+          </form>
+          <!-- form end -->
         <div class="bg-light p-30 mb-5">
           <div class="row justify-content-end">
             <!-- Add the 'justify-content-end' class to align the button to the right -->
@@ -62,19 +72,10 @@
               <% } } %>
         </div>
       </div>
+
       <div class="col-lg-4">
-        <!-- <form class="mb-30" action="">
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control border-0 p-4"
-            placeholder="Coupon Code"
-          />
-          <div class="input-group-append">
-            <button class="btn btn-primary">Apply Coupon</button>
-          </div>
-        </div>
-      </form> -->
+        <br>
+      
         <h5 class="section-title position-relative text-uppercase mb-3">
           <span class="bg-secondary pr-3">Order Total</span>
         </h5>
@@ -97,6 +98,12 @@
               <h6>Subtotal</h6>
               <h6>$<%= totalAmount %>
               </h6>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <h6>Discount</h6>
+              <h6><span id="discount">
+              $0.00
+                </span> </h6>
             </div>
             <div class="d-flex justify-content-between">
               <h6 class="font-weight-medium">Shipping</h6>
@@ -150,7 +157,56 @@
   </div>
   <!-- Checkout End -->
 
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <% if(coupon.length> 0){
+          coupon.forEach((coupons, index) => { %>
+          <div class="modal-body d-flex justify-content-between align-items-center">
+            <h6 class="text-dark">
+              <%= coupons.discountType %> &nbsp;&nbsp; : <span id="copy-text-<%= index %>" class="text-success">
+                  <%= coupons.code %>
+                </span>
+            </h6>
+            <h6 class="text-dark">Expiry Date &nbsp;&nbsp; : <span id="expiry-date-<%= index %>" class="text-success">
+                <%= coupons.expiryDate.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                  }).replace(/\//g,'-') %>
+              </span></h6>
+            <button type="submit" class="btn btn-outline-primary-2" data-bs-dismiss="modal"
+              onclick="copyText('<%= index %>')">Copy</button>
+          </div>
+          <% }); } %>
+      </div>
+    </div>
+  </div>
+
   <script>
+
+    function copyText(index) {
+      var codeToCopy = document.getElementById("copy-text-" + index).innerText;
+      var expiryDateToCopy = document.getElementById("expiry-date-" + index).innerText;
+
+      var tempInput = document.createElement("input");
+      tempInput.setAttribute("value", codeToCopy);
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+
+      setTimeout(function () {
+        alert("coupon code is copied");
+      }, 200);
+
+      var modal = document.getElementById("staticBackdrop");
+      var bootstrapModal = bootstrap.Modal.getInstance(modal);
+      bootstrapModal.hide();
+    }
+
 
     $("#checkout").submit((e) => {
       let address = $("input[name=selectAddress]:checked").val();
@@ -293,6 +349,50 @@
               });
             }
           });
+        }
+      });
+    }
+
+    function applycoupon(code) {
+      event.preventDefault();
+      const amount = document.getElementById('total').innerHTML;
+      $.ajax({
+        method: 'post',
+        url: '/applycoupon',
+        data: {
+          amount: amount,
+          code: code,
+        }, success: (response) => {
+          if (response.user) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'This coupon already used!'
+            })
+          } else if (response.date) {
+            console.log("coupon date expired");
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'date expired!!!'
+            })
+          } else if (response.amountOkey) {
+            document.getElementById('discount').innerHTML = response.disAmount
+            document.getElementById('total').innerHTML = response.disTotal
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Discount redeemed',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          } else if (response.invalid) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Invalid coupon!!!'
+            })
+          }
         }
       });
     }

@@ -26,6 +26,8 @@ const cartController = require("../controllers/cartController");
 const userController = require("../controllers/userController");
 const addressController = require("../controllers/addressController");
 const orderController = require("../controllers/orderController");
+const couponController = require('../controllers/couponController.js')
+
 
 
 
@@ -78,6 +80,8 @@ user_route.get('/singleOrder/:id',auth.isLogin, orderController.loadSingleOrder)
 user_route.post('/cancelOrder',auth.isLogin,orderController.orderCancel)
 user_route.post('/returnOrder', orderController.returnOrder);
 user_route.get('/changePassword',userController.changePassword)
+
+user_route.post('/applycoupon', couponController.applyCoupon);
 
 
 module.exports = user_route;

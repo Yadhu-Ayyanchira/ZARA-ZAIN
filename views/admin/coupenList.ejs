@@ -1,0 +1,354 @@
+<%- include('../layouts/adminLayout/header.ejs') %>
+    <%- include('../layouts/adminLayout/sidebar.ejs') %>
+        <%- include('../layouts/adminLayout/navbar.ejs') %>
+
+
+            <div class="main-panel bg-warning">
+                <div class="content-wrapper">
+                    <div class="row bg-dark">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card-body">
+                                <div class="card-body">
+                                    <h4 class="card-title">Coupen List</h4>
+                                    <button type="button" class="btn btn-outline-success float-right m-2" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                        data-bs-whatever="@mdo">Add Coupen</button>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover text-white ">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">No</th>
+                                                    <th scope="col">Coupon code</th>
+                                                    <th scope="col">Discount Type</th>
+                                                    <th scope="col">Start Date</th>
+                                                    <th scope="col">Expiry Date</th>
+                                                    <th scope="col">Percentage</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if(coupon.length> 0){
+                                                    coupon.forEach((coupon,i) => { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= i + 1 %>
+                                                        </td>
+                                                        <td>
+                                                            <%= coupon.code %>
+                                                        </td>
+                                                        <td>
+                                                            <%= coupon.discountType %>
+                                                        </td>
+                                                        <td>
+                                                            <%= coupon.startDate.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                                                                }).replace(/\//g,'-') %>
+                                                        </td>
+                                                        <td>
+                                                            <%= coupon.expiryDate.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                                                                }).replace(/\//g,'-') %>
+                                                        </td>
+                                                        <td>
+                                                            <%= coupon.discountPercentage %>
+                                                        </td>
+                                                        <td>
+                                                            <a href="" data-bs-toggle="modal" data-bs-target="#example-<%= coupon._id %>" data-bs-whatever="@mdo"><i
+                                                                    class="bi bi-pencil-square bi fs-4"></i></a>
+                                                            <a href="" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= coupon._id %>"><i
+                                                                    class="bi bi-trash bi fs-4 ms-3"></i></a>
+                                                        </td>
+                                                    </tr>
+                                            
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="staticBackdrop<%= coupon._id %>" data-bs-backdrop="static" data-bs-keyboard="false"
+                                                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content" style="background-color: #191C24;color: aliceblue;">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="staticBackdropLabel">Delete Category
+                                                                    </h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>Are you sure you want to delete coupon ?</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a href="/admin/couponList"><button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">No</button></a>
+                                                                    <a href="/admin/deleteCoupon?id=<%= coupon._id %>"><button type="button"
+                                                                            class="btn btn-primary">Yes</button></a>
+                                            
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            
+                                            
+                                            
+                                                    <% }); }else { %>
+                                                        <tr>
+                                                            <td>
+                                                            <td colspan="9">No Any Coupon Available</td>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                            </tbody>
+                                        </table>
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination justify-content-center">
+                                                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                                    <a class="page-link page-link-prev" href="?page=<%= currentPage - 1 %>" aria-label="Previous" tabindex="-1"
+                                                        aria-disabled="true">
+                                                        <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                                    </a>
+                                                </li>
+                                                <% for (let i=1; i <=totalPages; i++) { %>
+                                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>" aria-current="page">
+                                                        <a class="page-link" href="?page=<%= i %>">
+                                                            <%= i %>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+                                                        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                            <a class="page-link page-link-next" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                                                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                                            </a>
+                                                        </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #191C24;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="/admin/addCoupon" method="post" id="couponForm">
+                                        <div class="mb-3">
+                                            <label for="couponCode" class="col-form-label">Coupon code</label>
+                                            <input type="text" class="form-control" id="couponCode" name="code">
+                                            <span class="text-danger" id="couponCode-error"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="discountType" class="col-form-label">Discount Type</label>
+                                            <input type="text" class="form-control" id="discountType" name="discountType">
+                                            <span class="text-danger" id="discountType-error"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="startDate" class="col-form-label">Start Date</label>
+                                            <input type="date" class="form-control" id="startDate" name="startDate">
+                                            <span class="text-danger" id="startDate-error"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="expiryDate" class="col-form-label">Expiry Date</label>
+                                            <input type="date" class="form-control" id="expiryDate" name="expiryDate">
+                                            <span class="text-danger" id="expiryDate-error"></span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="percentage" class="col-form-label">Percentage</label>
+                                            <input type="text" class="form-control" id="percentage" name="percentage">
+                                            <span class="text-danger" id="percentage-error"></span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <% for (let i=0; i < coupon.length; i++) { %>
+                        <div class="modal fade" id="example-<%= coupon[i]._id %>" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content" style="background-color: #191C24;">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/admin/editCoupon/<%= coupon[i]._id %>" method="post" id="couponEditForm">
+                                            <div class="mb-3">
+                                                <label for="recipient-name" class="col-form-label">Coupon code</label>
+                                                <input type="text" class="form-control" id="couponCodeEdit" name="code"
+                                                    value="<%= coupon[i].code %>">
+                                                <span class="text-danger" id="couponCodeEdit-error"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="recipient-name" class="col-form-label">Discount Type</label>
+                                                <input type="text" class="form-control" id="discountTypeEdit" name="discountType"
+                                                    value="<%= coupon[i].discountType %>">
+                                                <span class="text-danger" id="discountTypeEdit-error"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="recipient-name" class="col-form-label">Start Date</label>
+                                                <input type="text" class="form-control" id="startDateEdit" name="startDate"
+                                                    value="<%= coupon[i].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %>">
+                                                <span class="text-danger" id="startDateEdit-error"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="recipient-name" class="col-form-label">Expiry Date</label>
+                                                <input type="text" class="form-control" id="expiryDateEdit" name="expiryDate"
+                                                    value="<%= coupon[i].expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %>">
+                                                <span class="text-danger" id="expiryDateEdit-error"></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="recipient-name" class="col-form-label">Percentage</label>
+                                                <input type="text" class="form-control" id="percentageEdit" name="percentage"
+                                                    value="<%= coupon[i].discountPercentage %>">
+                                                <input type="hidden" name="id" value="<%= coupon[i]._id %>">
+                                                <span class="text-danger" id="percentageEdit-error"></span>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    
+                    
+                    
+                            <script>
+                                const couponForm = document.getElementById('couponForm');
+                                const couponCodeInput = document.getElementById('couponCode');
+                                const discountTypeInput = document.getElementById('discountType');
+                                const startDateInput = document.getElementById('startDate');
+                                const expiryDateInput = document.getElementById('expiryDate');
+                                const percentageInput = document.getElementById('percentage');
+
+                                const couponCodeError = document.getElementById('couponCode-error');
+                                const discountTypeError = document.getElementById('discountType-error');
+                                const startDateError = document.getElementById('startDate-error');
+                                const expiryDateError = document.getElementById('expiryDate-error');
+                                const percentageError = document.getElementById('percentage-error');
+
+
+
+                                const couponEditForm = document.getElementById('couponEditForm');
+                                const couponCodeEditInput = document.getElementById('couponCodeEdit');
+                                const discountTypeEditInput = document.getElementById('discountTypeEdit');
+                                const startDateEditInput = document.getElementById('startDateEdit');
+                                const expiryDateEditInput = document.getElementById('expiryDateEdit');
+                                const percentageEditInput = document.getElementById('percentageEdit');
+
+                                const couponCodeEditError = document.getElementById('couponCodeEdit-error');
+                                const discountTypeEditError = document.getElementById('discountTypeEdit-error');
+                                const startDateEditError = document.getElementById('startDateEdit-error');
+                                const expiryDateEditError = document.getElementById('expiryDateEdit-error');
+                                const percentageEditError = document.getElementById('percentageEdit-error');
+
+                                couponEditForm.addEventListener('submit', (event) => {
+                                    event.preventDefault();
+
+                                    const couponCodeValue = couponCodeEditInput.value.trim();
+                                    const discountTypeValue = discountTypeEditInput.value.trim();
+                                    const startDateValue = startDateEditInput.value;
+                                    const expiryDateValue = expiryDateEditInput.value;
+                                    const percentageValue = percentageEditInput.value.trim();
+
+                                    if (!couponCodeValue) {
+                                        couponCodeEditError.textContent = 'Please enter a coupon code';
+                                        return;
+                                    } else {
+                                        couponCodeEditError.textContent = '';
+                                    }
+
+                                    if (!discountTypeValue) {
+                                        discountTypeEditError.textContent = 'Please enter a discount type';
+                                        return;
+                                    } else {
+                                        discountTypeEditError.textContent = '';
+                                    }
+
+                                    if (!startDateValue) {
+                                        startDateEditError.textContent = 'Please select a start date';
+                                        return;
+                                    } else {
+                                        startDateEditError.textContent = '';
+                                    }
+
+                                    if (!expiryDateValue) {
+                                        expiryDateEditError.textContent = 'Please select an expiry date';
+                                        return;
+                                    } else {
+                                        expiryDateEditError.textContent = '';
+                                    }
+
+                                    if (!percentageValue) {
+                                        percentageEditError.textContent = 'Please enter a percentage';
+                                        return;
+                                    } else if (isNaN(percentageValue) || Number(percentageValue) <= 0) {
+                                        percentageEditError.textContent = 'Please enter a positive number for percentage';
+                                        return;
+                                    } else {
+                                        percentageEditError.textContent = '';
+                                    }
+
+                                    couponEditForm.submit();
+                                });
+
+                                couponForm.addEventListener('submit', (event) => {
+                                    event.preventDefault();
+
+                                    const couponCodeValue = couponCodeInput.value.trim();
+                                    const discountTypeValue = discountTypeInput.value.trim();
+                                    const startDateValue = startDateInput.value;
+                                    const expiryDateValue = expiryDateInput.value;
+                                    const percentageValue = percentageInput.value.trim();
+
+                                    if (!couponCodeValue) {
+                                        couponCodeError.textContent = 'Please enter a coupon code';
+                                        return;
+                                    } else {
+                                        couponCodeError.textContent = '';
+                                    }
+
+                                    if (!discountTypeValue) {
+                                        discountTypeError.textContent = 'Please enter a discount type';
+                                        return;
+                                    } else {
+                                        discountTypeError.textContent = '';
+                                    }
+
+                                    if (!startDateValue) {
+                                        startDateError.textContent = 'Please select a start date';
+                                        return;
+                                    } else {
+                                        startDateError.textContent = '';
+                                    }
+
+                                    if (!expiryDateValue) {
+                                        expiryDateError.textContent = 'Please select an expiry date';
+                                        return;
+                                    } else {
+                                        expiryDateError.textContent = '';
+                                    }
+
+                                    if (!percentageValue) {
+                                        percentageError.textContent = 'Please enter a percentage';
+                                        return;
+                                    } else if (isNaN(percentageValue) || Number(percentageValue) <= 0) {
+                                        percentageError.textContent = 'Please enter a positive number for percentage';
+                                        return;
+                                    } else {
+                                        percentageError.textContent = '';
+                                    }
+
+                                    couponForm.submit();
+                                });
+                            </script>
+
+                    <%- include('../layouts/adminLayout/footer.ejs') %>
