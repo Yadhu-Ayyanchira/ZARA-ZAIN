@@ -87,7 +87,6 @@ const editCategory = async (req, res, next) => {
     const id = req.query.id;
     const catDATA = await category.findById({ _id: id });
     const adminData = await usermodal.findById({ _id: req.session.Auser_id });
-
     res.render("editCategory", { Category: catDATA, admin: adminData });
   } catch (error) {
     next(error);

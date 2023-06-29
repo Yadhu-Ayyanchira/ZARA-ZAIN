@@ -6,7 +6,7 @@ const session = require("express-session");
 const nodemailer = require("nodemailer");
 const randomString = require("randomstring");
 const Address = require("../Models/addressModel");
-const Banner = require('../Models/bannerModel')
+const Banner = require("../Models/bannerModel");
 const dotenv = require("dotenv");
 dotenv.config();
 let message;
@@ -61,7 +61,7 @@ const sendverifyMail = async (name, email, otp) => {
 
 const loadHome = async (req, res, next) => {
   try {
-    const banner = await Banner.find({})
+    const banner = await Banner.find({});
     const categoryData = await categoryModel.find();
     const productData = await productmodel.find({ is_delete: false });
     if (req.session.user_id) {
@@ -72,12 +72,12 @@ const loadHome = async (req, res, next) => {
         session: session,
         productData: productData,
         categoryData,
-        banner
+        banner,
       });
     } else {
       console.log("destroyyyyy");
       const session = null;
-      res.render("index", { session, productData, categoryData,banner });
+      res.render("index", { session, productData, categoryData, banner });
     }
   } catch (error) {
     next(error);
@@ -188,10 +188,9 @@ const insertUser = async (req, res, next) => {
   }
 };
 
-
 const verifyLogin = async (req, res, next) => {
   try {
-    const banner = await Banner.find({})
+    const banner = await Banner.find({});
     const categoryData = await categoryModel.find();
     const session = null;
     const email = req.body.email;
@@ -206,7 +205,13 @@ const verifyLogin = async (req, res, next) => {
       if (passwordMatch) {
         req.session.user_id = userData._id;
         const session = req.session.user_id;
-        res.render("index", { userData, session, productData, categoryData,banner });
+        res.render("index", {
+          userData,
+          session,
+          productData,
+          categoryData,
+          banner,
+        });
       } else {
         res.render("login", {
           userData: userData,
@@ -214,7 +219,6 @@ const verifyLogin = async (req, res, next) => {
           session,
           message: "Email or password is incorrect",
         });
-        
       }
     } else {
       res.render("login", {
@@ -293,10 +297,9 @@ const verifyLoad = async (req, res, next) => {
   const otp2 = req.body.otp;
   try {
     const session = req.session.user_id;
-    console.log(session+'helloo');
+    console.log(session + "helloo");
     const categoryData = await categoryModel.find();
     if (otp2 == otp) {
-      
       const UserData = await User.findOneAndUpdate(
         { email: email },
         { $set: { is_verified: 1 } }
@@ -306,7 +309,7 @@ const verifyLoad = async (req, res, next) => {
         res.render("/", {
           session,
           categoryData,
-          userData
+          userData,
         });
       } else {
         console.log("something went wrong");
@@ -323,27 +326,29 @@ const verifyLoad = async (req, res, next) => {
   }
 };
 
-
 const loadProfile = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
       const categoryData = await categoryModel.find();
       const userData = await User.findById({ _id: req.session.user_id });
-      const addressData = await Address.findOne({ userId: req.session.user_id });
-      if(addressData){
-      const address = addressData.addresses;
-      res.render("userProfile", {
-        userData: userData,
-        session: session,
-        categoryData,
-        address
-      });}else{
+      const addressData = await Address.findOne({
+        userId: req.session.user_id,
+      });
+      if (addressData) {
+        const address = addressData.addresses;
         res.render("userProfile", {
           userData: userData,
           session: session,
           categoryData,
-          address:0
+          address,
+        });
+      } else {
+        res.render("userProfile", {
+          userData: userData,
+          session: session,
+          categoryData,
+          address: 0,
         });
       }
     } else {
@@ -362,7 +367,7 @@ const changePassword = async (req, res, next) => {
     const session = req.session.user_id;
     const categoryData = await categoryModel.find();
     const userData = await User.findById({ _id: req.session.user_id });
-    res.render("passwordOtp",{session,categoryData,userData});
+    res.render("passwordOtp", { session, categoryData, userData });
   } catch (error) {
     next(error);
   }
@@ -380,5 +385,5 @@ module.exports = {
   verifyLoad,
   sendverifyMail,
   loadProfile,
-  changePassword
+  changePassword,
 };

@@ -370,8 +370,8 @@ const addBanner = async (req, res) => {
     const adminid = req.session.Auser_id;
     const adminData = await User.findOne({ _id: adminid });
     const banner = new Banner({
-      mainText:req.body.mainText,
-      description:req.body.description,
+      mainText: req.body.mainText,
+      description: req.body.description,
       image: req.file.filename
     });
 
@@ -507,7 +507,7 @@ const updateBanner = async (req, res) => {
       const id = req.params.id
       let c = await Banner.updateOne({ _id: id }, {
         $set: {
-          mainText:req.body.mainText,
+          mainText: req.body.mainText,
           description: req.body.description,
         }
       })

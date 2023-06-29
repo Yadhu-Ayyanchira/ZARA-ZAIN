@@ -51,7 +51,8 @@ admin_route.get("/addproduct", [auth.isLogin], productController.AddProducts);
 admin_route.post("/addproduct", upload.upload.array("image", 10), productController.insertProduct);
 admin_route.get("/deleteProduct", [auth.isLogin], productController.deleteProduct);
 admin_route.get("/editProduct/:id", [auth.isLogin], productController.editProduct);
-admin_route.post('/editProduct/:id', upload.upload.array("image", 10), productController.updateProduct); admin_route.get('/orderList', auth.isLogin, adminOrderController.loadOrderList)
+admin_route.post('/editProduct/:id', upload.upload.array("image", 10), productController.updateProduct);
+admin_route.get('/orderList', auth.isLogin, adminOrderController.loadOrderList)
 admin_route.get('/deleteimg/:imgid/:prodid', auth.isLogin, productController.deleteimage);
 admin_route.post("/editProduct/updateimage/:id", upload.upload.array('image'), productController.updateimage)
 

@@ -1,4 +1,4 @@
-const mongoose=require('mongoose')
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -26,14 +26,14 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  is_verified:{
+  is_verified: {
     type: Number,
     default: 0,
   },
-  wallet:{
+  wallet: {
     type: Number,
-    default: 0
-  }
+    default: 0,
+  },
 });
 
-module.exports=mongoose.model('User',userSchema)
+module.exports = mongoose.model("User", userSchema);

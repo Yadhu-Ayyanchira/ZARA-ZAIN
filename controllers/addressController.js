@@ -1,7 +1,7 @@
 const User = require("../Models/userModel");
 const Address = require("../Models/addressModel");
 const Category = require("../Models/categoryModel");
-const Cart =require ('../Models/cartModel')
+const Cart = require("../Models/cartModel");
 
 //-------- Address loding section  -----------//
 // const loadAddress = async (req, res, next) => {
@@ -48,8 +48,6 @@ const Cart =require ('../Models/cartModel')
 //   }
 // };
 
-
-
 const insertAddress = async (req, res, next) => {
   try {
     const session = req.session.user_id;
@@ -61,7 +59,7 @@ const insertAddress = async (req, res, next) => {
       userId: req.session.user_id,
     });
     if (addressDetails) {
-      console.log('wrkingggg');
+      console.log("wrkingggg");
       const updateOne = await Address.updateOne(
         { userId: req.session.user_id },
         {
@@ -69,7 +67,7 @@ const insertAddress = async (req, res, next) => {
             addresses: {
               userName: req.body.userName,
               mobile: req.body.mobile,
-              altrenativeMob: req.body.mobile2, 
+              altrenativeMob: req.body.mobile2,
               houseName: req.body.house,
               landmark: req.body.landmark,
               city: req.body.city,
@@ -80,12 +78,12 @@ const insertAddress = async (req, res, next) => {
         }
       );
       if (updateOne.nModified > 0) {
-        console.log('wrkin');
+        console.log("wrkin");
         console.log("here");
         const addresses = await Address.find(); // Renamed 'address' to 'addresses'
         console.log(addresses);
         return res.render("checkout", {
-          address:addresses,
+          address: addresses,
           categoryData,
           session,
           userData,
@@ -111,9 +109,9 @@ const insertAddress = async (req, res, next) => {
       });
       console.log(address);
       const addressData = await address.save();
-      let cartData = await Cart.findOne({ userId: req.session.user_id }).populate(
-        "products.productId"
-      );
+      let cartData = await Cart.findOne({
+        userId: req.session.user_id,
+      }).populate("products.productId");
       const products = cartData.products;
       if (addressData) {
         console.log("here1111");
@@ -126,7 +124,7 @@ const insertAddress = async (req, res, next) => {
         const addresses = await Address.find(); // Renamed 'address' to 'addresses'
         console.log(addresses);
         return res.render("checkout", {
-          address:addresses,
+          address: addresses,
           categoryData,
           session,
           userData,
@@ -138,26 +136,28 @@ const insertAddress = async (req, res, next) => {
   }
 };
 
-const deleteAddress = async (req,res, next) => {
+const deleteAddress = async (req, res, next) => {
   try {
-      const id = req.session.user_id
-      const addressId = req.body.address
-      console.log(addressId);
-      const addressData = await Address.findOne({userId:id})
-      if(addressData.addresses.length === 1){
-          await Address.deleteOne({userId:id})
-      }else{
-          await Address.updateOne({userId:id},{$pull:{addresses:{_id:addressId}}})
-      }
-      res.status(200).json({message:"Address Deleted Successfully"})        
+    const id = req.session.user_id;
+    const addressId = req.body.address;
+    console.log(addressId);
+    const addressData = await Address.findOne({ userId: id });
+    if (addressData.addresses.length === 1) {
+      await Address.deleteOne({ userId: id });
+    } else {
+      await Address.updateOne(
+        { userId: id },
+        { $pull: { addresses: { _id: addressId } } }
+      );
+    }
+    res.status(200).json({ message: "Address Deleted Successfully" });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
-
+};
 
 const editAddress = async (req, res, next) => {
-  console.log('yes edit address');
+  console.log("yes edit address");
 
   if (
     req.body.userName.trim() === "" ||
@@ -169,7 +169,7 @@ const editAddress = async (req, res, next) => {
     req.body.state.trim() === "" ||
     req.body.pincode.trim() === ""
   ) {
-    console.log('yes iam inn');
+    console.log("yes iam inn");
     const id = req.params.id;
     const session = req.session.user_id;
     const userData = await User.findOne({ _id: req.session.user_id });
@@ -183,10 +183,10 @@ const editAddress = async (req, res, next) => {
       session,
       userData: userData,
       address: address[0],
-      categoryData
+      categoryData,
     });
   } else {
-    console.log('i am else');
+    console.log("i am else");
     try {
       const id = req.params.id;
       await Address.updateOne(
@@ -196,7 +196,7 @@ const editAddress = async (req, res, next) => {
             "addresses.$": {
               userName: req.body.userName,
               mobile: req.body.mobile,
-              altrenativeMob: req.body.mobile2, 
+              altrenativeMob: req.body.mobile2,
               houseName: req.body.house,
               landmark: req.body.landmark,
               city: req.body.city,
@@ -208,11 +208,10 @@ const editAddress = async (req, res, next) => {
       );
       res.redirect("/checkout");
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 };
-
 
 const loadEditAddress = async (req, res, next) => {
   try {
@@ -230,14 +229,12 @@ const loadEditAddress = async (req, res, next) => {
       session,
       userData: userData,
       address: address[0],
-      categoryData
+      categoryData,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
-
-
 
 module.exports = {
   // loadAddress,
@@ -245,5 +242,5 @@ module.exports = {
   insertAddress,
   deleteAddress,
   editAddress,
-  loadEditAddress
+  loadEditAddress,
 };
