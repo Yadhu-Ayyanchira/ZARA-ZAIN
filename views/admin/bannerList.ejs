@@ -23,26 +23,29 @@
                                             <tbody>
                                                 <% if(banners.length>0){
                                                     for(let i=0;i<banners.length;i++){ %>
-                                                    <tr>
-                                                        <td>
-                                                            <img src="/adminAsset/bannerImages/<%=banners[i].image%>" alt="image" />
-                                                        </td>
-                                                        <td>
-                                                            <%=banners[i].mainText %>
-                                                        </td>
-                                                        <td>
-                                                            <%=banners[i]. description %>
-                                                        </td>
-                                                        <td>
-                                                            <a class="btn btn-success" href="/admin/editBanner/<%= banners[i]._id %>">
-                                                                Edit
-                                                            </a>
-                                                            <a class="btn btn-danger" href="deleteBanner?id=<%= banners[i]._id %>"
-                                                                onclick="return confirm('Are you sure you want to Delete <%= banners[i].banner %>?')">Delete</a>
-                                                        </td>
-                                                        
-                                                    </tr>
-                                                    <%} }%>
+                                                        <tr>
+                                                            <td>
+                                                                <img src="/adminAsset/bannerImages/<%=banners[i].image%>"
+                                                                    alt="image" />
+                                                            </td>
+                                                            <td>
+                                                                <%=banners[i].mainText %>
+                                                            </td>
+                                                            <td>
+                                                                <%=banners[i]. description %>
+                                                            </td>
+                                                            <td>
+                                                                <a class="btn btn-success"
+                                                                    href="/admin/editBanner/<%= banners[i]._id %>">
+                                                                    Edit
+                                                                </a>
+                                                                <a class="btn btn-danger"
+                                                                    href="deleteBanner?id=<%= banners[i]._id %>"
+                                                                    onclick="return confirm('Are you sure you want to Delete <%= banners[i].banner %>?')">Delete</a>
+                                                            </td>
+
+                                                        </tr>
+                                                        <%} }%>
                                             </tbody>
                                         </table>
                                     </div>

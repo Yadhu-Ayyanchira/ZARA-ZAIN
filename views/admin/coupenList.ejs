@@ -10,7 +10,8 @@
                             <div class="card-body">
                                 <div class="card-body">
                                     <h4 class="card-title">Coupen List</h4>
-                                    <button type="button" class="btn btn-outline-success float-right m-2" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                    <button type="button" class="btn btn-outline-success float-right m-2"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal"
                                         data-bs-whatever="@mdo">Add Coupen</button>
                                     <div class="table-responsive">
                                         <table class="table table-hover text-white ">
@@ -39,50 +40,62 @@
                                                             <%= coupon.discountType %>
                                                         </td>
                                                         <td>
-                                                            <%= coupon.startDate.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                                                            <%= coupon.startDate.toLocaleDateString('en-US', {
+                                                                year: 'numeric' , month: 'short' , day: '2-digit'
                                                                 }).replace(/\//g,'-') %>
                                                         </td>
                                                         <td>
-                                                            <%= coupon.expiryDate.toLocaleDateString('en-US', { year: 'numeric' , month: 'short' , day: '2-digit'
+                                                            <%= coupon.expiryDate.toLocaleDateString('en-US', {
+                                                                year: 'numeric' , month: 'short' , day: '2-digit'
                                                                 }).replace(/\//g,'-') %>
                                                         </td>
                                                         <td>
                                                             <%= coupon.discountPercentage %>
                                                         </td>
                                                         <td>
-                                                            <a href="" data-bs-toggle="modal" data-bs-target="#example-<%= coupon._id %>" data-bs-whatever="@mdo"><i
+                                                            <a href="" data-bs-toggle="modal"
+                                                                data-bs-target="#example-<%= coupon._id %>"
+                                                                data-bs-whatever="@mdo"><i
                                                                     class="bi bi-pencil-square bi fs-4"></i></a>
-                                                            <a href="" data-bs-toggle="modal" data-bs-target="#staticBackdrop<%= coupon._id %>"><i
+                                                            <a href="" data-bs-toggle="modal"
+                                                                data-bs-target="#staticBackdrop<%= coupon._id %>"><i
                                                                     class="bi bi-trash bi fs-4 ms-3"></i></a>
                                                         </td>
                                                     </tr>
-                                            
+
                                                     <!-- Modal -->
-                                                    <div class="modal fade" id="staticBackdrop<%= coupon._id %>" data-bs-backdrop="static" data-bs-keyboard="false"
-                                                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                    <div class="modal fade" id="staticBackdrop<%= coupon._id %>"
+                                                        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                         <div class="modal-dialog">
-                                                            <div class="modal-content" style="background-color: #191C24;color: aliceblue;">
+                                                            <div class="modal-content"
+                                                                style="background-color: #191C24;color: aliceblue;">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title" id="staticBackdropLabel">Delete Category
+                                                                    <h5 class="modal-title" id="staticBackdropLabel">
+                                                                        Delete Category
                                                                     </h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <p>Are you sure you want to delete coupon ?</p>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <a href="/admin/couponList"><button type="button" class="btn btn-secondary"
+                                                                    <a href="/admin/couponList"><button type="button"
+                                                                            class="btn btn-secondary"
                                                                             data-bs-dismiss="modal">No</button></a>
-                                                                    <a href="/admin/deleteCoupon?id=<%= coupon._id %>"><button type="button"
+                                                                    <a href="/admin/deleteCoupon?id=<%= coupon._id %>"><button
+                                                                            type="button"
                                                                             class="btn btn-primary">Yes</button></a>
-                                            
+
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                            
-                                            
-                                            
+
+
+
                                                     <% }); }else { %>
                                                         <tr>
                                                             <td>
@@ -95,24 +108,30 @@
                                         <nav aria-label="Page navigation">
                                             <ul class="pagination justify-content-center">
                                                 <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                                    <a class="page-link page-link-prev" href="?page=<%= currentPage - 1 %>" aria-label="Previous" tabindex="-1"
-                                                        aria-disabled="true">
-                                                        <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                                    <a class="page-link page-link-prev"
+                                                        href="?page=<%= currentPage - 1 %>" aria-label="Previous"
+                                                        tabindex="-1" aria-disabled="true">
+                                                        <span aria-hidden="true"><i
+                                                                class="icon-long-arrow-left"></i></span>Prev
                                                     </a>
                                                 </li>
                                                 <% for (let i=1; i <=totalPages; i++) { %>
-                                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>" aria-current="page">
+                                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>"
+                                                        aria-current="page">
                                                         <a class="page-link" href="?page=<%= i %>">
                                                             <%= i %>
                                                         </a>
                                                     </li>
                                                     <% } %>
-                                                        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                                                            <a class="page-link page-link-next" href="?page=<%= currentPage + 1 %>" aria-label="Next">
-                                                                Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                                        <li
+                                                            class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                            <a class="page-link page-link-next"
+                                                                href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                                                Next <span aria-hidden="true"><i
+                                                                        class="icon-long-arrow-right"></i></span>
                                                             </a>
                                                         </li>
-                                            </ul>
+                                         </ul>
                                         </nav>
                                     </div>
                                 </div>
@@ -120,12 +139,14 @@
                         </div>
                     </div>
 
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content" style="background-color: #191C24;">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form action="/admin/addCoupon" method="post" id="couponForm">
@@ -136,7 +157,8 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="discountType" class="col-form-label">Discount Type</label>
-                                            <input type="text" class="form-control" id="discountType" name="discountType">
+                                            <input type="text" class="form-control" id="discountType"
+                                                name="discountType">
                                             <span class="text-danger" id="discountType-error"></span>
                                         </div>
                                         <div class="mb-3">
@@ -155,7 +177,8 @@
                                             <span class="text-danger" id="percentage-error"></span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-dark"
+                                                data-bs-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                         </div>
                                     </form>
@@ -163,20 +186,22 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
-                    
+
+
+
                     <% for (let i=0; i < coupon.length; i++) { %>
-                        <div class="modal fade" id="example-<%= coupon[i]._id %>" tabindex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
+                        <div class="modal fade" id="example-<%= coupon[i]._id %>" tabindex="-1"
+                            aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content" style="background-color: #191C24;">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="/admin/editCoupon/<%= coupon[i]._id %>" method="post" id="couponEditForm">
+                                        <form action="/admin/editCoupon/<%= coupon[i]._id %>" method="post"
+                                            id="couponEditForm">
                                             <div class="mb-3">
                                                 <label for="recipient-name" class="col-form-label">Coupon code</label>
                                                 <input type="text" class="form-control" id="couponCodeEdit" name="code"
@@ -185,31 +210,34 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="recipient-name" class="col-form-label">Discount Type</label>
-                                                <input type="text" class="form-control" id="discountTypeEdit" name="discountType"
-                                                    value="<%= coupon[i].discountType %>">
+                                                <input type="text" class="form-control" id="discountTypeEdit"
+                                                    name="discountType" value="<%= coupon[i].discountType %>">
                                                 <span class="text-danger" id="discountTypeEdit-error"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="recipient-name" class="col-form-label">Start Date</label>
-                                                <input type="text" class="form-control" id="startDateEdit" name="startDate"
+                                                <input type="text" class="form-control" id="startDateEdit"
+                                                    name="startDate"
                                                     value="<%= coupon[i].startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %>">
                                                 <span class="text-danger" id="startDateEdit-error"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="recipient-name" class="col-form-label">Expiry Date</label>
-                                                <input type="text" class="form-control" id="expiryDateEdit" name="expiryDate"
+                                                <input type="text" class="form-control" id="expiryDateEdit"
+                                                    name="expiryDate"
                                                     value="<%= coupon[i].expiryDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).replace(/\//g,'-') %>">
                                                 <span class="text-danger" id="expiryDateEdit-error"></span>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="recipient-name" class="col-form-label">Percentage</label>
-                                                <input type="text" class="form-control" id="percentageEdit" name="percentage"
-                                                    value="<%= coupon[i].discountPercentage %>">
+                                                <input type="text" class="form-control" id="percentageEdit"
+                                                    name="percentage" value="<%= coupon[i].discountPercentage %>">
                                                 <input type="hidden" name="id" value="<%= coupon[i]._id %>">
                                                 <span class="text-danger" id="percentageEdit-error"></span>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-dark"
+                                                    data-bs-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary">Submit</button>
                                             </div>
                                         </form>
@@ -218,9 +246,9 @@
                             </div>
                         </div>
                         <% } %>
-                    
-                    
-                    
+
+
+
                             <script>
                                 const couponForm = document.getElementById('couponForm');
                                 const couponCodeInput = document.getElementById('couponCode');
@@ -351,4 +379,4 @@
                                 });
                             </script>
 
-                    <%- include('../layouts/adminLayout/footer.ejs') %>
+                            <%- include('../layouts/adminLayout/footer.ejs') %>

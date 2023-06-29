@@ -1,67 +1,77 @@
-<%- include('../layouts/adminLayout/header.ejs') %>
-  <%- include('../layouts/adminLayout/sidebar.ejs') %>
-    <%- include('../layouts/adminLayout/navbar.ejs') %>
-      <!-- partial -->
-      <div class="main-panel bg-warning">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-              <div class="card bg-dark">
-                <div class="card-body">
-                  <h4 class="card-title">ADD BANNER</h4>
+<%- include('../layouts/adminLayout/header.ejs') %> <%-
+include('../layouts/adminLayout/sidebar.ejs') %> <%-
+include('../layouts/adminLayout/navbar.ejs') %>
+<!-- partial -->
+<div class="main-panel bg-warning">
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-12 grid-margin stretch-card">
+        <div class="card bg-dark">
+          <div class="card-body">
+            <h4 class="card-title">ADD BANNER</h4>
 
-                  <form class="form-sample text-warning" action="/admin/addBanner" method="post"
-                    enctype="multipart/form-data">
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Main Text</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" name="mainText" />
-                          </div>
-                        </div>
-                      </div>
+            <form
+              class="form-sample text-warning"
+              action="/admin/addBanner"
+              method="post"
+              enctype="multipart/form-data"
+            >
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Main Text</label>
+                    <div class="col-sm-9">
+                      <input type="text" class="form-control" name="mainText" />
                     </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Description</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" name="description" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>File upload</label>
-
-                          <div class="input-group col-xs-12">
-                            <input class="bt"
-                              style="height: 28px;width: 228px ; background-color: #ffc107;color: rgb(5, 5, 5);"
-                              accept="Image/*" type="file" name="image" required>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                    </div><br>
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                    <button class="btn btn-dark">Cancel</button>
-                  </form>
+                  </div>
                 </div>
               </div>
-            </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Description</label>
+                    <div class="col-sm-9">
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="description"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>File upload</label>
 
-
-
-
-
-
-
+                    <div class="input-group col-xs-12">
+                      <input
+                        class="bt"
+                        style="
+                          height: 28px;
+                          width: 228px;
+                          background-color: #ffc107;
+                          color: rgb(5, 5, 5);
+                        "
+                        accept="Image/*"
+                        type="file"
+                        name="image"
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row"></div>
+              <br />
+              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              <button class="btn btn-dark">Cancel</button>
+            </form>
           </div>
         </div>
       </div>
-      <%- include('../layouts/adminLayout/footer.ejs') %>
+    </div>
+  </div>
+</div>
+<%- include('../layouts/adminLayout/footer.ejs') %>
