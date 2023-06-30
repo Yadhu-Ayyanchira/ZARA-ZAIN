@@ -1,0 +1,150 @@
+<%- include('../layouts/user/header.ejs') %>
+
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="#">Home</a>
+                <span class="breadcrumb-item active">Wishlist</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Cart Start -->
+<div class="container-fluid" id="reloadDiv">
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table table-light table-borderless table-hover  mb-0">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Preview</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <% if(products.length> 0){ products.forEach(products =>{ %>
+
+                        <tr>
+                            <td class="align-middle">
+                                <img src="/adminAsset/adminImages/<%=products.productId.image[0]%>" alt=""
+                                    style="width: 50px" />
+                            </td>
+                            <td class="align-middle">
+                                <%= products.productId.productName %>
+                            </td>
+                            <td class="align-middle">$<%= products.productId.price %>.00</td>
+                            
+                            
+                            <td class="align-middle">
+                                <a onclick="deleteWishlist('<%=products.productId._id%>')">
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="fa fa-times"></i></button></a>
+
+                            </td>
+                            <td class="align-middle">
+                                <a onclick="addToCart('<%= products._id %>')">
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="fa-solid fa-cart-plus"></i></button></a>
+
+                            </td>
+                        </tr>
+                        <% } ); %> <% } else { %>
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    No Products Added to Cart
+                                </td>
+                            </tr>
+                            <% } %>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    function show(id) {
+        $.ajax({
+            url: "/addfromwishlist",
+            method: "post",
+            data: {
+                query: id,
+            },
+            success: (response) => {
+                if (response.success) {
+                    location.href = "/cart";
+                }
+            },
+        });
+    }
+
+    function addToCart(productId) {
+        $.ajax({
+            url: "/addToCart",
+            method: "post",
+            data: {
+                id: productId,
+            },
+            success: (response) => {
+                if (response.success) {
+                    swal.fire({
+                        position: "center",
+                        icon: "success",
+                        title: "Product added to cart",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            },
+        });
+    }
+
+    function deleteWishlist(proId) {
+        swal
+            .fire({
+                title: "Are you sure?",
+                text: "You want to delete cart",
+                icon: "Warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes delete!",
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/deleteWishlist",
+                        data: {
+                            products: proId,
+                        },
+                        method: "post",
+                        success: (response) => {
+                            location.reload();
+                            swal.fire({
+                                title: "Deleted!",
+                                text: "Your item is deleted.",
+                                icon: "success",
+                                timer: 1500,
+                                showConfirmButton: false,
+                            });
+                        },
+                        error: (error) => {
+                            console.log(error);
+                            swal.fire({
+                                title: "Error!",
+                                text: "An error occured while deleting the item",
+                                icon: "error",
+                                showConfirmButton: false,
+                            });
+                        },
+                    });
+                }
+            });
+    }
+</script>
+
+<%- include('../layouts/user/footer.ejs') %>

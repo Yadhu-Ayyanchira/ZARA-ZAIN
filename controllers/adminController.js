@@ -439,37 +439,9 @@ const editBanner = async (req, res) => {
   }
 }
 
-// const loadSalesReport = async (req, res) => {
-//   try {
-//     const adminData = await User.findById({ _id: req.session.Auser_id });
-//     const order = await Order.aggregate([
-//       { $unwind: "$products" },
-//       { $match: { 'products.status': 'Delivered' } },
-//       { $sort: { date: -1 } },
-//       {
-//         $lookup: {
-//           from: 'products',
-//           let: { productId: { $toObjectId: '$products.productId' } },
-//           pipeline: [
-//             { $match: { $expr: { $eq: ['$_id', '$$productId'] } } }
-//           ],
-//           as: 'products.productDetails'
-//         }
-//       },
-//       {
-//         $addFields: {
-//           'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] }
-//         }
-//       }
-//     ]);
-//     res.render("salesReport", { order, admin: adminData });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
 const loadSalesReport = async (req, res) => {
   try {
-    const adminData = await User.findById(req.session.Auser_id);
+    const adminData = await User.findById({ _id: req.session.Auser_id });
     const order = await Order.aggregate([
       { $unwind: "$products" },
       { $match: { 'products.status': 'Delivered' } },
@@ -477,18 +449,46 @@ const loadSalesReport = async (req, res) => {
       {
         $lookup: {
           from: 'products',
-          localField: 'products.productId',
-          foreignField: '_id',
+          let: { productId: { $toObjectId: '$products.productId' } },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$_id', '$$productId'] } } }
+          ],
           as: 'products.productDetails'
         }
       },
-      { $addFields: { 'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] } } }
+      {
+        $addFields: {
+          'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] }
+        }
+      }
     ]);
     res.render("salesReport", { order, admin: adminData });
   } catch (error) {
     console.log(error.message);
   }
-};
+}
+// const loadSalesReport = async (req, res) => {
+//   try {
+//     const adminData = await User.findById(req.session.Auser_id);
+//     const order = await Order.aggregate([
+//       { $unwind: "$products" },
+//       { $match: { 'products.status': 'Delivered' } },
+//       { $sort: { date: -1 } },
+//       {
+//         $lookup: {
+//           from: 'products',
+//           localField: 'products.productId',
+//           foreignField: '_id',
+//           as: 'products.productDetails'
+//         }
+//       },
+//       { $addFields: { 'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] } } }
+//     ]);
+//     res.render("salesReport", { order, admin: adminData });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 
 const updateBanner = async (req, res) => {

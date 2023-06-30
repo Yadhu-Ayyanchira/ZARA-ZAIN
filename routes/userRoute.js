@@ -27,6 +27,7 @@ const userController = require("../controllers/userController");
 const addressController = require("../controllers/addressController");
 const orderController = require("../controllers/orderController");
 const couponController = require('../controllers/couponController.js')
+const wishlistController = require('../controllers/wishlistController')
 
 
 
@@ -82,6 +83,10 @@ user_route.post('/returnOrder', orderController.returnOrder);
 user_route.get('/changePassword',userController.changePassword)
 
 user_route.post('/applycoupon', couponController.applyCoupon);
+
+user_route.get("/wishlist", auth.isLogin, wishlistController.wishlistLoad);
+user_route.post("/addToWishlist",  wishlistController.addToWishlist);
+
 
 
 module.exports = user_route;
