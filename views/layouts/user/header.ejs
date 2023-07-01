@@ -101,7 +101,7 @@
                         </div> -->
                         <% if(categoryData.length>0){
                             for(let i=0;i<categoryData.length;i++){%>
-                        <a href="" class="nav-item nav-link"><%=categoryData[i].categoryName%></a>
+                        <a href="/filterCategory/<%= categoryData[i].categoryName %>"" class="nav-item nav-link"><%=categoryData[i].categoryName%></a>
                         <% } } %>
                     </div>
                 </nav>

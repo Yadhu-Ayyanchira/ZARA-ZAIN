@@ -1,6 +1,6 @@
 const User = require("../Models/userModel");
-const productmodel = require("../Models/productmodel");
-const categoryModel = require("../Models/categoryModel");
+const Product = require("../Models/productmodel");
+const Category = require("../Models/categoryModel");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const nodemailer = require("nodemailer");
@@ -62,8 +62,8 @@ const sendverifyMail = async (name, email, otp) => {
 const loadHome = async (req, res, next) => {
   try {
     const banner = await Banner.find({});
-    const categoryData = await categoryModel.find();
-    const productData = await productmodel.find({ is_delete: false });
+    const categoryData = await Category.find();
+    const productData = await Product.find({ is_delete: false });
     if (req.session.user_id) {
       const session = req.session.user_id;
       const userData = await User.findById({ _id: req.session.user_id });
@@ -86,7 +86,7 @@ const loadHome = async (req, res, next) => {
 
 const loginLoad = async (req, res, next) => {
   try {
-    const categoryData = await categoryModel.find();
+    const categoryData = await Category.find();
     if (req.session.user_id) {
       const session = req.session.user_id;
       const userData = await User.findById({ _id: req.session.user_id });
@@ -109,7 +109,7 @@ const loginLoad = async (req, res, next) => {
 
 const loadRegister = async (req, res, next) => {
   try {
-    const categoryData = await categoryModel.find();
+    const categoryData = await Category.find();
     if (req.session.user_id) {
       const session = req.session.user_id;
       const userData = await User.findById({ _id: req.session.user_id });
@@ -133,7 +133,7 @@ let email;
 const insertUser = async (req, res, next) => {
   try {
     const session = null;
-    const categoryData = await categoryModel.find();
+    const categoryData = await Category.find();
     const spassword = await securePassword(req.body.password);
     const user = new User({
       name: req.body.name,
@@ -191,13 +191,13 @@ const insertUser = async (req, res, next) => {
 const verifyLogin = async (req, res, next) => {
   try {
     const banner = await Banner.find({});
-    const categoryData = await categoryModel.find();
+    const categoryData = await Category.find();
     const session = null;
     const email = req.body.email;
     const password = req.body.password;
 
     const userData = await User.findOne({ email: email });
-    const productData = await productmodel.find({ is_delete: false });
+    const productData = await Product.find({ is_delete: false });
 
     if (userData && userData.is_block == false) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
@@ -246,8 +246,8 @@ const loadShop = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
-      const productData = await productmodel.find({ is_delete: false });
-      const categoryData = await categoryModel.find();
+      const productData = await Product.find({ is_delete: false });
+      const categoryData = await Category.find();
       const userData = await User.findById({ _id: req.session.user_id });
       res.render("shop", {
         userData: userData,
@@ -257,8 +257,8 @@ const loadShop = async (req, res, next) => {
       });
     } else {
       const session = null;
-      const categoryData = await categoryModel.find();
-      const productData = await productmodel.find();
+      const categoryData = await Category.find();
+      const productData = await Product.find();
       res.render("shop", { session, productData: productData, categoryData });
     }
   } catch (error) {
@@ -271,8 +271,8 @@ const loadShowproduct = async (req, res, next) => {
       const session = req.session.user_id;
       const id = req.params.id;
       const userData = await User.findById({ _id: req.session.user_id });
-      const categoryData = await categoryModel.find();
-      const data = await productmodel.findOne({ _id: id });
+      const categoryData = await Category.find();
+      const data = await Product.findOne({ _id: id });
       res.render("showProduct", {
         productData: data,
         session,
@@ -282,8 +282,8 @@ const loadShowproduct = async (req, res, next) => {
     } else {
       const id = req.params.id;
       const session = req.session.user_id;
-      const categoryData = await categoryModel.find();
-      const data = await productmodel.findOne({ _id: id });
+      const categoryData = await Category.find();
+      const data = await Product.findOne({ _id: id });
       res.render("showProduct", { productData: data, session, categoryData });
     }
   } catch (error) {
@@ -298,7 +298,7 @@ const verifyLoad = async (req, res, next) => {
   try {
     const session = req.session.user_id;
     console.log(session + "helloo");
-    const categoryData = await categoryModel.find();
+    const categoryData = await Category.find();
     if (otp2 == otp) {
       const UserData = await User.findOneAndUpdate(
         { email: email },
@@ -330,7 +330,7 @@ const loadProfile = async (req, res, next) => {
   try {
     if (req.session.user_id) {
       const session = req.session.user_id;
-      const categoryData = await categoryModel.find();
+      const categoryData = await Category.find();
       const userData = await User.findById({ _id: req.session.user_id });
       const addressData = await Address.findOne({
         userId: req.session.user_id,
@@ -354,7 +354,7 @@ const loadProfile = async (req, res, next) => {
     } else {
       const userData = await User.findById({ _id: "646dd35cb3f71f9940575fad" });
       const session = null;
-      const categoryData = await categoryModel.find();
+      const categoryData = await Category.find();
       res.render("userProfile", { session, categoryData, userData });
     }
   } catch (error) {
@@ -365,9 +365,52 @@ const loadProfile = async (req, res, next) => {
 const changePassword = async (req, res, next) => {
   try {
     const session = req.session.user_id;
-    const categoryData = await categoryModel.find();
+    const categoryData = await Category.find();
     const userData = await User.findById({ _id: req.session.user_id });
     res.render("passwordOtp", { session, categoryData, userData });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const filterCategory = async (req, res, next) => {
+  try {
+    var search = "";
+    if (req.query.search) {
+      search = req.query.search;
+    }
+    const id = req.params.id;
+    const limit = 6;
+    const count = await Product.find({
+      is_delete: false,
+      $or: [
+        { product: { $regex: ".*" + search + ".*", $options: "i" } },
+        { categoryName: { $regex: ".*" + search + ".*", $options: "i" } },
+        // {description:{$regex:'.*'+search+'.*',$options:'i'}},
+      ],
+    }).countDocuments();
+    const session = req.session.user_id;
+    const categoryData = await Category.find({ is_delete: false });
+    const userData = await User.find({});
+    const productData = await Product.find({ category: id, is_delete: false });
+
+    if (categoryData.length > 0) {
+      res.render("shop", {
+        totalPages: Math.ceil(count / limit),
+        productData: productData,
+        session,
+        categoryData: categoryData,
+        userData,
+      });
+    } else {
+      res.render("shop", {
+        totalPages: Math.ceil(count / limit),
+        product: [],
+        session,
+        category: categoryData,
+        userData,
+      });
+    }
   } catch (error) {
     next(error);
   }
@@ -386,4 +429,5 @@ module.exports = {
   sendverifyMail,
   loadProfile,
   changePassword,
+  filterCategory,
 };
