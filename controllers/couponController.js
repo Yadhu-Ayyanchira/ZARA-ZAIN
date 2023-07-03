@@ -2,11 +2,9 @@ const Coupon = require("../Models/couponModel");
 const User = require("../Models/userModel");
 
 const loadCopon = async (req, res, next) => {
-  console.log("coupon in");
   try {
     const adminData = await User.findById(req.session.Auser_id);
     const couponData = await Coupon.find({});
-
     const page = parseInt(req.query.page) || 1;
     const limit = 20;
     const startIndex = (page - 1) * limit;
@@ -53,7 +51,6 @@ const applyCoupon = async (req, res, next) => {
     const id = req.session.user_id;
     const couponCode = req.body.code;
     const amount = req.body.amount;
-    console.log("id:" + id + "   cucode:" + couponCode + "   amount:" + amount);
     const userExist = await Coupon.findOne({
       code: couponCode,
       user: { $in: [id] },
@@ -67,7 +64,6 @@ const applyCoupon = async (req, res, next) => {
         if (couponData.expiryDate <= new Date()) {
           res.json({ date: true });
         } else {
-          console.log("looooooo");
           await Coupon.findOneAndUpdate(
             { _id: couponData._id },
             { $push: { user: id } }
@@ -76,7 +72,6 @@ const applyCoupon = async (req, res, next) => {
             (amount * couponData.discountPercentage) / 100
           );
           const disTotal = Math.round(amount - perAmount);
-          console.log("per:" + perAmount + "   dis:" + disTotal);
           return res.json({ amountOkey: true, disAmount: perAmount, disTotal });
         }
       }

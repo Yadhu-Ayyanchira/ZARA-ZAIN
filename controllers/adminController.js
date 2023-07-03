@@ -19,7 +19,6 @@ const securePassword = async (password) => {
 
 const loadLogin = async (req, res, next) => {
   try {
-    console.log("nice");
     res.render("login", { message });
     message = null;
   } catch (error) {
@@ -36,10 +35,7 @@ const verifyLogin = async (req, res, next) => {
 
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
-      console.log(passwordMatch);
-      if (passwordMatch) {
-        console.log("correct");
-        console.log(userData.is_admin);
+      if (passwordMatch) {;
         if (userData.is_admin === 0) {
           res.render("login", { message: "Email and password incorrect" });
         } else {
@@ -48,7 +44,6 @@ const verifyLogin = async (req, res, next) => {
         }
       } else {
         res.render("login", { message: "Email or password is incorrect" });
-        console.log("incorrect");
       }
     } else {
       res.render("login", { message: "Email and password incorrect" });
@@ -57,15 +52,6 @@ const verifyLogin = async (req, res, next) => {
     next(error);
   }
 };
-
-// const loadDashboard = async (req, res, next) => {
-//   try {
-//     const adminData = await User.findById({ _id: req.session.user_id });
-//     res.render("dashboard", { admin: adminData });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
 const logout = async (req, res) => {
   try {
@@ -76,125 +62,7 @@ const logout = async (req, res) => {
   }
 };
 
-// const adminDashboard = async (req, res, next) => {
-//   try {
-//     const orderData = await Order.find({});
-//     const products = await productmodel.find({});
-//     const adminData = await usermodel.findById({ _id: req.session.Auser_id });
-//     const userData = await User.find({ is_block: false })
 
-
-//     //find total delivered sale
-
-//     const result = await Order.aggregate([
-//       { $unwind: "$products" },
-//       { $match: { 'products.status': 'Delivered' } },
-//       {
-//         $group: {
-//           _id: null,
-//           total: { $sum: '$products.totalPrice' }
-//         }
-//       },
-//       {
-//         $project: {
-//           _id: 0,
-//           total: 1
-//         }
-//       }
-//     ]);
-
-
-//     let total = 0
-//     if (result.length > 0) {
-//        total = result[0].total;
-//     }
-
-
-
-
-//     //total cod sale
-
-//     const codResult = await Order.aggregate([
-//       { $unwind: "$products" },
-//       { $match: { 'products.status': 'Delivered', paymentMethod: 'COD' } },
-//       {
-//         $group: {
-//           _id: null,
-//           total: { $sum: '$products.totalPrice' }
-//         }
-//       },
-//       {
-//         $project: {
-//           _id: 0,
-//           total: 1
-//         }
-//       }
-//     ]);
-
-//     let codTotal = 0
-//     if (codResult.length > 0) {
-//       codTotal = codResult[0].total;
-//     }
-
-
-//     //total online payment and wallet
-//     const onlineResult = await Order.aggregate([
-//       { $unwind: "$products" },
-//       { $match: { 'products.status': 'Delivered', 'paymentMethod': { $ne: 'COD' } } },
-//       {
-//         $group: {
-//           _id: null,
-//           total: { $sum: '$products.totalPrice' }
-//         }
-//       },
-//       {
-//         $project: {
-//           _id: 0,
-//           total: 1
-//         }
-//       }
-//     ]);
-
-//     let onlineTotal = 0;
-//     if (onlineResult.length > 0) {
-//       onlineTotal = onlineResult[0].total;
-//     }
-
-
-
-//     const weeklySalesCursor = Order.aggregate([
-//       {
-//         $unwind: "$products"
-//       },
-//       {
-//         $match: {
-//           'products.status': 'Delivered'
-//         }
-//       },
-//       {
-//         $group: {
-//           _id: { $dateToString: { format: "%d-%m-%Y", date: "$date" } },
-//           sales: { $sum: '$products.totalPrice' }
-//         }
-//       },
-//       {
-//         $sort: { _id: 1 }
-//       },
-//       {
-//         $limit: 7
-//       }
-//     ]);
-
-//     const weeklySales = await weeklySalesCursor.exec();
-//     const dates = weeklySales.map(item => item._id);
-//     const sales = weeklySales.map(item => item.sales);
-//     const salesSum = (weeklySales.reduce((accumulator, item) => accumulator + item.sales, 0)).toFixed(2);
-//     console.log(sales, dates);
-//     res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, total, sales, dates });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 const adminDashboard = async (req, res, next) => {
   try {
     const [orderData, products, adminData, userData] = await Promise.all([
@@ -259,49 +127,6 @@ const adminDashboard = async (req, res, next) => {
   }
 };
 
-
-// const editUserLoad = async (req, res, next) => {
-//   try {
-//     const id = req.query.id;
-//     const userData = await User.findById({ _id: id });
-//     if (userData) {
-//       res.render("edit-user", { user: userData });
-//     } else {
-//       res.redirect("/admin/dashboard");
-//     }
-//   } catch (error) {
-//     next(error); 
-//    }
-// };
-// const updateUsers = async (req, res, next) => {
-//   try {
-//     console.log(req.body.name);
-//     const userData = await User.findByIdAndUpdate(
-//       { _id: req.body.id },
-//       {
-//         $set: {
-//           name: req.body.name,
-//           email: req.body.email,
-//           mobile: req.body.mob,
-//         },
-//       }
-//     );
-//     res.redirect("/admin/dashboard");
-//   } catch (error) {
-//     next(error);  
-//     }
-// };
-
-// const deleteUser = async (req, res, next) => {
-//   try {
-//     const id = req.query.id;
-//     await User.deleteOne({ _id: id });
-//     res.redirect("/admin/dashboard");
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const newUserLoad = async (req, res, next) => {
   try {
     const userData = await usermodel.find({ is_admin: 0 });
@@ -312,31 +137,6 @@ const newUserLoad = async (req, res, next) => {
     next(error);
   }
 };
-
-// const addUser = async (req, res, next) => {
-//   try {
-//     const spassword = await securePassword(req.body.password);
-//     console.log(req.body);
-//     const user = new User({
-//       name: req.body.name,
-//       email: req.body.email,
-//       mobile: req.body.mob,
-//       password: spassword,
-//       is_admin: 0,
-//     });
-
-//     const userData = await user.save();
-
-//     if (userData) {
-//       const userData = await User.findById({ _id: req.session.Auser_id });
-//       res.redirect("/admin/dashboard");
-//     } else {
-//       res.render("add", { message: "Your registration has been failed" });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 const block = async (req, res, next) => {
   try {
@@ -362,18 +162,18 @@ const unblock = async (req, res, next) => {
   }
 };
 
-const loadAddBanner = async (req, res) => {
+const loadAddBanner = async (req, res, next) => {
   try {
     const adminData = await usermodel.findById({ _id: req.session.Auser_id });
     //const banner= await Banner.find({})
 
     res.render('addBanner', { admin: adminData, })
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    next(error)
   }
 }
 
-const addBanner = async (req, res) => {
+const addBanner = async (req, res, next) => {
   try {
 
     const adminid = req.session.Auser_id;
@@ -399,8 +199,8 @@ const addBanner = async (req, res) => {
 
       });
     }
-  } catch (err) {
-    console.log(err.message);
+  } catch (error) {
+    next(error)
   }
 };
 
@@ -419,7 +219,7 @@ const bannerList = async (req, res, next) => {
 }
 
 //Deleting the banner
-const deleteBanner = async (req, res) => {
+const deleteBanner = async (req, res, next) => {
   try {
     const dlt = await Banner.deleteOne({ _id: req.query.id }, { $set: { is_delete: true } })
 
@@ -430,25 +230,25 @@ const deleteBanner = async (req, res) => {
       res.redirect('/admin/bannerList')
     }
   } catch (error) {
-    console.log(error.message);
+    next(error)
   }
 }
 
 
 
 //Edit Banner
-const editBanner = async (req, res) => {
+const editBanner = async (req, res, next) => {
   try {
     const BanData = await Banner.findById({ _id: req.params.id });
     const adminData = await User.findById({ _id: req.session.Auser_id });
     res.render('editBanner', { banner: BanData, admin: adminData })
 
   } catch (error) {
-    console.log(error.message);
+   next(error)
   }
 }
 
-const loadSalesReport = async (req, res) => {
+const loadSalesReport = async (req, res, next) => {
   try {
     const adminData = await User.findById({ _id: req.session.Auser_id });
     const order = await Order.aggregate([
@@ -473,34 +273,11 @@ const loadSalesReport = async (req, res) => {
     ]);
     res.render("salesReport", { order, admin: adminData });
   } catch (error) {
-    console.log(error.message);
+    next(error)
   }
 }
-// const loadSalesReport = async (req, res) => {
-//   try {
-//     const adminData = await User.findById(req.session.Auser_id);
-//     const order = await Order.aggregate([
-//       { $unwind: "$products" },
-//       { $match: { 'products.status': 'Delivered' } },
-//       { $sort: { date: -1 } },
-//       {
-//         $lookup: {
-//           from: 'products',
-//           localField: 'products.productId',
-//           foreignField: '_id',
-//           as: 'products.productDetails'
-//         }
-//       },
-//       { $addFields: { 'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] } } }
-//     ]);
-//     res.render("salesReport", { order, admin: adminData });
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };
 
-
-const updateBanner = async (req, res) => {
+const updateBanner = async (req, res, next) => {
   if (req.body.description.trim() === "") {
     const id = req.params.id
     const bannerData = await Banner.findOne({ _id: id })
@@ -523,56 +300,12 @@ const updateBanner = async (req, res) => {
 
       res.redirect('/admin/bannerList')
     } catch (error) {
-      console.log(error.message);
+      next(error)
     }
   }
 }
 
-// const sortReport = async (req, res) => {
-//   try {
-//     const adminData = await User.findById({ _id: req.session.Auser_id });
-//     const id = parseInt(req.params.id);
-//     const from = new Date();
-//     const to = new Date(from.getTime() - id * 24 * 60 * 60 * 1000);
-
-//     const order = await Order.aggregate([
-//       { $unwind: "$products" },
-//       {
-//         $match: {
-//           'products.status': 'Delivered',
-//           $and: [
-//             { 'products.deliveryDate': { $gt: to } },
-//             { 'products.deliveryDate': { $lt: from } }
-//           ]
-//         }
-//       },
-//       { $sort: { date: -1 } },
-//       {
-//         $lookup: {
-//           from: 'products',
-//           let: { productId: { $toObjectId: '$products.productId' } },
-//           pipeline: [
-//             { $match: { $expr: { $eq: ['$_id', '$$productId'] } } }
-//           ],
-//           as: 'products.productDetails'
-//         }
-//       },
-//       {
-//         $addFields: {
-//           'products.productDetails': { $arrayElemAt: ['$products.productDetails', 0] }
-//         }
-//       }
-//     ]);
-//     console.log(order)
-
-//     res.render("salesReport", { order, admin: adminData });
-
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
-
-const sortReport = async (req, res) => {
+const sortReport = async (req, res, next) => {
   try {
     const adminData = await User.findById(req.session.Auser_id);
     const id = parseInt(req.params.id);
@@ -608,11 +341,9 @@ const sortReport = async (req, res) => {
         }
       }
     ]);
-
-    console.log(order);
     res.render("salesReport", { order, admin: adminData });
   } catch (error) {
-    console.log(error.message);
+    next(error)
   }
 };
 
@@ -633,9 +364,4 @@ module.exports = {
   updateBanner,
   loadSalesReport,
   sortReport,
-  // editUserLoad,
-  // updateUsers,
-  // deleteUser,
-  // addUser,
-  // addUser,
 };

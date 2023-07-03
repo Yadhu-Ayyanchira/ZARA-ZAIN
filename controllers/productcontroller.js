@@ -69,19 +69,7 @@ const insertProduct = async (req, res, next) => {
   }
 };
 
-// const deleteProduct = async (req, res, next) => {
-//   try {
-//     const id = req.query.id;
-//     const dlt = await productmodel.deleteOne({ _id: id });
-//     if (dlt) {
-//       res.redirect("/admin/productList");
-//     } else {
-//       res.redirect("/admin/productList");
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+
 const deleteProduct = async (req, res, next) => {
   try {
     const id = req.query.id;
@@ -99,9 +87,7 @@ const deleteProduct = async (req, res, next) => {
 
 const editProduct = async (req, res, next) => {
   try {
-    console.log("looo");
     const id = req.params.id;
-    console.log(id);
     const prodata = await productmodel.findById({ _id: id });
     const adminData = await usermodal.findById({ _id: req.session.Auser_id });
     if (prodata) {
@@ -114,44 +100,7 @@ const editProduct = async (req, res, next) => {
   }
 };
 
-// const updateProduct = async (req, res, next) => {
-//   try {
-//    console.log('ooh yeaah');
-
-//     const image = [];
-//     if (req.files && req.files.length > 0) {
-//       for (i = 0; i < req.files.length; i++) {
-//         image[i] = req.files[i].filename;
-//       }
-//     }
-
-//     const productUpdate = await productmodel.updateOne(
-//       { _id: req.query.id },
-//       {
-//         $set: {
-//           productName: req.body.name,
-//           description: req.body.description,
-//           price: req.body.price,
-//          quantity: req.body.quantity,
-//           category: req.body.category,
-//           brand: req.body.brand,
-//         },
-//       }
-//     );
-//     console.log(productUpdate);
-
-//     const productData = await productUpdate.save();
-//     if (productData) {
-//       res.redirect("/admin/productList");
-//     } else {
-//       res.redirect("/admin/productList");
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-const updateProduct = async (req, res) => {
+const updateProduct = async (req, res, next) => {
   if (
     req.body.product === "" ||
     req.body.stock.trim() === "" ||
@@ -194,7 +143,7 @@ const updateProduct = async (req, res) => {
 
       res.redirect("/admin/productList");
     } catch (error) {
-      console.log(error.message);
+    next(error);
     }
   }
 };

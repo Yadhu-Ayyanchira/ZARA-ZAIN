@@ -20,7 +20,7 @@ const securePassword = async (password) => {
   }
 };
 
-const sendverifyMail = async (name, email, otp) => {
+const sendverifyMail = async (name, email, next, otp) => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -55,7 +55,7 @@ const sendverifyMail = async (name, email, otp) => {
     });
     return otp;
   } catch (error) {
-    console.log(error.message);
+    next(error)
   }
 };
 
@@ -75,7 +75,6 @@ const loadHome = async (req, res, next) => {
         banner,
       });
     } else {
-      console.log("destroyyyyy");
       const session = null;
       res.render("index", { session, productData, categoryData, banner });
     }
@@ -102,7 +101,7 @@ const loginLoad = async (req, res, next) => {
       message = null;
       res.render("login", { session: session, message, categoryData });
     }
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 };
@@ -172,7 +171,6 @@ const insertUser = async (req, res, next) => {
       if (userData) {
         randomnumber = Math.floor(Math.random() * 9000) + 1000;
         otp = randomnumber;
-        console.log(otp, "===", req.body.email);
         sendverifyMail(name, req.body.email, randomnumber);
         res.render("verifyOtp", { session, categoryData });
       } else {
@@ -201,7 +199,6 @@ const verifyLogin = async (req, res, next) => {
 
     if (userData && userData.is_block == false) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
-      console.log(passwordMatch);
       if (passwordMatch) {
         req.session.user_id = userData._id;
         const session = req.session.user_id;
@@ -297,7 +294,6 @@ const verifyLoad = async (req, res, next) => {
   const otp2 = req.body.otp;
   try {
     const session = req.session.user_id;
-    console.log(session + "helloo");
     const categoryData = await Category.find();
     if (otp2 == otp) {
       const UserData = await User.findOneAndUpdate(

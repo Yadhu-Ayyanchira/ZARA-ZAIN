@@ -1,5 +1,3 @@
-// controller.js
-
 const category = require("../Models/categoryModel");
 const usermodal = require("../Models/userModel");
 const uc = require("upper-case");

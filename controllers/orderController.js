@@ -36,11 +36,9 @@ const placeOrder = async (req, res, next) => {
 
     const orderData = await order.save();
     if (orderData) {
-      console.log("yessss");
       for (let i = 0; i < products.length; i++) {
         const pro = products[i].productId;
         const count = parseInt(products[i].count);
-        console.log("pro:" + pro + "  count:" + count);
         await Product.findByIdAndUpdate(
           { _id: pro },
           { $inc: { StockQuantity: -count } }
