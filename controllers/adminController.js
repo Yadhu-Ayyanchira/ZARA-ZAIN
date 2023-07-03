@@ -231,6 +231,15 @@ const adminDashboard = async (req, res, next) => {
 
     const onlineTotal = onlineResult.length > 0 ? onlineResult[0].total : 0;
 
+     const walletResult = await Order.aggregate([
+       { $unwind: "$products" },
+       { $match: { "products.status": "Delivered", paymentMethod: "wallet" } },
+       { $group: { _id: null, total: { $sum: "$products.totalPrice" } } },
+       { $project: { _id: 0, total: 1 } },
+     ]);
+
+     const walletTotal = walletResult.length > 0 ? walletResult[0].total : 0;
+
     const weeklySalesCursor = Order.aggregate([
       { $unwind: "$products" },
       { $match: { 'products.status': 'Delivered' } },
@@ -244,7 +253,7 @@ const adminDashboard = async (req, res, next) => {
     const sales = weeklySales.map(item => item.sales);
     const salesSum = weeklySales.reduce((accumulator, item) => accumulator + item.sales, 0).toFixed(2);
 
-    res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, total, sales, dates });
+    res.render("dashboard", { admin: adminData, products, order: orderData, onlineTotal, codTotal, walletTotal, total, sales, dates });
   } catch (error) {
     next(error);
   }

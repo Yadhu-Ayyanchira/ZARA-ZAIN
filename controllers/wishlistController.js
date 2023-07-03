@@ -129,7 +129,29 @@ const wishlistLoad = async (req, res, next) => {
   }
 };
 
+const deleteWishlist = async (req, res, next) => {
+  try {
+    const userData = req.session.user_id;
+    console.log("haooi");
+    const proId = req.body.products;
+    const wishlistData = await Wishlist.findOne({ userId: userData });
+    if (wishlistData.products.length === 1) {
+      const c = await Wishlist.deleteOne({ userId: userData });
+    } else {
+      const v = await Wishlist.updateOne(
+        { userId: userData },
+        { $pull: { products: { productId: proId } } }
+      );
+    }
+    res.json({ success: true });
+  } catch (error) {
+    next(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 module.exports = {
   addToWishlist,
   wishlistLoad,
+  deleteWishlist
 };

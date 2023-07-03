@@ -86,6 +86,7 @@ user_route.post('/applycoupon', couponController.applyCoupon);
 
 user_route.get("/wishlist", auth.isLogin, wishlistController.wishlistLoad);
 user_route.post("/addToWishlist",  wishlistController.addToWishlist);
+user_route.post(  "/deleteWishlist", auth.isBlock, auth.isLogin, wishlistController.deleteWishlist);
 
 user_route.get("/filterCategory/:id", userController.filterCategory);
 

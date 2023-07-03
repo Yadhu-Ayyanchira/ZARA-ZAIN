@@ -1,205 +1,305 @@
-<%- include('../layouts/userLayout/header.ejs') %> <%-
-include('../layouts/userLayout/navbar.ejs') %>
+<%- include('../layouts/userLayout/header.ejs') %>
+  <%- include('../layouts/userLayout/navbar.ejs') %>
 
-<section id="breadcrumb">
-  <div class="container">
-    <div class="le-breadcrumb inline">
-      <div class="iconic-nav-bar">
-        <div class="icon-holder">
-          <i class="fa fa-chain"></i>
-          <span class="triangle"></span>
-        </div>
-        <div class="bar">
-          <ul>
-            <li><a href="/">homepage</a></li>
-            <li class="active">shopping cart</li>
-          </ul>
+
+    <section id="breadcrumb">
+
+      <div class="container">
+        <div class="le-breadcrumb inline">
+          <div class="iconic-nav-bar">
+            <div class="icon-holder">
+              <i class="fa fa-chain"></i>
+              <span class="triangle"></span>
+            </div>
+            <div class="bar">
+              <ul>
+                <li><a href="/">homepage</a></li>
+                <li class="active">shopping cart</li>
+
+              </ul>
+
+
+            </div>
+
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section id="cart" class="page-holder">
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="shopping-cart-page box">
-          <div class="icon-holder small badge-style">
-            <i class="fa fa-shopping-cart"></i>
-            <span class="triangle"></span>
-          </div>
-          <div class="table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th class="col-xs-12 col-md-2">preview</th>
-                  <th class="col-xs-12 col-md-5">product</th>
-                  <th class="col-xs-12 col-md-2 price-column">price</th>
-                  <th class="col-xs-12 col-md-2">&nbsp;</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% if(products.length> 0){ products.forEach(products =>{ %>
+    <section id="cart" class="page-holder ">
+      <div class="container">
 
-                <tr>
-                  <td>
-                    <div class="thumb">
-                      <a href="/singleProduct/<%=products.productId._id%>">
-                        <img
-                          alt=""
-                          src="/adminAsset/adminImages/<%=products.productId.image[0]%>"
-                      /></a>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="desc">
-                      <h3><%=products.productId.product%></h3>
 
-                      <div class="pid">Product Code: 4564789</div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="price"><%=products.productId.Price%></div>
-                  </td>
+        <div class="row ">
 
-                  <td>
-                    <div class="delete">
-                      <a
-                        class="close-btn"
-                        onclick="deleteWishlist('<%= products.productId._id%>')"
-                      ></a>
-                    </div>
-                  </td>
-                </tr>
+          <div class="col-xs-12">
+            <div class="shopping-cart-page box">
+              <div class="icon-holder small badge-style">
+                <i class="fa fa-shopping-cart "></i>
+                <span class="triangle"></span>
+              </div>
+              <div class="table-responsive">
+                <table class="table ">
+                  <thead>
+                    <tr>
+                      <th class="col-xs-12 col-md-2">preview</th>
+                      <th class="col-xs-12 col-md-5">product</th>
+                      <th class="col-xs-12 col-md-2 price-column">price</th>
+                      <!-- <th class="col-xs-12 col-md-2">quantity</th>
+                                      <th class="col-xs-12 col-md-1 price-column">total</th> -->
+                      <th class="col-xs-12 col-md-2">&nbsp;</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if(products.length> 0){
+                      products.forEach(products =>{
+                      %>
 
-                <% }); %> <% } else { %>
-                <tr>
-                  <td colspan="5" class="text-center">
-                    No Products Added to Cart
-                  </td>
-                </tr>
-                <% } %>
-              </tbody>
-            </table>
-            <div class="merged-buttons">
-              <a onclick="addToCart('<%= products._id %>')">
-                <button class="btn-add-to-cart le-btn btn-iconic">
-                  to cart
-                </button>
-              </a>
 
-              <!-- <a href="checkout.html" class="le-btn small">checkout</a> -->
+                      <tr>
+                        <td>
+                          <div class="thumb">
+                            <a href="/singleProduct/<%=products.productId._id%>"> <img alt=""
+                                src="/adminAsset/adminImages/<%=products.productId.image[0]%>"></a>
+
+                          </div>
+                        </td>
+                        <td>
+                          <div class="desc">
+                            <h3>
+                              <%=products.productId.product%>
+                            </h3>
+
+                            <div class="pid">Product Code: 4564789</div>
+                          </div>
+
+                        </td>
+                        <td>
+
+                          <div class="price">
+                            <%=products.productId.Price%>
+                          </div>
+
+                        </td>
+                        <!-- <td>
+                                          <div class="le-quantity">
+                  <form>
+                    <a class="minus" href="#reduce"></a>
+                    <input name="quantity" readonly="readonly" type="text" value="1">
+                    <a class="plus" href="#add"></a>
+                  </form>
+                </div>
+                                      </td> -->
+
+
+
+                        <td>
+
+                          <div class="delete">
+
+                            <a class="close-btn" onclick="deleteWishlist('<%= products.productId._id%>')"></a>
+                          </div>
+
+                        </td>
+                      </tr>
+
+
+
+
+
+                      <!-- <tr>
+                                      <td>
+                                          <div class="thumb">
+                                            <img alt="" src="/userAsset/images/products/product02.png">
+                                          </div>
+                                      </td>
+                                      <td>
+                                          <div class="desc">
+                                              <h3>men boot war style so classy</h3>
+                                              <div class="tag-line">
+                                                   In hac habitasse platea dictumst. Donec aliquet dolor in libero euismod, ac dapibus turpis euismod.
+                                              </div>
+                                              <div class="pid">Product Code: 56879456</div>
+                                          </div>
+
+                                      </td>
+                                      <td>
+
+                                          <div class="price">
+                                              $112.00
+                                          </div>
+
+                                      </td>
+                                      <td>
+                                         <div class="le-quantity">
+                  <form>
+                    <a class="minus" href="#reduce"></a>
+                    <input name="quantity" readonly="readonly" type="text" value="2">
+                    <a class="plus" href="#add"></a>
+                  </form>
+                </div>
+                                      </td>
+
+                                      <td>
+
+                                          <div class="price">
+                                              $224.00
+                                          </div>
+
+                                      </td>
+
+                                      <td>
+
+                                          <div class="delete">
+                                              <a class="close-btn" href="#"></a>
+                                          </div>
+
+                                      </td>
+                                  </tr> -->
+                      <% }); %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="5" class="text-center">
+                              No Products Added to Cart
+                            </td>
+                          </tr>
+                          <% } %>
+
+
+
+
+                  </tbody>
+
+
+                </table>
+                <div class="merged-buttons">
+                  <a onclick="addToCart('<%= products._id %>')"> <button class="btn-add-to-cart le-btn btn-iconic ">to
+                      cart</button>
+                  </a>
+
+                  <!-- <a href="checkout.html" class="le-btn small">checkout</a> -->
+
+                </div>
+
+              </div>
+
+
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section id="newsletter" class="section-newsletter">
-  <div class="container">
-    <div class="col-xs-12 col-md-1">
-      <div class="icon-holder big">
-        <i class="fa fa-newspaper-o"></i>
-        <span class="triangle"></span>
+
+
       </div>
-    </div>
-    <div class="col-xs-12 col-md-4">
-      <div class="text">
-        sign up for our newsletter to<br />
-        get best offers and news.
-      </div>
-    </div>
-    <div class="col-xs-12 col-md-7">
-      <!-- <form class="subscribe-form">
+
+    </section>
+
+    <section id="newsletter" class="section-newsletter">
+      <div class="container">
+
+
+        <div class="col-xs-12 col-md-1">
+          <div class="icon-holder big">
+            <i class="fa fa-newspaper-o"></i>
+            <span class="triangle"></span>
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-4">
+          <div class="text">
+            sign up for our newsletter to<br>
+            get best offers and news.
+          </div>
+        </div>
+        <div class="col-xs-12 col-md-7">
+          <!-- <form class="subscribe-form">
               <input data-placeholder="Enter Your Email Here..." class="le-input col-xs-12 col-md-10">
               <button type="submit" class="le-btn icon-btn fa fa-send"></button>
             </form> -->
-    </div>
-  </div>
-</section>
+        </div>
+      </div>
+    </section>
 
-<script>
-  function show(id) {
-    $.ajax({
-      url: "/addfromwishlist",
-      method: "post",
-      data: {
-        query: id,
-      },
-      success: (response) => {
-        if (response.success) {
-          location.href = "/cart";
-        }
-      },
-    });
-  }
 
-  function addToCart(productId) {
-    $.ajax({
-      url: "/addToCart",
-      method: "post",
-      data: {
-        id: productId,
-      },
-      success: (response) => {
-        if (response.success) {
-          swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Product added to cart",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      },
-    });
-  }
+    <script>
+      function show(id) {
+        $.ajax({
+          url: "/addfromwishlist",
+          method: "post",
+          data: {
+            query: id
+          },
+          success: (response) => {
+            if (response.success) {
+              location.href = "/cart";
+            }
+          }
+        })
+      }
 
-  function deleteWishlist(proId) {
-    swal
-      .fire({
-        title: "Are you sure?",
-        text: "You want to delete cart",
-        icon: "Warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes delete!",
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          $.ajax({
-            url: "/deleteWishlist",
-            data: {
-              products: proId,
-            },
-            method: "post",
-            success: (response) => {
-              location.reload();
+      function addToCart(productId) {
+        $.ajax({
+          url: '/addToCart',
+          method: 'post',
+          data: {
+            id: productId
+          },
+          success: (response) => {
+            if (response.success) {
               swal.fire({
-                title: "Deleted!",
-                text: "Your item is deleted.",
-                icon: "success",
+                position: 'center',
+                icon: 'success',
+                title: 'Product added to cart',
+                showConfirmButton: false,
                 timer: 1500,
-                showConfirmButton: false,
               });
-            },
-            error: (error) => {
-              console.log(error);
-              swal.fire({
-                title: "Error!",
-                text: "An error occured while deleting the item",
-                icon: "error",
-                showConfirmButton: false,
-              });
-            },
-          });
-        }
-      });
-  }
-</script>
+            }
+          }
+        })
+      }
 
-<%- include('../layouts/userLayout/footer.ejs') %>
+
+      function deleteWishlist(proId) {
+        swal.fire({
+          title: 'Are you sure?',
+          text: 'You want to delete cart',
+          icon: 'Warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes delete!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: '/deleteWishlist',
+              data: {
+                products: proId,
+              },
+              method: 'post',
+              success: (response) => {
+                location.reload();
+                swal.fire({
+                  title: 'Deleted!',
+                  text: 'Your item is deleted.',
+                  icon: 'success',
+                  timer: 1500,
+                  showConfirmButton: false,
+                })
+              },
+              error: (error) => {
+                console.log(error);
+                swal.fire({
+                  title: 'Error!',
+                  text: 'An error occured while deleting the item',
+                  icon: 'error',
+                  showConfirmButton: false,
+                })
+              }
+            })
+          }
+        })
+      }
+
+
+    </script>
+
+    <%- include('../layouts/userLayout/footer.ejs') %>

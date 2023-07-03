@@ -37,6 +37,7 @@
                          <a href="/showProduct/<%=productData[i]._id%>">  <img class="img-fluid w-100" src="/adminAsset/adminImages/<%=productData[i].image[0]%>" alt=""> </a> 
                             <div class="product-action">
                                 <a class="btn btn-outline-dark btn-square" onclick="addToCart('<%=productData[i]._id %>')"><i class="fa fa-shopping-cart"></i></a>
+                                <a class="btn btn-outline-dark btn-square" onclick="addToWishlist('<%= productData[i]._id %>')"><i class="fas fa-heart "></i></a>
                                 
                             </div>
                         </div>
@@ -103,6 +104,27 @@
         },
       });
     }
+
+    function addToWishlist(productId) {
+        $.ajax({
+          url: '/addToWishlist',
+          method: 'post',
+          data: {
+            id: productId
+          },
+          success: (response) => {
+            if (response.success) {
+              swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Product added to wishlist',
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            }
+          }
+        })
+      }
   
     
   </script>

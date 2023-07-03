@@ -115,7 +115,7 @@
             <div class="col-lg-8 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Bar chart</h4>
+                  <h4 class="card-title">Daily Wise Sales</h4>
                   <canvas id="barChart" style="height:230px"></canvas>
                 </div>
               </div>
@@ -130,7 +130,7 @@
    var areaData = {
       labels: ["Wallet", "Online", "COD"],
       datasets: [{
-        data: ['<%= codTotal %>', '<%= onlineTotal %>', '<%= codTotal %>'],
+        data: ['<%= walletTotal %>', '<%= onlineTotal %>', '<%= codTotal %>'],
         backgroundColor: [
           "#dc3545", "#00d25b", "#ffab00"
         ]
@@ -167,7 +167,7 @@
         ctx.textBaseline = "middle";
         ctx.fillStyle = "#ffffff";
 
-        var text = "$1200",
+        var text = "<%= total %>",
           textX = Math.round((width - ctx.measureText(text).width) / 2),
           textY = height / 2.4;
 
