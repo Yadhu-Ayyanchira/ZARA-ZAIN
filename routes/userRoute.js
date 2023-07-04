@@ -37,11 +37,7 @@ user_route.get(["/", "/index"], auth.isBlock, userController.loadHome);
 user_route.get("/login", [auth.isBlock, auth.isLogout], userController.loginLoad);
 user_route.post("/login", userController.verifyLogin, auth.isBlock);
 
-user_route.get(
-  "/register",
-  [auth.isBlock, auth.isLogout],
-  userController.loadRegister
-);
+user_route.get( "/register", [auth.isBlock, auth.isLogout], userController.loadRegister);
 user_route.post("/register", auth.isBlock, userController.insertUser);
 
 user_route.get(

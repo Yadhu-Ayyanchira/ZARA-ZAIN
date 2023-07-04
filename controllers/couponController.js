@@ -81,8 +81,51 @@ const applyCoupon = async (req, res, next) => {
     next(err);
   }
 };
+
+const editCoupon = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const updateCoupen = await Coupon.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          code: req.body.code,
+          discountType: req.body.discountType,
+          startDate: req.body.startDate,
+          expiryDate: req.body.expiryDate,
+          discountPercentage: req.body.percentage,
+        },
+      }
+    );
+    if (updateCoupen) {
+      res.redirect("/admin/couponList");
+    } else {
+      message = "something error";
+      res.redirect("/admin/couponList");
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteCoupon = async (req, res, next) => {
+  try {
+    const id = req.query.id;
+    const deleteCoupon = await Coupon.deleteOne({ _id: id });
+    if (deleteCoupon) {
+      res.redirect("/admin/couponList");
+    } else {
+      res.redirect("/admin/couponList");
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   loadCopon,
   addCoupon,
   applyCoupon,
+  editCoupon,
+  deleteCoupon
 };

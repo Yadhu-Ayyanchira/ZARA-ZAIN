@@ -7,7 +7,6 @@ const Category = require("../Models/categoryModel");
 const { ObjectId } = require("mongodb");
 
 const addToWishlist = async (req, res, next) => {
-  console.log("wish in");
   try {
     const userId = req.session.user_id;
     const userData = await User.findOne({ _id: userId });
@@ -132,7 +131,6 @@ const wishlistLoad = async (req, res, next) => {
 const deleteWishlist = async (req, res, next) => {
   try {
     const userData = req.session.user_id;
-    console.log("haooi");
     const proId = req.body.products;
     const wishlistData = await Wishlist.findOne({ userId: userData });
     if (wishlistData.products.length === 1) {

@@ -21,6 +21,7 @@ const securePassword = async (password) => {
 };
 
 const sendverifyMail = async (name, email, next, otp) => {
+  console.log('veri otp:'+otp);
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -50,7 +51,7 @@ const sendverifyMail = async (name, email, next, otp) => {
         console.log(error);
       } else {
         console.log("Email has been send", info.response);
-        console.log(otp);
+        console.log("otp:"+otp);
       }
     });
     return otp;
@@ -129,6 +130,7 @@ const loadRegister = async (req, res, next) => {
 };
 
 let email;
+let otp;
 const insertUser = async (req, res, next) => {
   try {
     const session = null;
@@ -172,6 +174,7 @@ const insertUser = async (req, res, next) => {
         randomnumber = Math.floor(Math.random() * 9000) + 1000;
         otp = randomnumber;
         sendverifyMail(name, req.body.email, randomnumber);
+        console.log('otp1:'+otp);
         res.render("verifyOtp", { session, categoryData });
       } else {
         res.render("registration", {
@@ -301,11 +304,10 @@ const verifyLoad = async (req, res, next) => {
         { $set: { is_verified: 1 } }
       );
       if (UserData) {
-        const userData = await User.findById({ _id: req.session.user_id });
-        res.render("/", {
+        res.render("login", {
           session,
           categoryData,
-          userData,
+          message:null
         });
       } else {
         console.log("something went wrong");
