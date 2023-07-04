@@ -22,7 +22,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log('404-page not found');
   res.render('404');
   res.end();
 })

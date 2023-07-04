@@ -62,9 +62,20 @@ const sendverifyMail = async (name, email, next, otp) => {
 
 const loadHome = async (req, res, next) => {
   try {
+     var search = "";
+     if (req.query.search) {
+       search = req.query.search;
+     }
     const banner = await Banner.find({});
     const categoryData = await Category.find();
-    const productData = await Product.find({ is_delete: false });
+    //const productData = await Product.find({ is_delete: false });
+    const productData = await Product.find({
+      is_delete: false,
+      $or: [
+        { productName: { $regex: ".*" + search + ".*", $options: "i" } },
+        { description: { $regex: ".*" + search + ".*", $options: "i" } },
+      ],
+    });
     if (req.session.user_id) {
       const session = req.session.user_id;
       const userData = await User.findById({ _id: req.session.user_id });
@@ -244,9 +255,21 @@ const userLogout = async (req, res, next) => {
 
 const loadShop = async (req, res, next) => {
   try {
+     var search = "";
+     if (req.query.search) {
+       search = req.query.search;
+     }
+     const productData = await Product.find({
+       is_delete: false,
+       $or: [
+         { productName: { $regex: ".*" + search + ".*", $options: "i" } },
+         { description: { $regex: ".*" + search + ".*", $options: "i" } },
+       ],
+     });
     if (req.session.user_id) {
       const session = req.session.user_id;
-      const productData = await Product.find({ is_delete: false });
+      //const productData = await Product.find({ is_delete: false });
+      
       const categoryData = await Category.find();
       const userData = await User.findById({ _id: req.session.user_id });
       res.render("shop", {
@@ -258,7 +281,7 @@ const loadShop = async (req, res, next) => {
     } else {
       const session = null;
       const categoryData = await Category.find();
-      const productData = await Product.find();
+      //const productData = await Product.find();
       res.render("shop", { session, productData: productData, categoryData });
     }
   } catch (error) {
@@ -382,7 +405,7 @@ const filterCategory = async (req, res, next) => {
     const count = await Product.find({
       is_delete: false,
       $or: [
-        { product: { $regex: ".*" + search + ".*", $options: "i" } },
+        { productName: { $regex: ".*" + search + ".*", $options: "i" } },
         { categoryName: { $regex: ".*" + search + ".*", $options: "i" } },
         // {description:{$regex:'.*'+search+'.*',$options:'i'}},
       ],
