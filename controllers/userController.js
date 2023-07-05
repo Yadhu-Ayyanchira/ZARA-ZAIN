@@ -259,13 +259,32 @@ const loadShop = async (req, res, next) => {
      if (req.query.search) {
        search = req.query.search;
      }
+
+     var page = 1;
+     if (req.query.page) {
+       page = req.query.page;
+     }
+     const limit = 8;
+
      const productData = await Product.find({
        is_delete: false,
        $or: [
          { productName: { $regex: ".*" + search + ".*", $options: "i" } },
          { description: { $regex: ".*" + search + ".*", $options: "i" } },
        ],
-     });
+     })
+       .limit(limit * 1)
+       .skip((page - 1) * limit)
+       .exec();
+
+       const count = await Product.find({
+         is_delete: false,
+         $or: [
+           { product: { $regex: ".*" + search + ".*", $options: "i" } },
+           { description: { $regex: ".*" + search + ".*", $options: "i" } },
+         ],
+       }).countDocuments();
+
     if (req.session.user_id) {
       const session = req.session.user_id;
       //const productData = await Product.find({ is_delete: false });
@@ -277,12 +296,20 @@ const loadShop = async (req, res, next) => {
         session: session,
         productData: productData,
         categoryData,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
       });
     } else {
       const session = null;
       const categoryData = await Category.find();
       //const productData = await Product.find();
-      res.render("shop", { session, productData: productData, categoryData });
+      res.render("shop", {
+        session,
+        productData: productData,
+        categoryData,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+      });
     }
   } catch (error) {
     next(error);
