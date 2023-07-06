@@ -11,6 +11,7 @@ include('../layouts/adminLayout/navbar.ejs') %>
             <h4 class="card-title">ADD BANNER</h4>
 
             <form
+            id="form"
               class="form-sample text-warning"
               action="/admin/addBanner"
               method="post"
@@ -21,7 +22,8 @@ include('../layouts/adminLayout/navbar.ejs') %>
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label">Main Text</label>
                     <div class="col-sm-9">
-                      <input type="text" class="form-control" name="mainText" />
+                      <input type="text" class="form-control" id="mainText" name="mainText" />
+                      <span class="text-danger" id="mainText-error"></span>
                     </div>
                   </div>
                 </div>
@@ -57,8 +59,10 @@ include('../layouts/adminLayout/navbar.ejs') %>
                         accept="Image/*"
                         type="file"
                         name="image"
+                        id="formFileMultiple"
                         required
                       />
+                      <span class="text-danger" id="image-error"></span>
                     </div>
                   </div>
                 </div>
@@ -74,4 +78,37 @@ include('../layouts/adminLayout/navbar.ejs') %>
     </div>
   </div>
 </div>
+<script>
+  const form = document.getElementById("form")
+  const mainTextInput = document.getElementById("mainText");
+  const mainTextError = document.getElementById("mainText-error");
+  const imageInput = document.getElementById('formFileMultiple');
+  const imageError = document.getElementById("image-error");
+
+  form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const mainTextValue = mainTextInput.value.trim();
+    if (!mainTextValue) {
+      mainTextError.textContent = "Please enter a Banner text";
+      return;
+    } else {
+      mainTextError.textContent = "";
+    }
+
+  const imageFile = imageInput.files[0];
+    if (!imageFile) {
+      imageError.textContent = "Please select an image";
+      return;
+    } else {
+      const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+      if (!allowedExtensions.exec(imageFile.name)) {
+        imageError.textContent = "Invalid image file format";
+        return;
+      }
+      imageError.textContent = "";
+    }
+      form.submit();
+  });
+</script>
 <%- include('../layouts/adminLayout/footer.ejs') %>

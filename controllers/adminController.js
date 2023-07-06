@@ -187,13 +187,14 @@ const addBanner = async (req, res, next) => {
     const bannerData = await banner.save();
 
     if (bannerData) {
-      res.render("bannerlist", {
+      const bannerData = await Banner.find();
+      res.render("bannerList", {
         message: "Product added successfully",
         admin: adminData,
-        banner: bannerData
+        banners: bannerData
       });
     } else {
-      return res.render("bannerlist", {
+      return res.render("bannerList", {
         message: "Enter valid details",
         admin: adminData,
 
