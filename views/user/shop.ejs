@@ -68,31 +68,16 @@
                 <div class="col-12">
                   <nav>
                     <ul class="pagination justify-content-center">
-                      <% if (currentPage> 1) { %>
-                        <li class="page-item">
-                          <a class="page-link" href="?page=<%= currentPage - 1 %>">Previous</a>
-                        </li>
+                      <% for(let j=1;j<=totalPages;j++){ %>
+                      
+                        <a href="?page=<%= j%>">
+                          <button class="bt-sm bg-success">
+                            <%= j%>
+                          </button>
+                        </a>
+                      
+                      
                         <% } %>
-                          <% for (let j=1; j <=totalPages; j++) { %>
-                            <% if (j===currentPage) { %>
-                              <li class="page-item active">
-                                <a class="page-link" href="?page=<%= j %>">
-                                  <%= j %>
-                                </a>
-                              </li>
-                              <% } else { %>
-                                <li class="page-item">
-                                  <a class="page-link" href="?page=<%= j %>">
-                                    <%= j %>
-                                  </a>
-                                </li>
-                                <% } %>
-                                  <% } %>
-                                    <% if (currentPage < totalPages) { %>
-                                      <li class="page-item">
-                                        <a class="page-link" href="?page=<%= currentPage + 1 %>">Next</a>
-                                      </li>
-                                      <% } %>
                     </ul>
                   </nav>
                 </div>
