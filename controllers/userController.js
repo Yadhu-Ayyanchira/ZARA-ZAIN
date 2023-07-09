@@ -320,7 +320,7 @@ const loadShowproduct = async (req, res, next) => {
     if (req.session.user_id) {
       const session = req.session.user_id;
       const id = req.params.id;
-      const userData = await User.findById({ _id: req.session.user_id })
+      const userData = await User.findById({ _id: req.session.user_id });
       const categoryData = await Category.find();
       const data = await Product.findOne({ _id: id });
       res.render("showProduct", {
