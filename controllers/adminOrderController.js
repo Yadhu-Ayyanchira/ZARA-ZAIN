@@ -59,7 +59,7 @@ const loadSingleOrderList = async (req, res, next) => {
 
 const changeStatus = async (req, res, next) => {
   try {
-    const { orderId, status, userId } = req.body;
+    const { orderId, status, userId } = req.body
 
     const updateQuery = {
       userId: userId,

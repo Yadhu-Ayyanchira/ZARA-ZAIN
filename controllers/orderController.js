@@ -188,7 +188,7 @@ const orderCancel = async (req, res, next) => {
     });
     const product = orderData.products.find((p) => p._id.toString() === id);
     const procount = product.count;
-    const proId = product.productId;
+    const proId = product.productId
     const cancelledAmount = product.totalPrice;
     const updatedOrder = await Order.findOneAndUpdate(
       {
