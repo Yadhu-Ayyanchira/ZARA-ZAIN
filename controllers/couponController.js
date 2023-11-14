@@ -111,7 +111,7 @@ const editCoupon = async (req, res, next) => {
 const deleteCoupon = async (req, res, next) => {
   try {
     const id = req.query.id;
-    const deleteCoupon = await Coupon.deleteOne({ _id: id });
+    const deleteCoupon = await Coupon.deleteOne({ _id: id })
     if (deleteCoupon) {
       res.redirect("/admin/couponList");
     } else {

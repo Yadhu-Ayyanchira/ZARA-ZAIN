@@ -15,6 +15,7 @@ var instance = new razorpay({
 const placeOrder = async (req, res, next) => {
   try {
     const id = req.session.user_id;
+    console.log(id);
     const userData = await User.findOne({ _id: req.session.user_id });
     const address = req.body.address;
     const cartData = await Cart.findOne({ userId: req.session.user_id });

@@ -132,7 +132,7 @@ const deleteWishlist = async (req, res, next) => {
   try {
     const userData = req.session.user_id;
     const proId = req.body.products;
-    const wishlistData = await Wishlist.findOne({ userId: userData });
+    const wishlistData = await Wishlist.findOne({ userId: userData })
     if (wishlistData.products.length === 1) {
       const c = await Wishlist.deleteOne({ userId: userData });
     } else {
